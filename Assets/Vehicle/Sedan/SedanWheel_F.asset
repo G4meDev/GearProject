@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffe67a361229fab45b206c6ea8a42489, type: 3}
   m_Name: SedanWheel_F
   m_EditorClassIdentifier: 
-  WheelWidth: 28
-  WheelRadius: 32
+  WheelWidth: 0.28
+  WheelRadius: 0.32

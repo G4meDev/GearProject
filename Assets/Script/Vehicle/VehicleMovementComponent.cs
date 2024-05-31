@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class VehicleMovementComponent : MonoBehaviour
@@ -16,6 +17,7 @@ public class VehicleMovementComponent : MonoBehaviour
     private struct WheelDataInternal
     {
         public Transform WheelTransform;
+        public bool bRightWheel;
         public string BoneName;
         public float WheelWidth;
         public float WheelRadius;   
@@ -26,6 +28,9 @@ public class VehicleMovementComponent : MonoBehaviour
 
     [SerializeField]
     public WheelDescription[] WheelsDescription;
+
+    [SerializeField]
+    public float WheelsInnerPadding = 0.2f;
 
     private List<WheelDataInternal> WheelsDataInternal = new();
 
@@ -49,8 +54,18 @@ public class VehicleMovementComponent : MonoBehaviour
         
         foreach (WheelDataInternal WDI in WheelsDataInternal)
         {
-            DrawHelpers.DrawSphere(WDI.WheelTransform.position, 0.3f, Color.red);
-           
+            //DrawHelpers.DrawSphere(WDI.WheelTransform.position, 0.3f, WDI.bRightWheel ? Color.red : Color.blue);
+
+            Vector3 pos1 = new Vector3();
+            Vector3 pos2 = new Vector3();
+
+            pos1 = WDI.WheelTransform.position + WDI.WheelWidth * 0.5f * (WDI.bRightWheel ? -WDI.WheelTransform.up : WDI.WheelTransform.up);
+            pos2 = WDI.WheelTransform.position + (WDI.WheelWidth * 0.5f + WheelsInnerPadding) * (WDI.bRightWheel ? WDI.WheelTransform.up : -WDI.WheelTransform.up);
+
+            DrawHelpers.DrawBox(pos1, WDI.WheelTransform.rotation * Quaternion.Euler(90, 0, 0) , 0.4f, Color.green);
+            
+
+            //RaycastHit[] Results = Physics.CapsuleCastAll(,)
         }
     }
 
@@ -76,6 +91,9 @@ public class VehicleMovementComponent : MonoBehaviour
                 WDI.WheelWidth = WheelDesc.wheelData.WheelWidth;
                 WDI.WheelRadius = WheelDesc.wheelData.WheelRadius;
                 WDI.WheelTransform = T;
+
+                Transform P = transform;
+                WDI.bRightWheel = Vector3.Dot(P.right, T.position - P.position) > 0;
 
                 WheelsDataInternal.Add(WDI);
             }

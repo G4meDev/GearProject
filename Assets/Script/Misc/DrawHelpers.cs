@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public static class DrawHelpers
 {
@@ -48,4 +49,37 @@ public static class DrawHelpers
         }
     }
 
+    public static void DrawBox(Vector3 Position, Quaternion Rotation, float Scale, Color color)
+    {
+        for (int i = 0; i < s_UnitSquare.Length; i++)
+        {
+            Vector3 p1 = s_UnitSquare[i];
+            Vector3 p2 = s_UnitSquare[(i + 1) % s_UnitSquare.Length];
+
+            p1 *= Scale;
+            p2 *= Scale;
+
+            p1 = Rotation * p1;
+            p2 = Rotation * p2;
+
+            p1 += Position;
+            p2 += Position;
+
+            Debug.DrawLine(p1, p2, Color.yellow);
+        }
+    }
+
+    public static void DrawCylinder(Vector3 pos1, Vector3 pos2, float radius, Color color)
+    { 
+        for (int i = 0; i < s_UnitSquare.Length ; i++)
+        {
+            Vector3 p1 = s_UnitSquare[i];
+            Vector3 p2 = s_UnitSquare[(i+1)% s_UnitSquare.Length];
+
+            p1 += pos1;
+            p2 += pos1;
+
+            Debug.DrawLine(p1, p2, Color.yellow);
+        }
+    }
 }
