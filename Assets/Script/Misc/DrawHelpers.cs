@@ -6,14 +6,31 @@ public static class DrawHelpers
 {
     private static readonly Vector4[] s_UnitSphere = MakeUnitSphere(16);
 
+    private static readonly Vector3[] s_UnitCircle = MakeUnitCircle(16);
+
     // Square with edge of length 1
     private static readonly Vector4[] s_UnitSquare =
     {
-            new Vector4(-0.5f, 0.5f, 0, 1),
-            new Vector4(0.5f, 0.5f, 0, 1),
-            new Vector4(0.5f, -0.5f, 0, 1),
-            new Vector4(-0.5f, -0.5f, 0, 1),
+            new Vector4(-0.5f,  0,   0.5f, 1),
+            new Vector4(0.5f,   0,  0.5f, 1),
+            new Vector4(0.5f,   0,  -0.5f, 1),
+            new Vector4(-0.5f,  0,  -0.5f, 1),
     };
+
+    private static Vector3[] MakeUnitCircle(int len)
+    {
+        var v = new Vector3[len];
+        for (int i = 0; i < len; i++)
+        {
+            var f = i / (float)len;
+            float c = Mathf.Cos(f * (float)(Math.PI * 2.0));
+            float s = Mathf.Sin(f * (float)(Math.PI * 2.0));
+            v[i].x = c + s;
+            v[i].y = 0.0f;
+            v[i].z = -s + c;
+        }
+        return v;
+    }
 
     private static Vector4[] MakeUnitSphere(int len)
     {
@@ -69,15 +86,21 @@ public static class DrawHelpers
         }
     }
 
-    public static void DrawCylinder(Vector3 pos1, Vector3 pos2, float radius, Color color)
-    { 
-        for (int i = 0; i < s_UnitSquare.Length ; i++)
+    public static void DrawCircle(Vector3 Position, Quaternion Rotation, float Scale, Color color)
+    {
+        for (int i = 0; i < s_UnitCircle.Length; i++)
         {
-            Vector3 p1 = s_UnitSquare[i];
-            Vector3 p2 = s_UnitSquare[(i+1)% s_UnitSquare.Length];
+            Vector3 p1 = s_UnitCircle[i];
+            Vector3 p2 = s_UnitCircle[(i + 1) % s_UnitCircle.Length];
 
-            p1 += pos1;
-            p2 += pos1;
+            p1 *= Scale;
+            p2 *= Scale;
+
+            p1 = Rotation * p1;
+            p2 = Rotation * p2;
+
+            p1 += Position;
+            p2 += Position;
 
             Debug.DrawLine(p1, p2, Color.yellow);
         }

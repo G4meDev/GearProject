@@ -62,8 +62,8 @@ public class VehicleMovementComponent : MonoBehaviour
             pos1 = WDI.WheelTransform.position + WDI.WheelWidth * 0.5f * (WDI.bRightWheel ? -WDI.WheelTransform.up : WDI.WheelTransform.up);
             pos2 = WDI.WheelTransform.position + (WDI.WheelWidth * 0.5f + WheelsInnerPadding) * (WDI.bRightWheel ? WDI.WheelTransform.up : -WDI.WheelTransform.up);
 
-            DrawHelpers.DrawBox(pos1, WDI.WheelTransform.rotation * Quaternion.Euler(90, 0, 0) , 0.4f, Color.green);
-            
+            DrawHelpers.DrawCircle(pos1, WDI.WheelTransform.rotation * Quaternion.Euler(0, 0, 0) , 0.2f, Color.green);
+            DrawHelpers.DrawBox(pos2, WDI.WheelTransform.rotation * Quaternion.Euler(90, 0, 0), 0.4f, Color.cyan);
 
             //RaycastHit[] Results = Physics.CapsuleCastAll(,)
         }
