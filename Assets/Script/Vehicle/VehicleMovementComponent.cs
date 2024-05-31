@@ -15,6 +15,7 @@ public class VehicleMovementComponent : MonoBehaviour
 
     private struct WheelDataInternal
     {
+        public Transform WheelTransform;
         public string BoneName;
         public float WheelWidth;
         public float WheelRadius;   
@@ -48,16 +49,8 @@ public class VehicleMovementComponent : MonoBehaviour
         
         foreach (WheelDataInternal WDI in WheelsDataInternal)
         {
-            Transform t = transform.Find("VehicleMesh/root/" + WDI.BoneName);
-            if (t)
-            {
-                Debug.Log("logging");
-                DrawHelpers.DrawSphere(t.position, 0.3f, Color.red);
-            }
-            else
-            {
-                Debug.LogError(name + ": no bone with name _ " + WDI.BoneName);
-            }
+            DrawHelpers.DrawSphere(WDI.WheelTransform.position, 0.3f, Color.red);
+           
         }
     }
 
@@ -65,20 +58,28 @@ public class VehicleMovementComponent : MonoBehaviour
     {
         foreach (WheelDescription WheelDesc in WheelsDescription)
         {
-            
-            if (WheelDesc.wheelData)
+            if (WheelDesc.wheelData == null)
+            {
+                Debug.LogError(name + ": missing WheelData!");
+            }    
+
+            Transform T = transform.Find("VehicleMesh/root/" + WheelDesc.boneName);
+            if (T == null)
+            {
+                Debug.LogError(name + ": no bone with name _ " + WheelDesc.boneName);
+            }
+
+            else
             {
                 WheelDataInternal WDI = new WheelDataInternal();
                 WDI.BoneName = WheelDesc.boneName;
                 WDI.WheelWidth = WheelDesc.wheelData.WheelWidth;
                 WDI.WheelRadius = WheelDesc.wheelData.WheelRadius;
+                WDI.WheelTransform = T;
 
                 WheelsDataInternal.Add(WDI);
             }
-            else 
-            {
-                Debug.LogError(name + ": missing WheelData!");
-            }
+            
         }
     }
 
