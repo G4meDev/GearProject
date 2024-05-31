@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5090885852110593917}
   - component: {fileID: 1111264123147916799}
   - component: {fileID: 4320829956215920555}
+  - component: {fileID: 4846820830711406233}
   m_Layer: 0
   m_Name: BP_VehicleSedan
   m_TagString: Untagged
@@ -62,6 +63,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81de862f6d1e6ce49acc736f5140b352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WheelsDescription:
+  - boneName: 
+    wheelData: {fileID: 0}
+  - boneName: 
+    wheelData: {fileID: 0}
+--- !u!65 &4846820830711406233
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4138780187681453698}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.3, y: 1, z: 2.1}
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!1001 &4187227681540195796
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -93,22 +112,22 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: e1e5faf49c4546c45b68ad29e43b9542,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.023086186
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e1e5faf49c4546c45b68ad29e43b9542,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.023086186
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e1e5faf49c4546c45b68ad29e43b9542,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7067298
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e1e5faf49c4546c45b68ad29e43b9542,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.7067298
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e1e5faf49c4546c45b68ad29e43b9542,
         type: 3}
@@ -123,7 +142,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: e1e5faf49c4546c45b68ad29e43b9542,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -176.258
+      value: -270
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e1e5faf49c4546c45b68ad29e43b9542,
         type: 3}
