@@ -64,10 +64,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WheelsDescription:
-  - boneName: 
-    wheelData: {fileID: 0}
-  - boneName: 
-    wheelData: {fileID: 0}
+  - boneName: Wheel_FR
+    wheelData: {fileID: 11400000, guid: 0741324902c66374997869facc83b43e, type: 2}
+  - boneName: Wheel_FL
+    wheelData: {fileID: 11400000, guid: 0741324902c66374997869facc83b43e, type: 2}
+  - boneName: Wheel_RR
+    wheelData: {fileID: 11400000, guid: 0741324902c66374997869facc83b43e, type: 2}
+  - boneName: Wheel_RL
+    wheelData: {fileID: 11400000, guid: 0741324902c66374997869facc83b43e, type: 2}
 --- !u!65 &4846820830711406233
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -147,7 +151,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e1e5faf49c4546c45b68ad29e43b9542,
         type: 3}
       propertyPath: m_Name
-      value: SKM_Vehicle_Sedan
+      value: VehicleMesh
       objectReference: {fileID: 0}
     - target: {fileID: 8809822202811584803, guid: e1e5faf49c4546c45b68ad29e43b9542,
         type: 3}
