@@ -68,9 +68,22 @@ public class VehicleMovementComponent : MonoBehaviour
                 quat = q * quat;
             }
 
-            DrawHelpers.DrawCylinder(OuterPosition, quat, 0.2f, CylinderHeight, Color.green);
+            Vector3 dir = quat * Vector3.up;
+            Vector3 InnerPosition = OuterPosition + dir * CylinderHeight;
 
-            //RaycastHit[] Results = Physics.CapsuleCastAll(,)
+            DrawHelpers.DrawCylinder(OuterPosition, quat, WDI.WheelRadius, CylinderHeight, Color.green);
+            DrawHelpers.DrawSphere(InnerPosition, 0.05f, Color.blue);
+            DrawHelpers.DrawSphere(OuterPosition, 0.05f, Color.blue);
+
+            RaycastHit[] Results = Physics.SphereCastAll(InnerPosition, WDI.WheelRadius, dir, CylinderHeight);
+
+            Debug.Log(WDI.BoneName + " " + Results.Length);
+
+            foreach (RaycastHit hit in Results)
+            {
+                DrawHelpers.DrawSphere(hit.point, 0.1f, Color.red);
+                Debug.Log(hit.point.ToString());
+            }
         }
     }
 

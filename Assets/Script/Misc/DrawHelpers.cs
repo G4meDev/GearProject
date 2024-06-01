@@ -25,9 +25,9 @@ public static class DrawHelpers
             var f = i / (float)len;
             float c = Mathf.Cos(f * (float)(Math.PI * 2.0));
             float s = Mathf.Sin(f * (float)(Math.PI * 2.0));
-            v[i].x = c + s;
+            v[i].x = c;
             v[i].y = 0.0f;
-            v[i].z = -s + c;
+            v[i].z = s;
         }
         return v;
     }

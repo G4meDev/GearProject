@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: SedanWheel_F
   m_EditorClassIdentifier: 
   WheelWidth: 0.28
-  WheelRadius: 0.32
+  WheelRadius: 0.22
