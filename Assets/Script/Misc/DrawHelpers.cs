@@ -11,10 +11,10 @@ public static class DrawHelpers
     // Square with edge of length 1
     private static readonly Vector4[] s_UnitSquare =
     {
-            new Vector4(-0.5f,  0,   0.5f, 1),
-            new Vector4(0.5f,   0,  0.5f, 1),
-            new Vector4(0.5f,   0,  -0.5f, 1),
-            new Vector4(-0.5f,  0,  -0.5f, 1),
+            new Vector4(-0.5f,0,   0.5f,  1),
+            new Vector4(0.5f,0,   0.5f,  1),
+            new Vector4(0.5f,0,   -0.5f,  1),
+            new Vector4(-0.5f,0,  -0.5f,  1),
     };
 
     private static Vector3[] MakeUnitCircle(int len)
@@ -82,27 +82,47 @@ public static class DrawHelpers
             p1 += Position;
             p2 += Position;
 
-            Debug.DrawLine(p1, p2, Color.yellow);
+            Debug.DrawLine(p1, p2, color);
         }
     }
 
-    public static void DrawCircle(Vector3 Position, Quaternion Rotation, float Scale, Color color)
+    public static void DrawCircle(Vector3 Position, Quaternion Rotation, float Radius, Color color)
     {
         for (int i = 0; i < s_UnitCircle.Length; i++)
         {
             Vector3 p1 = s_UnitCircle[i];
             Vector3 p2 = s_UnitCircle[(i + 1) % s_UnitCircle.Length];
 
-            p1 *= Scale;
-            p2 *= Scale;
-
+            p1 *= Radius;
+            p2 *= Radius;
+            
             p1 = Rotation * p1;
             p2 = Rotation * p2;
 
             p1 += Position;
             p2 += Position;
 
-            Debug.DrawLine(p1, p2, Color.yellow);
+            Debug.DrawLine(p1, p2, color);
+        }
+    }
+
+    public static void DrawCylinder(Vector3 Position, Quaternion Rotation, float Radius, float Height, Color color)
+    {
+        DrawCircle(Position, Rotation, Radius, color);
+        Vector3 dir = Vector3.up;
+        Vector3 EndPosition = Position + (Rotation * dir) * Height;
+        DrawCircle(EndPosition, Rotation, Radius, color);
+
+        for (int i = 0; i < s_UnitCircle.Length; i++)
+        {
+            Vector3 p1 = s_UnitCircle[i];
+
+            p1 *= Radius;
+            p1 = Rotation * p1;
+            p1 += Position;
+
+            Vector3 p2 = p1 + (Rotation * dir) * Height;
+            Debug.DrawLine(p1, p2, color);
         }
     }
 }

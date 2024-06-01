@@ -32,7 +32,11 @@ public class VehicleMovementComponent : MonoBehaviour
     [SerializeField]
     public float WheelsInnerPadding = 0.2f;
 
+
     private List<WheelDataInternal> WheelsDataInternal = new();
+
+
+    private static Vector3 HalfRotation = new Vector3(180, 180, 180);
 
     // ------------------------------------------------------------------------------------------------------------
 
@@ -49,21 +53,22 @@ public class VehicleMovementComponent : MonoBehaviour
     {
         // Gravity
         Vector3 GravityForce = GravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
-        RB.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
+        //RB.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
 
         
         foreach (WheelDataInternal WDI in WheelsDataInternal)
         {
-            //DrawHelpers.DrawSphere(WDI.WheelTransform.position, 0.3f, WDI.bRightWheel ? Color.red : Color.blue);
+            Vector3 OuterPosition = WDI.WheelTransform.position + WDI.WheelWidth * 0.5f * (WDI.bRightWheel ? -WDI.WheelTransform.up : WDI.WheelTransform.up);
+            float CylinderHeight = WDI.WheelWidth + WheelsInnerPadding;
 
-            Vector3 pos1 = new Vector3();
-            Vector3 pos2 = new Vector3();
+            Quaternion quat = WDI.WheelTransform.rotation;
+            if (!WDI.bRightWheel)
+            {
+                Quaternion q = Quaternion.AngleAxis(180, transform.forward);
+                quat = q * quat;
+            }
 
-            pos1 = WDI.WheelTransform.position + WDI.WheelWidth * 0.5f * (WDI.bRightWheel ? -WDI.WheelTransform.up : WDI.WheelTransform.up);
-            pos2 = WDI.WheelTransform.position + (WDI.WheelWidth * 0.5f + WheelsInnerPadding) * (WDI.bRightWheel ? WDI.WheelTransform.up : -WDI.WheelTransform.up);
-
-            DrawHelpers.DrawCircle(pos1, WDI.WheelTransform.rotation * Quaternion.Euler(0, 0, 0) , 0.2f, Color.green);
-            DrawHelpers.DrawBox(pos2, WDI.WheelTransform.rotation * Quaternion.Euler(90, 0, 0), 0.4f, Color.cyan);
+            DrawHelpers.DrawCylinder(OuterPosition, quat, 0.2f, CylinderHeight, Color.green);
 
             //RaycastHit[] Results = Physics.CapsuleCastAll(,)
         }
