@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class VehicleMovementComponent : MonoBehaviour
 {
@@ -72,8 +73,6 @@ public class VehicleMovementComponent : MonoBehaviour
             Vector3 InnerPosition = OuterPosition + dir * CylinderHeight;
 
             DrawHelpers.DrawCylinder(OuterPosition, quat, WDI.WheelRadius, CylinderHeight, Color.green);
-            //DrawHelpers.DrawSphere(InnerPosition, 0.05f, Color.blue);
-            //DrawHelpers.DrawSphere(OuterPosition, 0.05f, Color.blue);
 
             Vector3 SweepOffest = WDI.WheelTransform.forward * WDI.WheelRadius * 2;
 
@@ -82,27 +81,48 @@ public class VehicleMovementComponent : MonoBehaviour
 
             foreach (RaycastHit r in Results)
             {
-                if (r.point == Vector3.zero)
-                    continue;
-                
-                Plane OuterPlane = new Plane(dir, OuterPosition);
+                DrawHelpers.DrawSphere(r.point, 0.1f, Color.red);
+
+                if (new Vector3(0, 0, 0) == r.point)
+                { continue; }
+
+                float Padding = 0.01f;
+                Vector3 PaddedOuterPosition = OuterPosition - dir * Padding;
+                Plane OuterPlane = new Plane(dir, PaddedOuterPosition);
                 float d = OuterPlane.GetDistanceToPoint(r.point);
 
-                if (d < 0 || d > CylinderHeight) 
-                    continue;
+                if (d < 0 || d > CylinderHeight + Padding * 2)
+                { continue; }
+
+                DrawHelpers.DrawSphere(r.point, 0.1f, Color.blue);
 
                 FilteredResult.Add(r);
             }
 
-            foreach (RaycastHit hit in Results)
-            {
-                DrawHelpers.DrawSphere(hit.point, 0.1f, Color.red);
-            }
+
+            float NearestDistance = 10000.0f;
+            RaycastHit FinalResult = new RaycastHit();
+            bool bFoundHit = false;
+            Plane WheelPlane = new Plane(-WDI.WheelTransform.forward, OuterPosition);
 
             foreach (RaycastHit hit in FilteredResult)
             {
-                DrawHelpers.DrawSphere(hit.point, 0.1f, Color.blue);
+                float distance = WheelPlane.GetDistanceToPoint(hit.point);
+                if (distance < NearestDistance)
+                {
+                    bFoundHit = true;
+                    NearestDistance = distance;
+                    FinalResult = hit;
+                }
             }
+
+            if(bFoundHit)
+            {
+                DrawHelpers.DrawSphere(FinalResult.point, 0.1f, Color.yellow);
+            }
+
+
+
         }
     }
 
