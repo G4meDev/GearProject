@@ -15,13 +15,18 @@ public class VehicleMovementComponent : MonoBehaviour
         public WheelData wheelData;
     }
 
-    private struct WheelDataInternal
+    private class WheelDataInternal
     {
         public Transform WheelTransform;
+        public Vector3 LastPosition;
         public bool bRightWheel;
         public string BoneName;
         public float WheelWidth;
         public float WheelRadius;   
+        public float MaxSuspensionRaise;
+        public float MaxSuspensionLower;
+        public float SuspensionStrength;
+        public float SuspensionDamper;
     };
 
     private Rigidbody RB;
@@ -103,12 +108,12 @@ public class VehicleMovementComponent : MonoBehaviour
             float NearestDistance = 10000.0f;
             RaycastHit FinalResult = new RaycastHit();
             bool bFoundHit = false;
-            Plane WheelPlane = new Plane(-WDI.WheelTransform.forward, OuterPosition);
+            Plane WheelPlane = new Plane(-WDI.WheelTransform.forward, OuterPosition + WDI.WheelTransform.forward * WDI.WheelRadius);
 
             foreach (RaycastHit hit in FilteredResult)
             {
                 float distance = WheelPlane.GetDistanceToPoint(hit.point);
-                if (distance < NearestDistance)
+                if (distance < NearestDistance && distance > 0)
                 {
                     bFoundHit = true;
                     NearestDistance = distance;
@@ -119,10 +124,28 @@ public class VehicleMovementComponent : MonoBehaviour
             if(bFoundHit)
             {
                 DrawHelpers.DrawSphere(FinalResult.point, 0.1f, Color.yellow);
+
+
+                Vector3 BottomEnd = OuterPosition - WDI.WheelTransform.forward * (WDI.WheelRadius + WDI.MaxSuspensionLower);
+                Plane BottomPlane = new Plane(WDI.WheelTransform.forward, BottomEnd);
+                float Offset = BottomPlane.GetDistanceToPoint(FinalResult.point);
+                Offset = Mathf.Clamp(Offset, 0, 2 * WDI.WheelRadius + WDI.MaxSuspensionRaise + WDI.MaxSuspensionLower);
+
+                float SuspensionForce = WDI.SuspensionStrength * Offset;
+                Vector3 Velocity = (WDI.WheelTransform.position - WDI.LastPosition) / Time.fixedDeltaTime;
+                SuspensionForce -= Vector3.Dot(Velocity, WDI.WheelTransform.forward) * WDI.SuspensionDamper;
+                RB.AddForceAtPosition(SuspensionForce * WDI.WheelTransform.forward, WDI.WheelTransform.position);
+
             }
 
 
+       
+        }
 
+
+        for (int i = 0; i < WheelsDataInternal.Count; i++)
+        {
+            WheelsDataInternal[i].LastPosition = new Vector3(WheelsDataInternal[i].WheelTransform.position.x, WheelsDataInternal[i].WheelTransform.position.y, WheelsDataInternal[i].WheelTransform.position.z);
         }
     }
 
@@ -148,6 +171,10 @@ public class VehicleMovementComponent : MonoBehaviour
                 WDI.WheelWidth = WheelDesc.wheelData.WheelWidth;
                 WDI.WheelRadius = WheelDesc.wheelData.WheelRadius;
                 WDI.WheelTransform = T;
+                WDI.MaxSuspensionRaise = WheelDesc.wheelData.MaxSuspensionRaise;
+                WDI.MaxSuspensionLower = WheelDesc.wheelData.MaxSuspensionLower;
+                WDI.SuspensionStrength = WheelDesc.wheelData.SuspensionStrength;
+                WDI.SuspensionDamper = WheelDesc.wheelData.SuspensionDamper;
 
                 Transform P = transform;
                 WDI.bRightWheel = Vector3.Dot(P.right, T.position - P.position) > 0;

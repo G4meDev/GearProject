@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WheelWidth: 0.32
   WheelRadius: 0.22
+  MaxSuspensionRaise: 0.05
+  MaxSuspensionLower: 0.1
+  SuspensionStrength: 100000
+  SuspensionDamper: 0
