@@ -53,7 +53,7 @@ public class VehicleMovementComponent : MonoBehaviour
     {
         // Gravity
         Vector3 GravityForce = GravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
-        //RB.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
+        RB.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
 
         
         foreach (WheelDataInternal WDI in WheelsDataInternal)
@@ -72,17 +72,36 @@ public class VehicleMovementComponent : MonoBehaviour
             Vector3 InnerPosition = OuterPosition + dir * CylinderHeight;
 
             DrawHelpers.DrawCylinder(OuterPosition, quat, WDI.WheelRadius, CylinderHeight, Color.green);
-            DrawHelpers.DrawSphere(InnerPosition, 0.05f, Color.blue);
-            DrawHelpers.DrawSphere(OuterPosition, 0.05f, Color.blue);
+            //DrawHelpers.DrawSphere(InnerPosition, 0.05f, Color.blue);
+            //DrawHelpers.DrawSphere(OuterPosition, 0.05f, Color.blue);
 
-            RaycastHit[] Results = Physics.SphereCastAll(InnerPosition, WDI.WheelRadius, dir, CylinderHeight);
+            Vector3 SweepOffest = WDI.WheelTransform.forward * WDI.WheelRadius * 2;
 
-            Debug.Log(WDI.BoneName + " " + Results.Length);
+            RaycastHit[] Results = Physics.CapsuleCastAll(InnerPosition + SweepOffest, OuterPosition + SweepOffest, WDI.WheelRadius, -WDI.WheelTransform.forward, WDI.WheelRadius * 2);
+            List<RaycastHit> FilteredResult = new List<RaycastHit>();
+
+            foreach (RaycastHit r in Results)
+            {
+                if (r.point == Vector3.zero)
+                    continue;
+                
+                Plane OuterPlane = new Plane(dir, OuterPosition);
+                float d = OuterPlane.GetDistanceToPoint(r.point);
+
+                if (d < 0 || d > CylinderHeight) 
+                    continue;
+
+                FilteredResult.Add(r);
+            }
 
             foreach (RaycastHit hit in Results)
             {
                 DrawHelpers.DrawSphere(hit.point, 0.1f, Color.red);
-                Debug.Log(hit.point.ToString());
+            }
+
+            foreach (RaycastHit hit in FilteredResult)
+            {
+                DrawHelpers.DrawSphere(hit.point, 0.1f, Color.blue);
             }
         }
     }
@@ -118,6 +137,5 @@ public class VehicleMovementComponent : MonoBehaviour
             
         }
     }
-
 
 }
