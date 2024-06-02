@@ -62,12 +62,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8691d71ec8767194ba0d901a79937292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spline:
-    m_EditModeType: 1
-    m_Knots: []
-    m_Length: -1
-    m_Closed: 0
+  spline: {fileID: 0}
   markDirty: 0
+  splineVissibility: 0
+  lastVis: 0
   TextFile: {fileID: 0}
   ParsedData:
     points: []
+  Positions: []
+  Tangenets: []
+  Ups: []

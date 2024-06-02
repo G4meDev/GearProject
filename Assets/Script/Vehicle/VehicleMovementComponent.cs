@@ -21,6 +21,8 @@ public class VehicleMovementComponent : MonoBehaviour
 
     VehicleWheel[] wheels = new VehicleWheel[4];
 
+    public RoadSplineRimporter RoadSpline;
+
     void Start()
     {
         Application.targetFrameRate = 60;
@@ -87,11 +89,15 @@ public class VehicleMovementComponent : MonoBehaviour
 
         bool isAccelerating = Mathf.Sign(vInput) == Mathf.Sign(forwardSpeed);
 
-        DrawHelpers.DrawSphere(rb.worldCenterOfMass, 1, Color.green);
+        //DrawHelpers.DrawSphere(rb.worldCenterOfMass, 1, Color.green);
 
+        RoadSplinePointData roadPoint =  RoadSpline.GetClosestRoadSplinePoint(transform.position);
 
+        Vector3 p1 = transform.position + transform.up * 2;
+        Vector3 p2 = p1 + roadPoint.up * 2;
+        Debug.DrawLine(p1, p2);
 
-
+        gravityDirection = -roadPoint.up;
 
         foreach (var wheel in wheels)
         {
