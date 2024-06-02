@@ -123,7 +123,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &642482610
+--- !u!1 &474120289
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 474120292}
+  - component: {fileID: 474120291}
+  - component: {fileID: 474120290}
+  m_Layer: 0
+  m_Name: VisualScripting SceneVariables
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &474120290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474120289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 765181c9ef4b24d32a4f7cbd2ef370dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &474120291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474120289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"declarations":{"Kind":"Scene","collection":{"$content":[],"$version":"A"},"$version":"A"}}'
+    _objectReferences: []
+--- !u!4 &474120292
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474120289}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &671986369
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -136,28 +196,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BP_VehicleSedan
       objectReference: {fileID: 0}
-    - target: {fileID: 4320829956215920555, guid: 496d60a4afde1f948a9ff256aed1f771,
-        type: 3}
-      propertyPath: WheelsInnerPadding
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4320829956215920555, guid: 496d60a4afde1f948a9ff256aed1f771,
-        type: 3}
-      propertyPath: WheelsDescription.Array.data[0].boneName
-      value: Wheel_FR
-      objectReference: {fileID: 0}
-    - target: {fileID: 4320829956215920555, guid: 496d60a4afde1f948a9ff256aed1f771,
-        type: 3}
-      propertyPath: WheelsDescription.Array.data[0].wheelData
-      value: 
-      objectReference: {fileID: 11400000, guid: 0741324902c66374997869facc83b43e,
-        type: 2}
-    - target: {fileID: 4320829956215920555, guid: 496d60a4afde1f948a9ff256aed1f771,
-        type: 3}
-      propertyPath: WheelsDescription.Array.data[1].wheelData
-      value: 
-      objectReference: {fileID: 11400000, guid: 0741324902c66374997869facc83b43e,
-        type: 2}
     - target: {fileID: 5090885852110593917, guid: 496d60a4afde1f948a9ff256aed1f771,
         type: 3}
       propertyPath: m_RootOrder
@@ -166,17 +204,17 @@ PrefabInstance:
     - target: {fileID: 5090885852110593917, guid: 496d60a4afde1f948a9ff256aed1f771,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.15
+      value: 4.6990905
       objectReference: {fileID: 0}
     - target: {fileID: 5090885852110593917, guid: 496d60a4afde1f948a9ff256aed1f771,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.218
+      value: -0.977
       objectReference: {fileID: 0}
     - target: {fileID: 5090885852110593917, guid: 496d60a4afde1f948a9ff256aed1f771,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.85
+      value: -4.2367973
       objectReference: {fileID: 0}
     - target: {fileID: 5090885852110593917, guid: 496d60a4afde1f948a9ff256aed1f771,
         type: 3}
