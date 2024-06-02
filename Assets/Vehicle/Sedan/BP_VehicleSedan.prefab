@@ -385,12 +385,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81de862f6d1e6ce49acc736f5140b352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  motorTorque: 2000
+  motorTorque: 20000
   brakeTorque: 2000
   maxSpeed: 2000
-  steeringRange: 30
-  steeringRangeAtMaxSpeed: 10
-  centreOfMassOffset: -1
+  steeringRange: 40
+  steeringRangeAtMaxSpeed: 20
+  centreOfMassOffset: 0
+  AntiRoll: 5000
 --- !u!65 &4846820830711406233
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -402,8 +403,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.3, y: 0.8, z: 2.1}
-  m_Center: {x: 0, y: 0.65, z: 0}
+  m_Size: {x: 1.3, y: 0.92, z: 2.1}
+  m_Center: {x: 0, y: 0.57, z: 0}
 --- !u!1 &8770361623210686527
 GameObject:
   m_ObjectHideFlags: 0
