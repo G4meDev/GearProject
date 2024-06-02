@@ -23,6 +23,8 @@ public class VehicleMovementComponent : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
+
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass += Vector3.up * centreOfMassOffset;
 
