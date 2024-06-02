@@ -1,7 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Splines;
 
 [ExecuteInEditMode]
 public class RoadSplineRimporter : MonoBehaviour
@@ -26,8 +30,13 @@ public class RoadSplineRimporter : MonoBehaviour
         public float up_z;
     }
 
+    [HideInInspector]
+    public SplineContainer spline;
 
     public bool markDirty = false;
+    public bool splineVissibility = false;
+    [HideInInspector]
+    public bool lastVis = false;
 
     public TextAsset TextFile;
 
@@ -41,15 +50,40 @@ public class RoadSplineRimporter : MonoBehaviour
 
     void Update()
     {
-        if (!Application.isPlaying && markDirty)
+        if (!Application.isPlaying)
         {
-            string rawData = TextFile.text;
+            if (markDirty)
+            {
+                string rawData = TextFile.text;
+                ParsedData = JsonUtility.FromJson<Rootobject>(rawData);
 
-            ParsedData = JsonUtility.FromJson<Rootobject>(rawData);
+                spline = GetComponent<SplineContainer>();
 
+                spline.Spline.EditType = SplineType.Linear;
+                spline.Spline.Clear();
 
+                GizmoUtility.SetGizmoEnabled(typeof(SplineContainer), false, true);
 
-            markDirty = false;
+                foreach (Point p in ParsedData.points)
+                {
+                    Vector3 pos = new Vector3(p.x, p.y, p.z);
+                    float y = pos.y;
+                    pos.y = pos.z;
+                    pos.z = y;
+                    pos *= 10;
+
+                    spline.Spline.Add(new BezierKnot(pos));
+                }
+
+                markDirty = false;
+            }
+            if(lastVis != splineVissibility)
+            {
+                Type type = typeof(SplineContainer);
+                GizmoUtility.SetGizmoEnabled(type, splineVissibility, true);
+                lastVis = splineVissibility;
+            }
+            
         }
     }
 }
