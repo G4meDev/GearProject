@@ -77,8 +77,9 @@ public class RoadSplineRimporter : MonoBehaviour
                 Tangenets.Clear();
                 Ups.Clear();
 
+#if (UNITY_EDITOR) 
                 GizmoUtility.SetGizmoEnabled(typeof(SplineContainer), false, true);
-
+#endif
                 foreach (Point p in ParsedData.points)
                 {
                     Vector3 pos = new Vector3(p.x, p.y, p.z);
@@ -110,7 +111,9 @@ public class RoadSplineRimporter : MonoBehaviour
             if(lastVis != splineVissibility)
             {
                 Type type = typeof(SplineContainer);
+#if (UNITY_EDITOR)
                 GizmoUtility.SetGizmoEnabled(type, splineVissibility, true);
+#endif
                 lastVis = splineVissibility;
             }
             
