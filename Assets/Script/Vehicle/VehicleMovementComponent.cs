@@ -59,6 +59,25 @@ public class VehicleMovementComponent : MonoBehaviour
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");
 
+        foreach(Touch t in Input.touches)
+        {
+            Vector2 p = t.position;
+
+            if (p.x < Screen.width / 2)
+                vInput -= 1;
+            else
+                vInput += 1;
+        }
+
+        float angle = 0;
+        if (Input.acceleration != Vector3.zero)
+        {
+            angle = Mathf.Atan2(Input.acceleration.x, -Input.acceleration.y) * Mathf.Rad2Deg;
+        }
+
+        float axisValue = Mathf.InverseLerp(-40, 40, angle) * 2 - 1;
+        hInput += axisValue;
+
         float forwardSpeed = Vector3.Dot(transform.forward, rb.velocity);
         float speedFactor = Mathf.InverseLerp(0, maxSpeed, forwardSpeed);
         float currentMotorTorque = Mathf.Lerp(motorTorque, 0, speedFactor);

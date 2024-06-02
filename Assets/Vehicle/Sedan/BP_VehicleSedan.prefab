@@ -241,7 +241,7 @@ MonoBehaviour:
   WheelBoneTransform: {fileID: 0}
   WheelCollider: {fileID: 0}
   CanSteer: 1
-  EffectedByEngine: 0
+  EffectedByEngine: 1
 --- !u!1 &3844431666073626191
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,7 +389,7 @@ MonoBehaviour:
   brakeTorque: 2000
   maxSpeed: 2000
   steeringRange: 40
-  steeringRangeAtMaxSpeed: 20
+  steeringRangeAtMaxSpeed: 40
   centreOfMassOffset: 0
   AntiRoll: 5000
 --- !u!65 &4846820830711406233
@@ -483,7 +483,7 @@ MonoBehaviour:
   WheelBoneTransform: {fileID: 0}
   WheelCollider: {fileID: 0}
   CanSteer: 1
-  EffectedByEngine: 0
+  EffectedByEngine: 1
 --- !u!1001 &4187227681540195796
 PrefabInstance:
   m_ObjectHideFlags: 0
