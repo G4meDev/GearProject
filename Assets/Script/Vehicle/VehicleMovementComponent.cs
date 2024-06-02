@@ -8,26 +8,70 @@ using UnityEngine.EventSystems;
 
 public class VehicleMovementComponent : MonoBehaviour
 {
-    private Rigidbody RB;
-    private Vector3 GravityDirection;
+    private Rigidbody rb;
+    private Vector3 gravityDirection;
+
+    public float motorTorque = 2000;
+    public float brakeTorque = 2000;
+    public float maxSpeed = 20;
+    public float steeringRange = 30;
+    public float steeringRangeAtMaxSpeed = 10;
+    public float centreOfMassOffset = -1f;
+
+    VehicleWheel[] wheels;
 
     void Start()
     {
-        RB = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        rb.centerOfMass += Vector3.up * centreOfMassOffset;
 
-        GravityDirection = Vector3.down;
+        wheels = GetComponentsInChildren<VehicleWheel>();
+
+        gravityDirection = Vector3.down;
 
     }
 
     void FixedUpdate()
     {
         // Gravity
-        Vector3 GravityForce = GravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
-        RB.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
-
+        Vector3 GravityForce = gravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
+        rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
 
     }
 
+    private void Update()
+    {
+        float vInput = Input.GetAxis("Vertical");
+        float hInput = Input.GetAxis("Horizontal");
 
+        float forwardSpeed = Vector3.Dot(transform.forward, rb.velocity);
+        float speedFactor = Mathf.InverseLerp(0, maxSpeed, forwardSpeed);
+        float currentMotorTorque = Mathf.Lerp(motorTorque, 0, speedFactor);
+        float currentSteerRange = Mathf.Lerp(steeringRange, steeringRangeAtMaxSpeed, speedFactor);
+
+        bool isAccelerating = Mathf.Sign(vInput) == Mathf.Sign(forwardSpeed);
+
+        foreach (var wheel in wheels)
+        {
+            if (wheel.CanSteer)
+            {
+                wheel.WheelCollider.steerAngle = hInput * currentSteerRange;
+            }
+
+            if (isAccelerating)
+            {
+                if (wheel.EffectedByEngine)
+                {
+                    wheel.WheelCollider.motorTorque = vInput * currentMotorTorque;
+                }
+                wheel.WheelCollider.brakeTorque = 0;
+            }
+            else
+            {
+                wheel.WheelCollider.brakeTorque = Mathf.Abs(vInput) * brakeTorque;
+                wheel.WheelCollider.motorTorque = 0;
+            }
+        }
+    }
 
 }
