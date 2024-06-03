@@ -49,11 +49,15 @@ MonoBehaviour:
   EffectedByEngine: 1
   isOnGround: 0
   offset: 0
-  SuspensionLength: 0.5
-  SuspensionRestLength: 0.25
+  throtleInput: 0
+  SuspensionLength: 1
+  SuspensionRestLength: 0.5
   springStrength: 100000
   springDamper: 3000
   wheelRadius: 0.22
+  speed: 5000
+  effectedByEngine: 1
+  effectedBySteer: 0
 --- !u!1 &1414015412002394221
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,11 +191,15 @@ MonoBehaviour:
   EffectedByEngine: 1
   isOnGround: 0
   offset: 0
-  SuspensionLength: 0.5
-  SuspensionRestLength: 0.25
+  throtleInput: 0
+  SuspensionLength: 1
+  SuspensionRestLength: 0.5
   springStrength: 100000
   springDamper: 3000
   wheelRadius: 0.22
+  speed: 5000
+  effectedByEngine: 0
+  effectedBySteer: 1
 --- !u!1 &3844431666073626191
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,11 +249,15 @@ MonoBehaviour:
   EffectedByEngine: 1
   isOnGround: 0
   offset: 0
-  SuspensionLength: 0.5
-  SuspensionRestLength: 0.25
+  throtleInput: 0
+  SuspensionLength: 1
+  SuspensionRestLength: 0.5
   springStrength: 100000
   springDamper: 3000
   wheelRadius: 0.22
+  speed: 5000
+  effectedByEngine: 1
+  effectedBySteer: 0
 --- !u!1 &4138780187681453698
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,6 +329,8 @@ MonoBehaviour:
   steeringRangeAtMaxSpeed: 40
   centreOfMassOffset: 0
   AntiRoll: 0
+  vInput: 0
+  hInput: 0
   RoadSpline: {fileID: 0}
 --- !u!65 &4846820830711406233
 BoxCollider:
@@ -380,11 +394,15 @@ MonoBehaviour:
   EffectedByEngine: 1
   isOnGround: 0
   offset: 0
-  SuspensionLength: 0.5
-  SuspensionRestLength: 0.25
+  throtleInput: 0
+  SuspensionLength: 1
+  SuspensionRestLength: 0.5
   springStrength: 100000
   springDamper: 3000
   wheelRadius: 0.22
+  speed: 5000
+  effectedByEngine: 0
+  effectedBySteer: 1
 --- !u!1001 &4187227681540195796
 PrefabInstance:
   m_ObjectHideFlags: 0

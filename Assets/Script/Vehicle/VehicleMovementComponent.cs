@@ -20,6 +20,10 @@ public class VehicleMovementComponent : MonoBehaviour
     public float centreOfMassOffset = -1f;
     public float AntiRoll= 5000.0f;
 
+    public float vInput;
+    public float hInput;
+
+
     VehicleWheel[] wheels = new VehicleWheel[4];
 
     public RoadSplineRimporter RoadSpline;
@@ -31,9 +35,9 @@ public class VehicleMovementComponent : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass += Vector3.up * centreOfMassOffset;
 
-//         VehicleWheel[] allWheels = GetComponentsInChildren<VehicleWheel>();
-// 
-// 
+        wheels = GetComponentsInChildren<VehicleWheel>();
+
+
 //         foreach (VehicleWheel wheel in allWheels)
 //         {
 //             WheelFrictionCurve c = wheel.WheelCollider.forwardFriction;
@@ -69,18 +73,26 @@ public class VehicleMovementComponent : MonoBehaviour
         Vector3 GravityForce = gravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
         rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
 
-
-
         DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
 
-
-
+//         int numWheelsOnGround = 0;
+//         foreach (var wheel in wheels)
+//         {
+//             if (wheel.isOnGround)
+//                 numWheelsOnGround++;
+//         }
+// 
+//         if (numWheelsOnGround > 2) 
+//         {
+//             Vector3 force = vInput * transform.forward * maxSpeed;
+//             rb.AddForce(force);
+//         }
     }
 
     private void Update()
     {
-        float vInput = UnityEngine.Input.GetAxis("Vertical");
-        float hInput = UnityEngine.Input.GetAxis("Horizontal");
+        vInput = UnityEngine.Input.GetAxis("Vertical");
+        hInput = UnityEngine.Input.GetAxis("Horizontal");
 
         foreach (Touch t in UnityEngine.Input.touches)
         {
@@ -100,6 +112,11 @@ public class VehicleMovementComponent : MonoBehaviour
 
         float axisValue = Mathf.InverseLerp(-40, 40, angle) * 2 - 1;
         hInput += axisValue;
+
+        foreach (var wheel in wheels)
+        {
+            wheel.throtleInput = vInput;
+        }
     }
 
 
