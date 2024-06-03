@@ -58,6 +58,7 @@ MonoBehaviour:
   speed: 5000
   effectedByEngine: 1
   effectedBySteer: 0
+  forceTargetoffset: {x: 0, y: 0, z: 0}
 --- !u!1 &1414015412002394221
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,6 +201,7 @@ MonoBehaviour:
   speed: 5000
   effectedByEngine: 0
   effectedBySteer: 1
+  forceTargetoffset: {x: 0, y: 0, z: 0}
 --- !u!1 &3844431666073626191
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,6 +260,7 @@ MonoBehaviour:
   speed: 5000
   effectedByEngine: 1
   effectedBySteer: 0
+  forceTargetoffset: {x: 0, y: 0, z: 0}
 --- !u!1 &4138780187681453698
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,6 +332,8 @@ MonoBehaviour:
   steeringRangeAtMaxSpeed: 40
   centreOfMassOffset: 0
   AntiRoll: 0
+  rotationTorque: 1000
+  traction: 0.8
   vInput: 0
   hInput: 0
   RoadSpline: {fileID: 0}
@@ -403,6 +408,7 @@ MonoBehaviour:
   speed: 5000
   effectedByEngine: 0
   effectedBySteer: 1
+  forceTargetoffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &4187227681540195796
 PrefabInstance:
   m_ObjectHideFlags: 0

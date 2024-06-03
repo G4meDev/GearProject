@@ -20,8 +20,12 @@ public class VehicleMovementComponent : MonoBehaviour
     public float centreOfMassOffset = -1f;
     public float AntiRoll= 5000.0f;
 
+    public float rotationTorque = 1000;
+    public float traction = 1;
+
     public float vInput;
     public float hInput;
+
 
 
     VehicleWheel[] wheels = new VehicleWheel[4];
@@ -75,18 +79,31 @@ public class VehicleMovementComponent : MonoBehaviour
 
         DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
 
-//         int numWheelsOnGround = 0;
-//         foreach (var wheel in wheels)
-//         {
-//             if (wheel.isOnGround)
-//                 numWheelsOnGround++;
-//         }
-// 
-//         if (numWheelsOnGround > 2) 
-//         {
-//             Vector3 force = vInput * transform.forward * maxSpeed;
-//             rb.AddForce(force);
-//         }
+        int numWheelsOnGround = 0;
+        foreach (var wheel in wheels)
+        {
+            if (wheel.isOnGround)
+                numWheelsOnGround++;
+        }
+
+        if (numWheelsOnGround > 2) 
+        {
+            rb.AddTorque(hInput * transform.up * rotationTorque);
+
+            float slipingRatio = Vector3.Dot(transform.right, rb.velocity) / rb.velocity.magnitude;
+            Debug.DrawLine(transform.position, transform.position + transform.right * 2);
+            Debug.Log("slip : " + Mathf.Floor(slipingRatio * 100) / 100);
+
+            if (slipingRatio != 0)
+            {
+                Vector3 slipingVelocity = rb.velocity.magnitude * -transform.right * slipingRatio * traction;
+
+                rb.AddForce(slipingVelocity, ForceMode.VelocityChange);
+                //rb.AddForce(rb.mass * slipingVelocity / Time.fixedDeltaTime);
+            }
+        }
+
+        
     }
 
     private void Update()
