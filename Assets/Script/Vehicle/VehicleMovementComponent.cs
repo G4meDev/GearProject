@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Windows;
 
 public class VehicleMovementComponent : MonoBehaviour
 {
@@ -30,19 +31,33 @@ public class VehicleMovementComponent : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass += Vector3.up * centreOfMassOffset;
 
-        VehicleWheel[] allWheels = GetComponentsInChildren<VehicleWheel>();
-
-        foreach (VehicleWheel wheel in allWheels) 
-        {
-            if (wheel.name == "Wheel_FL")
-                wheels[0] = wheel;
-            else if (wheel.name == "Wheel_FR")
-                wheels[1] = wheel;
-            else if (wheel.name == "Wheel_RL")
-                wheels[2] = wheel;
-            else if (wheel.name == "Wheel_RR")
-                wheels[3] = wheel;
-        }
+//         VehicleWheel[] allWheels = GetComponentsInChildren<VehicleWheel>();
+// 
+// 
+//         foreach (VehicleWheel wheel in allWheels)
+//         {
+//             WheelFrictionCurve c = wheel.WheelCollider.forwardFriction;
+//             c.asymptoteSlip = 0;
+//             c.asymptoteValue = 0;
+//             c.extremumSlip = 0;
+//             c.extremumValue = 0;
+//             c.stiffness = 0;
+// 
+//             WheelFrictionCurve d = wheel.WheelCollider.sidewaysFriction;
+//             c.asymptoteSlip = 0;
+//             c.asymptoteValue = 0;
+//             c.extremumSlip = 0;
+//             c.extremumValue = 0;
+//             c.stiffness = 0;
+//             if (wheel.name == "Wheel_FL")
+//                 wheels[0] = wheel;
+//             else if (wheel.name == "Wheel_FR")
+//                 wheels[1] = wheel;
+//             else if (wheel.name == "Wheel_RL")
+//                 wheels[2] = wheel;
+//             else if (wheel.name == "Wheel_RR")
+//                 wheels[3] = wheel;
+//         }
 
         gravityDirection = Vector3.down;
 
@@ -54,16 +69,20 @@ public class VehicleMovementComponent : MonoBehaviour
         Vector3 GravityForce = gravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
         rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
 
-        AntiRollForAxis(wheels[0].WheelCollider, wheels[1].WheelCollider);
-        AntiRollForAxis(wheels[2].WheelCollider, wheels[3].WheelCollider);
+
+
+        DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
+
+
+
     }
 
     private void Update()
     {
-        float vInput = Input.GetAxis("Vertical");
-        float hInput = Input.GetAxis("Horizontal");
+        float vInput = UnityEngine.Input.GetAxis("Vertical");
+        float hInput = UnityEngine.Input.GetAxis("Horizontal");
 
-        foreach(Touch t in Input.touches)
+        foreach (Touch t in UnityEngine.Input.touches)
         {
             Vector2 p = t.position;
 
@@ -74,80 +93,15 @@ public class VehicleMovementComponent : MonoBehaviour
         }
 
         float angle = 0;
-        if (Input.acceleration != Vector3.zero)
+        if (UnityEngine.Input.acceleration != Vector3.zero)
         {
-            angle = Mathf.Atan2(Input.acceleration.x, -Input.acceleration.y) * Mathf.Rad2Deg;
+            angle = Mathf.Atan2(UnityEngine.Input.acceleration.x, -UnityEngine.Input.acceleration.y) * Mathf.Rad2Deg;
         }
 
         float axisValue = Mathf.InverseLerp(-40, 40, angle) * 2 - 1;
         hInput += axisValue;
-
-        float forwardSpeed = Vector3.Dot(transform.forward, rb.velocity);
-        float speedFactor = Mathf.InverseLerp(0, maxSpeed, forwardSpeed);
-        float currentMotorTorque = Mathf.Lerp(motorTorque, 0, speedFactor);
-        float currentSteerRange = Mathf.Lerp(steeringRange, steeringRangeAtMaxSpeed, speedFactor);
-
-        bool isAccelerating = Mathf.Sign(vInput) == Mathf.Sign(forwardSpeed);
-
-        //DrawHelpers.DrawSphere(rb.worldCenterOfMass, 1, Color.green);
-
-        RoadSplinePointData roadPoint =  RoadSpline.GetClosestRoadSplinePoint(transform.position);
-
-        Vector3 p1 = transform.position + transform.up * 2;
-        Vector3 p2 = p1 + roadPoint.up * 2;
-        Debug.DrawLine(p1, p2);
-
-        gravityDirection = -roadPoint.up;
-
-        foreach (var wheel in wheels)
-        {
-            if (wheel.CanSteer)
-            {
-                wheel.WheelCollider.steerAngle = hInput * currentSteerRange;
-            }
-
-            if (isAccelerating)
-            {
-                if (wheel.EffectedByEngine)
-                {
-                    wheel.WheelCollider.motorTorque = vInput * currentMotorTorque;
-                }
-                wheel.WheelCollider.brakeTorque = 0;
-            }
-            else
-            {
-                wheel.WheelCollider.brakeTorque = Mathf.Abs(vInput) * brakeTorque;
-                wheel.WheelCollider.motorTorque = 0;
-            }
-        }
     }
 
 
-    void AntiRollForAxis(WheelCollider L, WheelCollider R)
-    {
-        WheelHit hit;
 
-        float travelL = 1.0f;
-        float travelR = 1.0f;
-
-        var groundedL = L.GetGroundHit(out hit);
-        if (groundedL)
-        { 
-            travelL = (-L.transform.InverseTransformPoint(hit.point).y - L.radius) / L.suspensionDistance;
-        }
-
-        var groundedR = R.GetGroundHit(out hit);
-        if (groundedR)
-        {
-            travelL = (-R.transform.InverseTransformPoint(hit.point).y - R.radius) / R.suspensionDistance;
-        }
-
-        var antiRollForce = (travelL - travelR) * AntiRoll;
-
-        if (groundedL)
-            rb.AddForceAtPosition(L.transform.up * -antiRollForce, L.transform.position);
-        if (groundedR)
-            rb.AddForceAtPosition(R.transform.up * antiRollForce, R.transform.position);
-
-    }
 }
