@@ -43,7 +43,10 @@ public class VehicleMovementComponent : MonoBehaviour
 
         wheels = GetComponentsInChildren<VehicleWheel>();
 
-        gravityDirection = Vector3.down;
+        if(RoadSpline)
+            gravityDirection = -RoadSpline.GetClosestRoadSplinePoint(transform.position).up;
+        else
+            gravityDirection = Vector3.down;
 
     }
 
@@ -66,7 +69,7 @@ public class VehicleMovementComponent : MonoBehaviour
         {
             rb.AddTorque(hInput * transform.up * rotationTorque);
 
-            float slipingRatio = Vector3.Dot(transform.right, rb.velocity) / rb.velocity.magnitude;
+            float slipingRatio = rb.velocity.magnitude == 0 ? 0.0f : Vector3.Dot(transform.right, rb.velocity) / rb.velocity.magnitude;
             Debug.DrawLine(transform.position, transform.position + transform.right * 2);
             //Debug.Log("slip : " + Mathf.Floor(slipingRatio * 100) / 100);
 

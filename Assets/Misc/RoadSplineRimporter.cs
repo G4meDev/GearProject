@@ -86,12 +86,14 @@ public class RoadSplineRimporter : MonoBehaviour
                     float y = pos.y;
                     pos.y = pos.z;
                     pos.z = y;
+                    pos.x = -pos.x;
                     pos *= 10;
 
                     Vector3 Tangent = new Vector3(p.n_x, p.n_y, p.n_z);
                     y = Tangent.y;
                     Tangent.y = Tangent.z;
                     Tangent.z = y;
+                    Tangent.x = -Tangent.x;
 
                     Vector3 Up = new Vector3(p.up_x, p.up_y, p.up_z);
                     y = Up.y;
@@ -116,19 +118,20 @@ public class RoadSplineRimporter : MonoBehaviour
 #endif
                 lastVis = splineVissibility;
             }
-            
+
+            for (int i = 0; i < spline.Spline.Count; i++)
+            {
+                Vector3 c = Positions[i];
+                Vector3 t = Positions[i] + Tangenets[i] * 2;
+                Vector3 u = Positions[i] + Ups[i] * 2;
+
+                Debug.DrawLine(c, t, Color.green);
+                Debug.DrawLine(c, u, Color.blue);
+            }
         }
 
 
-        for (int i = 0; i < spline.Spline.Count; i++)
-        {
-            Vector3 c = Positions[i];
-            Vector3 t = Positions[i] + Tangenets[i] * 2;
-            Vector3 u = Positions[i] + Ups[i] * 2;
 
-            Debug.DrawLine(c, t, Color.green);
-            Debug.DrawLine(c, u, Color.blue);
-        }
     }
 
     public RoadSplinePointData GetClosestRoadSplinePoint(Vector3 position)
