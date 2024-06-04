@@ -19,9 +19,6 @@ public class VehicleWheel : MonoBehaviour
     [HideInInspector]
     public float offset = 0.0f;
 
-    [HideInInspector]
-    public float throtleInput = 0.0f;
-
     public float SuspensionLength = 0.5f;
     public float SuspensionRestLength = 0.25f;
 
@@ -29,8 +26,6 @@ public class VehicleWheel : MonoBehaviour
     public float springDamper = 150;
 
     public float wheelRadius = 0.22f;
-
-    //public float speed = 5000;
 
     public bool effectedByEngine = true;
     public bool effectedBySteer = true;
@@ -88,7 +83,7 @@ public class VehicleWheel : MonoBehaviour
                 Vector3 contactRightVector = Vector3.Cross(contactNormal, -transform.right);
                 Vector3 contactTangent = Vector3.Cross(contactRightVector, contactNormal);
 
-                Vector3 throtleForce = throtleInput * MovmentComp.currentTorque * contactTangent;
+                Vector3 throtleForce = MovmentComp.vInput * MovmentComp.currentTorque * contactTangent;
                 Vector3 forceTarget = transform.TransformPoint(forceTargetoffset);
                 CarBody.AddForceAtPosition(throtleForce, forceTarget);
 

@@ -17,9 +17,12 @@ public class VehicleMovementComponent : MonoBehaviour
     public float vInput;
     public float hInput;
 
-    public AnimationCurve EngineCurve;
+    public AnimationCurve engineCurve;
     public float maxSpeed = 20;
     public float engineTorque = 2000;
+    public AnimationCurve brakeCurve;
+    public float maxBrake = 5;
+    public float brakeTorque = 2000;
     [HideInInspector]
     public float currentTorque = 0.0f;
 
@@ -81,18 +84,40 @@ public class VehicleMovementComponent : MonoBehaviour
             }
         }
 
-        float speedRatio = rb.velocity.magnitude / maxSpeed;
-        if (speedRatio < 1)
+        bool Accerating = Vector3.Dot(rb.velocity, transform.forward) > 0;
+
+        if(vInput > 0)
         {
-            currentTorque = EngineCurve.Evaluate(speedRatio);
-            currentTorque *= engineTorque;
+            float speedRatio = rb.velocity.magnitude / maxSpeed;
+            speedRatio = Accerating ? speedRatio : 0;
+
+            if (speedRatio < 1)
+            {
+                currentTorque = engineCurve.Evaluate(speedRatio);
+                currentTorque *= engineTorque;
+            }
+            else
+            {
+                currentTorque = 0.0f;
+            }
         }
         else
         {
-            currentTorque = 0.0f;
+            float speedRatio = rb.velocity.magnitude / maxBrake;
+            speedRatio = Accerating ? 0 : speedRatio;
+
+            if (speedRatio < 1)
+            {
+                currentTorque = brakeCurve.Evaluate(speedRatio);
+                currentTorque *= brakeTorque;
+            }
+            else
+            {
+                currentTorque = 0.0f;
+            }
+
         }
 
-        Debug.Log(rb.velocity.magnitude);
     }
 
     private void Update()
@@ -118,11 +143,6 @@ public class VehicleMovementComponent : MonoBehaviour
 
         float axisValue = Mathf.InverseLerp(-40, 40, angle) * 2 - 1;
         hInput += axisValue;
-
-        foreach (var wheel in wheels)
-        {
-            wheel.throtleInput = vInput;
-        }
     }
 
 
