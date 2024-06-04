@@ -55,7 +55,6 @@ MonoBehaviour:
   springStrength: 100000
   springDamper: 3000
   wheelRadius: 0.22
-  speed: 5000
   effectedByEngine: 1
   effectedBySteer: 0
   forceTargetoffset: {x: 0, y: 0, z: 0}
@@ -198,7 +197,6 @@ MonoBehaviour:
   springStrength: 100000
   springDamper: 3000
   wheelRadius: 0.22
-  speed: 5000
   effectedByEngine: 0
   effectedBySteer: 1
   forceTargetoffset: {x: 0, y: 0, z: 0}
@@ -257,7 +255,6 @@ MonoBehaviour:
   springStrength: 100000
   springDamper: 3000
   wheelRadius: 0.22
-  speed: 5000
   effectedByEngine: 1
   effectedBySteer: 0
   forceTargetoffset: {x: 0, y: 0, z: 0}
@@ -325,17 +322,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81de862f6d1e6ce49acc736f5140b352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  motorTorque: 20000
-  brakeTorque: 2000
-  maxSpeed: 2000
-  steeringRange: 40
-  steeringRangeAtMaxSpeed: 40
   centreOfMassOffset: 0
-  AntiRoll: 0
-  rotationTorque: 1000
-  traction: 0.8
   vInput: 0
   hInput: 0
+  EngineCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.4
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.8
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxSpeed: 20
+  engineTorque: 4000
+  currentTorque: 0
+  rotationTorque: 1000
+  traction: 0.8
   RoadSpline: {fileID: 0}
 --- !u!65 &4846820830711406233
 BoxCollider:
@@ -405,7 +450,6 @@ MonoBehaviour:
   springStrength: 100000
   springDamper: 3000
   wheelRadius: 0.22
-  speed: 5000
   effectedByEngine: 0
   effectedBySteer: 1
   forceTargetoffset: {x: 0, y: 0, z: 0}

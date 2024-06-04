@@ -12,19 +12,21 @@ public class VehicleMovementComponent : MonoBehaviour
     private Rigidbody rb;
     private Vector3 gravityDirection;
 
-    public float motorTorque = 2000;
-    public float brakeTorque = 2000;
-    public float maxSpeed = 20;
-    public float steeringRange = 30;
-    public float steeringRangeAtMaxSpeed = 10;
     public float centreOfMassOffset = -1f;
-    public float AntiRoll= 5000.0f;
+
+    public float vInput;
+    public float hInput;
+
+    public AnimationCurve EngineCurve;
+    public float maxSpeed = 20;
+    public float engineTorque = 2000;
+    [HideInInspector]
+    public float currentTorque = 0.0f;
 
     public float rotationTorque = 1000;
     public float traction = 1;
 
-    public float vInput;
-    public float hInput;
+
 
 
 
@@ -40,32 +42,6 @@ public class VehicleMovementComponent : MonoBehaviour
         rb.centerOfMass += Vector3.up * centreOfMassOffset;
 
         wheels = GetComponentsInChildren<VehicleWheel>();
-
-
-//         foreach (VehicleWheel wheel in allWheels)
-//         {
-//             WheelFrictionCurve c = wheel.WheelCollider.forwardFriction;
-//             c.asymptoteSlip = 0;
-//             c.asymptoteValue = 0;
-//             c.extremumSlip = 0;
-//             c.extremumValue = 0;
-//             c.stiffness = 0;
-// 
-//             WheelFrictionCurve d = wheel.WheelCollider.sidewaysFriction;
-//             c.asymptoteSlip = 0;
-//             c.asymptoteValue = 0;
-//             c.extremumSlip = 0;
-//             c.extremumValue = 0;
-//             c.stiffness = 0;
-//             if (wheel.name == "Wheel_FL")
-//                 wheels[0] = wheel;
-//             else if (wheel.name == "Wheel_FR")
-//                 wheels[1] = wheel;
-//             else if (wheel.name == "Wheel_RL")
-//                 wheels[2] = wheel;
-//             else if (wheel.name == "Wheel_RR")
-//                 wheels[3] = wheel;
-//         }
 
         gravityDirection = Vector3.down;
 
@@ -92,18 +68,28 @@ public class VehicleMovementComponent : MonoBehaviour
 
             float slipingRatio = Vector3.Dot(transform.right, rb.velocity) / rb.velocity.magnitude;
             Debug.DrawLine(transform.position, transform.position + transform.right * 2);
-            Debug.Log("slip : " + Mathf.Floor(slipingRatio * 100) / 100);
+            //Debug.Log("slip : " + Mathf.Floor(slipingRatio * 100) / 100);
 
             if (slipingRatio != 0)
             {
                 Vector3 slipingVelocity = rb.velocity.magnitude * -transform.right * slipingRatio * traction;
 
                 rb.AddForce(slipingVelocity, ForceMode.VelocityChange);
-                //rb.AddForce(rb.mass * slipingVelocity / Time.fixedDeltaTime);
             }
         }
 
-        
+        float speedRatio = rb.velocity.magnitude / maxSpeed;
+        if (speedRatio < 1)
+        {
+            currentTorque = EngineCurve.Evaluate(speedRatio);
+            currentTorque *= engineTorque;
+        }
+        else
+        {
+            currentTorque = 0.0f;
+        }
+
+        Debug.Log(rb.velocity.magnitude);
     }
 
     private void Update()

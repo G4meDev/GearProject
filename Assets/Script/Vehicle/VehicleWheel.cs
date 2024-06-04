@@ -30,13 +30,14 @@ public class VehicleWheel : MonoBehaviour
 
     public float wheelRadius = 0.22f;
 
-    public float speed = 5000;
+    //public float speed = 5000;
 
     public bool effectedByEngine = true;
     public bool effectedBySteer = true;
 
     public Vector3 forceTargetoffset;
 
+    VehicleMovementComponent MovmentComp;
     Rigidbody CarBody;
 
     void Start()
@@ -48,6 +49,7 @@ public class VehicleWheel : MonoBehaviour
             Debug.LogError(name + ": no bone with name _ " + name);
 
         CarBody = transform.root.GetComponent<Rigidbody>();
+        MovmentComp = CarBody.GetComponent<VehicleMovementComponent>();
 
 
     }
@@ -77,7 +79,7 @@ public class VehicleWheel : MonoBehaviour
                 Vector3 contactRightVector = Vector3.Cross(contactNormal, -transform.right);
                 Vector3 contactTangent = Vector3.Cross(contactRightVector, contactNormal);
 
-                Vector3 throtleForce = throtleInput * speed * contactTangent;
+                Vector3 throtleForce = throtleInput * MovmentComp.currentTorque * contactTangent;
                 Vector3 forceTarget = transform.TransformPoint(forceTargetoffset);
                 CarBody.AddForceAtPosition(throtleForce, forceTarget);
 
