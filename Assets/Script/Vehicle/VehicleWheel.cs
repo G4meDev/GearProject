@@ -54,6 +54,15 @@ public class VehicleWheel : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        Vector3 tireWorldVelocity = transform.root.GetComponent<Rigidbody>().GetPointVelocity(transform.position);
+        float wheelForardVelocity = Vector3.Dot(tireWorldVelocity, transform.right);
+        float rotationAngle = (wheelForardVelocity * 360 * Time.deltaTime) / Mathf.PI * 2 * wheelRadius;
+        WheelBoneTransform.Rotate(0, rotationAngle, 0);
+    }
+
+
     void FixedUpdate()
     {
         Ray ray = new Ray(transform.position, -transform.forward);
