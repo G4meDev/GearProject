@@ -29,9 +29,11 @@ public class VehicleMovementComponent : MonoBehaviour
     public float rotationTorque = 1000;
     public float traction = 1;
 
+    [HideInInspector]
+    int numWheelsOnGround = 0;
 
-
-
+    [HideInInspector]
+    float slipingRatio;
 
     VehicleWheel[] wheels = new VehicleWheel[4];
 
@@ -53,6 +55,35 @@ public class VehicleMovementComponent : MonoBehaviour
 
     }
 
+    void OnGUI()
+    {
+        Vector2 TextPosition = new Vector2(Screen.width - 200, 50);
+
+        string speedText = "speed : " + Mathf.Floor(rb.velocity.magnitude);
+        Vector2 size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(speedText));
+        GUI.Label(new Rect(TextPosition, new Vector2(size.x, size.y)), speedText);
+
+        string numberOfWheelsOnGroundText = "number of wheels on ground : " + numWheelsOnGround;
+        size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(numberOfWheelsOnGroundText));
+        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y), new Vector2(size.x, size.y)), numberOfWheelsOnGroundText);
+
+        string slipingRatioText = "sliping ratio : " + Mathf.Floor(slipingRatio * 100) / 100;
+        size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(slipingRatioText));
+        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 2), new Vector2(size.x, size.y)), slipingRatioText);
+
+        string vinputText = "vInput : " + Mathf.Floor(vInput * 100) / 100;
+        size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(vinputText));
+        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 3), new Vector2(size.x, size.y)), vinputText);
+
+        string hInputText = "hInput : " + Mathf.Floor(hInput * 100) / 100;
+        size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(hInputText));
+        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 4), new Vector2(size.x, size.y)), hInputText);
+
+        string torqueText = "Torque : " + Mathf.Floor(currentTorque);
+        size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(torqueText));
+        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 5), new Vector2(size.x, size.y)), torqueText);
+    }
+
     void FixedUpdate()
     {
         // Gravity
@@ -61,7 +92,7 @@ public class VehicleMovementComponent : MonoBehaviour
 
         DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
 
-        int numWheelsOnGround = 0;
+        numWheelsOnGround = 0;
         foreach (var wheel in wheels)
         {
             if (wheel.isOnGround)
@@ -72,15 +103,19 @@ public class VehicleMovementComponent : MonoBehaviour
         {
             rb.AddTorque(hInput * transform.up * rotationTorque);
 
-            float slipingRatio = rb.velocity.magnitude == 0 ? 0.0f : Vector3.Dot(transform.right, rb.velocity) / rb.velocity.magnitude;
+            slipingRatio = rb.velocity.magnitude == 0 ? 0.0f : Vector3.Dot(transform.right, rb.velocity) / rb.velocity.magnitude;
             Debug.DrawLine(transform.position, transform.position + transform.right * 2);
-            //Debug.Log("slip : " + Mathf.Floor(slipingRatio * 100) / 100);
 
             if (slipingRatio != 0)
             {
                 Vector3 slipingVelocity = rb.velocity.magnitude * -transform.right * slipingRatio * traction;
 
                 rb.AddForce(slipingVelocity, ForceMode.VelocityChange);
+            }
+
+            else
+            {
+                slipingRatio = 0.0f;
             }
         }
 
