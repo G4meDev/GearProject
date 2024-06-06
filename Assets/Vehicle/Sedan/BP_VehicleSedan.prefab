@@ -55,12 +55,45 @@ MonoBehaviour:
   springStrength: 100000
   springDamper: 5000
   wheelRadius: 0.22
-  traction: 1
+  tractionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.8
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.35
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   effectedByEngine: 1
   effectedBySteer: 0
   maxSteerAngle: 40
-  forceTargetoffset: {x: 0, y: 0, z: 0.1}
+  forceComOffset: 0
   currentYaw: 0
+  currentRoll: 0
 --- !u!1 &1414015412002394221
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,12 +233,45 @@ MonoBehaviour:
   springStrength: 100000
   springDamper: 5000
   wheelRadius: 0.22
-  traction: 1
+  tractionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.8
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.35
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   effectedByEngine: 0
   effectedBySteer: 1
   maxSteerAngle: 40
-  forceTargetoffset: {x: 0, y: 0, z: 0.1}
+  forceComOffset: 0
   currentYaw: 0
+  currentRoll: 0
 --- !u!1 &3844431666073626191
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,12 +327,45 @@ MonoBehaviour:
   springStrength: 100000
   springDamper: 5000
   wheelRadius: 0.22
-  traction: 1
+  tractionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.8
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.35
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   effectedByEngine: 1
   effectedBySteer: 0
   maxSteerAngle: 40
-  forceTargetoffset: {x: 0, y: 0, z: 0.1}
+  forceComOffset: 0
   currentYaw: 0
+  currentRoll: 0
 --- !u!1 &4138780187681453698
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,12 +616,45 @@ MonoBehaviour:
   springStrength: 100000
   springDamper: 5000
   wheelRadius: 0.22
-  traction: 1
+  tractionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.8
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.35
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   effectedByEngine: 0
   effectedBySteer: 1
   maxSteerAngle: 40
-  forceTargetoffset: {x: 0, y: 0, z: 0.1}
+  forceComOffset: 0
   currentYaw: 0
+  currentRoll: 0
 --- !u!1001 &4187227681540195796
 PrefabInstance:
   m_ObjectHideFlags: 0

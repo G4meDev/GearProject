@@ -29,7 +29,7 @@ public class VehicleWheel : MonoBehaviour
 
     public float wheelRadius = 0.22f;
 
-    public float traction = 1.0f;
+    public AnimationCurve tractionCurve;
 
     public bool effectedByEngine = true;
     public bool effectedBySteer = true;
@@ -39,6 +39,9 @@ public class VehicleWheel : MonoBehaviour
 
     [HideInInspector]
     public float currentYaw = 0;
+
+    [HideInInspector]
+    public float currentRoll = 0;
 
     [HideInInspector]
     VehicleMovementComponent MovmentComp;
@@ -68,14 +71,18 @@ public class VehicleWheel : MonoBehaviour
 
     private void Update()
     {
+        currentYaw = effectedBySteer ? MovmentComp.hInput * MovmentComp.steerValue * maxSteerAngle : 0;
+
         Vector3 tireWorldVelocity = transform.root.GetComponent<Rigidbody>().GetPointVelocity(transform.position);
         float wheelForardVelocity = Vector3.Dot(tireWorldVelocity, transform.right);
         float rotationAngle = (wheelForardVelocity * 360 * Time.deltaTime) / Mathf.PI * 2 * wheelRadius;
-        WheelBoneTransform.Rotate(0, rotationAngle, 0);
+        //WheelBoneTransform.Rotate(0, rotationAngle, 0);
+        //refWheelTransform.transform.Rotate(0, rotationAngle, 0);
 
-        currentYaw = effectedBySteer ? MovmentComp.hInput * maxSteerAngle : 0;
+        currentRoll += rotationAngle;
 
-        
+        WheelBoneTransform.transform.rotation = transform.rotation;
+        WheelBoneTransform.Rotate(0, currentRoll, 0);
     }
 
 
@@ -83,7 +90,7 @@ public class VehicleWheel : MonoBehaviour
     {
         transform.rotation = refWheelTransform.transform.rotation;
         transform.Rotate(0, 0, currentYaw);
-        WheelBoneTransform.transform.rotation = transform.rotation;
+        //WheelBoneTransform.transform.rotation = transform.rotation;
 
         Debug.DrawLine(transform.position, transform.position - transform.right * 0.5f, Color.blue);
         Debug.DrawLine(transform.position, transform.position - transform.up * 0.5f, Color.red);
@@ -125,6 +132,9 @@ public class VehicleWheel : MonoBehaviour
 
             Vector3 steerDir = -transform.up;
             float steerVelocity = Vector3.Dot(steerDir, tireWorldVelocity);
+            float steerRatio = steerVelocity == 0 ? 0 : steerVelocity / CarBody.velocity.magnitude;
+            steerRatio = Mathf.Clamp(Mathf.Abs(steerRatio), 0, 1);
+            float traction = tractionCurve.Evaluate(steerRatio);
 
             float desirdVelocityChange = -steerVelocity * traction;
             float desireAccel = desirdVelocityChange / Time.fixedDeltaTime;

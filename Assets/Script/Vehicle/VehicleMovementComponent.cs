@@ -29,6 +29,9 @@ public class VehicleMovementComponent : MonoBehaviour
     public float rotationTorque = 1000;
     public AnimationCurve tractionCurve;
 
+    public AnimationCurve steerCurve;
+    public float steerValue;
+
     [HideInInspector]
     int numWheelsOnGround = 0;
 
@@ -184,8 +187,11 @@ public class VehicleMovementComponent : MonoBehaviour
 
         float axisValue = Mathf.InverseLerp(-40, 40, angle) * 2 - 1;
         hInput += axisValue;
-    }
 
+
+        float speedRatio = Mathf.Clamp01(rb.velocity.magnitude == 0 ? 0 : rb.velocity.magnitude / maxSpeed);
+        steerValue = steerCurve.Evaluate(speedRatio);
+    }
 
 
 }
