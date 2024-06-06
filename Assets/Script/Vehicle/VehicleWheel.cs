@@ -27,13 +27,25 @@ public class VehicleWheel : MonoBehaviour
 
     public float wheelRadius = 0.22f;
 
+    public float traction = 1.0f;
+
     public bool effectedByEngine = true;
     public bool effectedBySteer = true;
+    public float maxSteerAngle = 40.0f;
 
     public Vector3 forceTargetoffset;
 
+    [HideInInspector]
+    public float currentYaw = 0;
+
+    [HideInInspector]
     VehicleMovementComponent MovmentComp;
+    
+    [HideInInspector]
     Rigidbody CarBody;
+
+    [HideInInspector]
+    GameObject refWheelTransform;
 
     void Start()
     {
@@ -46,7 +58,10 @@ public class VehicleWheel : MonoBehaviour
         CarBody = transform.root.GetComponent<Rigidbody>();
         MovmentComp = CarBody.GetComponent<VehicleMovementComponent>();
 
-
+        refWheelTransform = new GameObject(name + "_Refrence");
+        refWheelTransform.transform.parent = transform.parent;
+        refWheelTransform.transform.transform.position = transform.position;
+        refWheelTransform.transform.transform.rotation = transform.rotation;
     }
 
     private void Update()
@@ -55,15 +70,28 @@ public class VehicleWheel : MonoBehaviour
         float wheelForardVelocity = Vector3.Dot(tireWorldVelocity, transform.right);
         float rotationAngle = (wheelForardVelocity * 360 * Time.deltaTime) / Mathf.PI * 2 * wheelRadius;
         WheelBoneTransform.Rotate(0, rotationAngle, 0);
+
+        currentYaw = effectedBySteer ? MovmentComp.hInput * maxSteerAngle : 0;
+
+        
     }
 
 
     void FixedUpdate()
     {
+        transform.rotation = refWheelTransform.transform.rotation;
+        transform.Rotate(0, 0, currentYaw);
+        WheelBoneTransform.transform.rotation = transform.rotation;
+
+        Debug.DrawLine(transform.position, transform.position - transform.right * 0.5f, Color.blue);
+        Debug.DrawLine(transform.position, transform.position - transform.up * 0.5f, Color.red);
+
+
+
         Ray ray = new Ray(transform.position, -transform.forward);
         isOnGround = Physics.Raycast(ray, out contactHit, SuspensionLength);
 
-        Debug.DrawLine(transform.position, transform.position - transform.forward * SuspensionLength);
+        //Debug.DrawLine(transform.position, transform.position - transform.forward * SuspensionLength);
 
         if (isOnGround)
         {
@@ -87,8 +115,8 @@ public class VehicleWheel : MonoBehaviour
                 Vector3 forceTarget = transform.TransformPoint(forceTargetoffset);
                 CarBody.AddForceAtPosition(throtleForce, forceTarget);
 
-                Debug.DrawLine(transform.position, transform.position + contactTangent * 1);
-                DrawHelpers.DrawSphere(forceTarget, 0.2f, Color.blue);
+                //Debug.DrawLine(transform.position, transform.position + contactTangent * 1);
+                //DrawHelpers.DrawSphere(forceTarget, 0.2f, Color.blue);
             }
         }
 

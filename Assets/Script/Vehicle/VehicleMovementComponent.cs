@@ -27,13 +27,16 @@ public class VehicleMovementComponent : MonoBehaviour
     public float currentTorque = 0.0f;
 
     public float rotationTorque = 1000;
-    public float traction = 1;
+    public AnimationCurve tractionCurve;
 
     [HideInInspector]
     int numWheelsOnGround = 0;
 
     [HideInInspector]
     float slipingRatio;
+
+    [HideInInspector]
+    float traction;
 
     VehicleWheel[] wheels = new VehicleWheel[4];
 
@@ -67,9 +70,9 @@ public class VehicleMovementComponent : MonoBehaviour
         size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(numberOfWheelsOnGroundText));
         GUI.Label(new Rect(TextPosition + new Vector2(0, size.y), new Vector2(size.x, size.y)), numberOfWheelsOnGroundText);
 
-        string slipingRatioText = "sliping ratio : " + Mathf.Floor(slipingRatio * 100) / 100;
-        size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(slipingRatioText));
-        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 2), new Vector2(size.x, size.y)), slipingRatioText);
+        string tractionText = "traction : " + Mathf.Floor(traction * 100) / 100;
+        size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(tractionText));
+        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 2), new Vector2(size.x, size.y)), tractionText);
 
         string vinputText = "vInput : " + Mathf.Floor(vInput * 100) / 100;
         size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(vinputText));
@@ -90,7 +93,7 @@ public class VehicleMovementComponent : MonoBehaviour
         Vector3 GravityForce = gravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
         rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
 
-        DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
+        //DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
 
         numWheelsOnGround = 0;
         foreach (var wheel in wheels)
@@ -101,21 +104,24 @@ public class VehicleMovementComponent : MonoBehaviour
 
         if (numWheelsOnGround > 2) 
         {
-            rb.AddTorque(hInput * transform.up * rotationTorque);
+            //rb.AddTorque(hInput * transform.up * rotationTorque);
 
             slipingRatio = rb.velocity.magnitude == 0 ? 0.0f : Vector3.Dot(transform.right, rb.velocity) / rb.velocity.magnitude;
-            Debug.DrawLine(transform.position, transform.position + transform.right * 2);
 
             if (slipingRatio != 0)
             {
+                float velocityRatio = Mathf.Clamp(rb.velocity.magnitude == 0 ? 0 : rb.velocity.magnitude / maxSpeed, 0, 1);
+                //traction = tractionCurve.Evaluate(velocityRatio);
+                traction = tractionCurve.Evaluate(slipingRatio);
+
                 Vector3 slipingVelocity = rb.velocity.magnitude * -transform.right * slipingRatio * traction;
 
-                rb.AddForce(slipingVelocity, ForceMode.VelocityChange);
+                //rb.AddForce(slipingVelocity, ForceMode.VelocityChange);
             }
 
             else
             {
-                slipingRatio = 0.0f;
+                traction = 0.0f;
             }
         }
 
