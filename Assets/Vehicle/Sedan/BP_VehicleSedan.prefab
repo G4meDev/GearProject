@@ -547,6 +547,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  steerCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  steerValue: 0
   RoadSpline: {fileID: 0}
 --- !u!65 &4846820830711406233
 BoxCollider:
@@ -727,12 +734,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 01ca4115d6a3b8c458294d647721f187, type: 2}
+      objectReference: {fileID: 2100000, guid: ca8a22dc3401656448ff0e125620fac8, type: 2}
     - target: {fileID: 8809822202811584803, guid: e1e5faf49c4546c45b68ad29e43b9542,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 1d117156d52dcdf4da6ce390b04e4922, type: 2}
+      objectReference: {fileID: 2100000, guid: d8799c3b6bc02904184ec33caba09f9a, type: 2}
     m_RemovedComponents: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: e1e5faf49c4546c45b68ad29e43b9542,
