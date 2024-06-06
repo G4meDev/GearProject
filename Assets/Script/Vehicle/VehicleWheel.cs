@@ -19,6 +19,8 @@ public class VehicleWheel : MonoBehaviour
     [HideInInspector]
     public float offset = 0.0f;
 
+    public float mass = 20.0f;
+
     public float SuspensionLength = 0.5f;
     public float SuspensionRestLength = 0.25f;
 
@@ -33,7 +35,7 @@ public class VehicleWheel : MonoBehaviour
     public bool effectedBySteer = true;
     public float maxSteerAngle = 40.0f;
 
-    public Vector3 forceTargetoffset;
+    public float forceComOffset;
 
     [HideInInspector]
     public float currentYaw = 0;
@@ -104,6 +106,12 @@ public class VehicleWheel : MonoBehaviour
             float suspenssionForce = (offset * springStrength) - (vel * springDamper);
             CarBody.AddForceAtPosition(SpringDir * suspenssionForce, transform.position);
 
+
+            Vector3 t = transform.parent.InverseTransformPoint(CarBody.worldCenterOfMass);
+            Vector3 targetLocal = new Vector3(transform.localPosition.x, transform.localPosition.y, t.z + forceComOffset);
+            Vector3 targetWorld = transform.parent.TransformPoint(targetLocal);
+            DrawHelpers.DrawSphere(targetWorld, 0.2f, Color.blue);
+
             // ------------------------------------------------------
             if (effectedByEngine)
             {
@@ -112,12 +120,18 @@ public class VehicleWheel : MonoBehaviour
                 Vector3 contactTangent = Vector3.Cross(contactRightVector, contactNormal);
 
                 Vector3 throtleForce = MovmentComp.vInput * MovmentComp.currentTorque * contactTangent;
-                Vector3 forceTarget = transform.TransformPoint(forceTargetoffset);
-                CarBody.AddForceAtPosition(throtleForce, forceTarget);
-
-                //Debug.DrawLine(transform.position, transform.position + contactTangent * 1);
-                //DrawHelpers.DrawSphere(forceTarget, 0.2f, Color.blue);
+                CarBody.AddForceAtPosition(throtleForce, targetWorld);
             }
+
+            Vector3 steerDir = -transform.up;
+            float steerVelocity = Vector3.Dot(steerDir, tireWorldVelocity);
+
+            float desirdVelocityChange = -steerVelocity * traction;
+            float desireAccel = desirdVelocityChange / Time.fixedDeltaTime;
+
+            
+            CarBody.AddForceAtPosition(steerDir * desireAccel * mass, targetWorld);
+          
         }
 
 
