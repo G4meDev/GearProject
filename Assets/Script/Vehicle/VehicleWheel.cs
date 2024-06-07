@@ -73,38 +73,30 @@ public class VehicleWheel : MonoBehaviour
     {
         currentYaw = effectedBySteer ? MovmentComp.hInput * MovmentComp.steerValue * maxSteerAngle : 0;
 
-        Vector3 tireWorldVelocity = transform.root.GetComponent<Rigidbody>().GetPointVelocity(transform.position);
-        float wheelForardVelocity = Vector3.Dot(tireWorldVelocity, transform.right);
+        Vector3 tireWorldVelocity = CarBody.GetPointVelocity(refWheelTransform.transform.position);
+        float wheelForardVelocity = Vector3.Dot(tireWorldVelocity, refWheelTransform.transform.forward);
         float rotationAngle = (wheelForardVelocity * 360 * Time.deltaTime) / Mathf.PI * 2 * wheelRadius;
-        //WheelBoneTransform.Rotate(0, rotationAngle, 0);
-        //refWheelTransform.transform.Rotate(0, rotationAngle, 0);
 
         currentRoll += rotationAngle;
-
-        WheelBoneTransform.transform.rotation = transform.rotation;
-        WheelBoneTransform.Rotate(0, currentRoll, 0);
     }
 
 
     void FixedUpdate()
     {
         transform.rotation = refWheelTransform.transform.rotation;
-        transform.Rotate(0, 0, currentYaw);
-        //WheelBoneTransform.transform.rotation = transform.rotation;
+        transform.Rotate(0, currentYaw, 0);
 
-        Debug.DrawLine(transform.position, transform.position - transform.right * 0.5f, Color.blue);
-        Debug.DrawLine(transform.position, transform.position - transform.up * 0.5f, Color.red);
-
+        Debug.DrawLine(transform.position, transform.position + transform.forward * 0.5f, Color.blue);
+        Debug.DrawLine(transform.position, transform.position + transform.right * 0.5f, Color.red);
 
 
-        Ray ray = new Ray(transform.position, -transform.forward);
+
+        Ray ray = new Ray(refWheelTransform.transform.position, -refWheelTransform.transform.up);
         isOnGround = Physics.Raycast(ray, out contactHit, SuspensionLength);
-
-        //Debug.DrawLine(transform.position, transform.position - transform.forward * SuspensionLength);
 
         if (isOnGround)
         {
-            Vector3 SpringDir = transform.forward;
+            Vector3 SpringDir = transform.up;
             Vector3 tireWorldVelocity = transform.root.GetComponent<Rigidbody>().GetPointVelocity(transform.position);
 
             offset = SuspensionRestLength - contactHit.distance;
@@ -115,7 +107,7 @@ public class VehicleWheel : MonoBehaviour
 
 
             Vector3 t = transform.parent.InverseTransformPoint(CarBody.worldCenterOfMass);
-            Vector3 targetLocal = new Vector3(transform.localPosition.x, transform.localPosition.y, t.z + forceComOffset);
+            Vector3 targetLocal = new Vector3(transform.localPosition.x, t.y + forceComOffset, transform.localPosition.z);
             Vector3 targetWorld = transform.parent.TransformPoint(targetLocal);
             DrawHelpers.DrawSphere(targetWorld, 0.2f, Color.blue);
 
@@ -123,14 +115,17 @@ public class VehicleWheel : MonoBehaviour
             if (effectedByEngine)
             {
                 Vector3 contactNormal = contactHit.normal;
-                Vector3 contactRightVector = Vector3.Cross(contactNormal, -transform.right);
+                Vector3 contactRightVector = Vector3.Cross(contactNormal, transform.forward);
                 Vector3 contactTangent = Vector3.Cross(contactRightVector, contactNormal);
+
+                Vector3 p = contactHit.point + new Vector3(0, 2, 0);
+                Debug.DrawLine(p, p + contactTangent);
 
                 Vector3 throtleForce = MovmentComp.vInput * MovmentComp.currentTorque * contactTangent;
                 CarBody.AddForceAtPosition(throtleForce, targetWorld);
             }
 
-            Vector3 steerDir = -transform.up;
+            Vector3 steerDir = transform.right;
             float steerVelocity = Vector3.Dot(steerDir, tireWorldVelocity);
             float steerRatio = steerVelocity == 0 ? 0 : steerVelocity / CarBody.velocity.magnitude;
             steerRatio = Mathf.Clamp(Mathf.Abs(steerRatio), 0, 1);
@@ -145,7 +140,10 @@ public class VehicleWheel : MonoBehaviour
         }
 
 
-        Vector3 c = isOnGround ? contactHit.point : transform.position - transform.forward * SuspensionLength;
-        WheelBoneTransform.position = c + transform.forward * wheelRadius;
+        Vector3 c = isOnGround ? contactHit.point : refWheelTransform.transform.position - refWheelTransform.transform.parent.up * SuspensionLength;
+        WheelBoneTransform.position = c + refWheelTransform.transform.parent.up * wheelRadius;
+
+        WheelBoneTransform.Rotate(currentRoll, 0, 0);
+        Debug.Log(currentRoll);
     }
 }
