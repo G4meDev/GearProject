@@ -267,7 +267,25 @@ MonoBehaviour:
     m_RotationOrder: 4
   steerCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.9
+      outSlope: -0.9
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: -0.9
+      outSlope: -0.9
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -284,8 +302,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.3, y: 0.92, z: 2.1}
-  m_Center: {x: 0, y: 0.57, z: 0}
+  m_Size: {x: 1.3, y: 0.8, z: 2.1}
+  m_Center: {x: 0, y: 0.65, z: 0}
 --- !u!1001 &5282459059234648633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -396,8 +414,8 @@ MonoBehaviour:
   isOnGround: 0
   offset: 0
   mass: 200
-  SuspensionLength: 1
-  SuspensionRestLength: 0.5
+  SuspensionLength: 0.4
+  SuspensionRestLength: 0.35
   springStrength: 100000
   springDamper: 5000
   wheelRadius: 0.22
@@ -464,8 +482,8 @@ MonoBehaviour:
   isOnGround: 0
   offset: 0
   mass: 200
-  SuspensionLength: 1
-  SuspensionRestLength: 0.5
+  SuspensionLength: 0.4
+  SuspensionRestLength: 0.35
   springStrength: 100000
   springDamper: 5000
   wheelRadius: 0.22
@@ -532,8 +550,8 @@ MonoBehaviour:
   isOnGround: 0
   offset: 0
   mass: 200
-  SuspensionLength: 1
-  SuspensionRestLength: 0.5
+  SuspensionLength: 0.4
+  SuspensionRestLength: 0.35
   springStrength: 100000
   springDamper: 5000
   wheelRadius: 0.22
@@ -606,8 +624,8 @@ MonoBehaviour:
   isOnGround: 0
   offset: 0
   mass: 200
-  SuspensionLength: 1
-  SuspensionRestLength: 0.5
+  SuspensionLength: 0.4
+  SuspensionRestLength: 0.35
   springStrength: 100000
   springDamper: 5000
   wheelRadius: 0.22
