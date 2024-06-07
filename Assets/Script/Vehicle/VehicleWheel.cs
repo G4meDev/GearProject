@@ -5,7 +5,11 @@ using UnityEngine;
 
 public class VehicleWheel : MonoBehaviour
 {
+    [HideInInspector]
     public Transform WheelBoneTransform;
+
+    [HideInInspector]
+    public Transform axelTransform;
 
     public bool CanSteer;
     public bool EffectedByEngine;
@@ -52,11 +56,19 @@ public class VehicleWheel : MonoBehaviour
     [HideInInspector]
     GameObject refWheelTransform;
 
+
+
     void Start()
     {
         Transform T = transform.root.Find("VehicleMesh/root/" + name);
         if (T)
             WheelBoneTransform = T;
+        else
+            Debug.LogError(name + ": no bone with name _ " + name);
+
+        Transform A = transform.root.Find("VehicleMesh/root/" + name + "_Axel");
+        if (A)
+            axelTransform = A;
         else
             Debug.LogError(name + ": no bone with name _ " + name);
 
@@ -73,16 +85,18 @@ public class VehicleWheel : MonoBehaviour
     {
         currentYaw = effectedBySteer ? MovmentComp.hInput * MovmentComp.steerValue * maxSteerAngle : 0;
 
-        Vector3 tireWorldVelocity = CarBody.GetPointVelocity(refWheelTransform.transform.position);
-        float wheelForardVelocity = Vector3.Dot(tireWorldVelocity, refWheelTransform.transform.forward);
-        float rotationAngle = (wheelForardVelocity * 360 * Time.deltaTime) / Mathf.PI * 2 * wheelRadius;
-
-        currentRoll += rotationAngle;
+        
     }
 
 
     void FixedUpdate()
     {
+        Vector3 tireWorldVelocity = transform.root.GetComponent<Rigidbody>().GetPointVelocity(transform.position);
+        float wheelForardVelocity = Vector3.Dot(tireWorldVelocity, refWheelTransform.transform.forward);
+        float rotationAngle = (wheelForardVelocity * 360 * Time.fixedDeltaTime * 3) / Mathf.PI * 2 * wheelRadius;
+
+        currentRoll += rotationAngle;
+
         transform.rotation = refWheelTransform.transform.rotation;
         transform.Rotate(0, currentYaw, 0);
 
@@ -97,7 +111,7 @@ public class VehicleWheel : MonoBehaviour
         if (isOnGround)
         {
             Vector3 SpringDir = transform.up;
-            Vector3 tireWorldVelocity = transform.root.GetComponent<Rigidbody>().GetPointVelocity(transform.position);
+            //Vector3 tireWorldVelocity = transform.root.GetComponent<Rigidbody>().GetPointVelocity(transform.position);
 
             offset = SuspensionRestLength - contactHit.distance;
             float vel = Vector3.Dot(SpringDir, tireWorldVelocity);
@@ -141,9 +155,12 @@ public class VehicleWheel : MonoBehaviour
 
 
         Vector3 c = isOnGround ? contactHit.point : refWheelTransform.transform.position - refWheelTransform.transform.parent.up * SuspensionLength;
-        WheelBoneTransform.position = c + refWheelTransform.transform.parent.up * wheelRadius;
+        Vector3 boneTarget = c + refWheelTransform.transform.parent.up * wheelRadius;
+        WheelBoneTransform.position = boneTarget;
+
+        axelTransform.position = boneTarget;
 
         WheelBoneTransform.Rotate(currentRoll, 0, 0);
-        Debug.Log(currentRoll);
+
     }
 }
