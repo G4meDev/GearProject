@@ -36,7 +36,13 @@ public class VehicleMovementComponent : MonoBehaviour
     int numWheelsOnGround = 0;
 
     [HideInInspector]
+    public float speedR = 0;
+
+    [HideInInspector]
     float slipingRatio;
+
+    [HideInInspector]
+    public float slipingVelocity;
 
     [HideInInspector]
     float traction;
@@ -92,6 +98,8 @@ public class VehicleMovementComponent : MonoBehaviour
 
     void FixedUpdate()
     {
+        speedR = rb.velocity.magnitude == 0 ? 0 : Mathf.Clamp01(rb.velocity.magnitude / maxSpeed);
+
         // Gravity
         Vector3 GravityForce = gravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
         rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
@@ -107,25 +115,9 @@ public class VehicleMovementComponent : MonoBehaviour
 
         if (numWheelsOnGround > 2) 
         {
-            //rb.AddTorque(hInput * transform.up * rotationTorque);
-
+            //slipingVelocity = Vector3.Dot(transform.right, rb.velocity);
+            //Debug.Log(slipingVelocity);
             slipingRatio = rb.velocity.magnitude == 0 ? 0.0f : Vector3.Dot(transform.right, rb.velocity) / rb.velocity.magnitude;
-
-            if (slipingRatio != 0)
-            {
-                float velocityRatio = Mathf.Clamp(rb.velocity.magnitude == 0 ? 0 : rb.velocity.magnitude / maxSpeed, 0, 1);
-                //traction = tractionCurve.Evaluate(velocityRatio);
-                traction = tractionCurve.Evaluate(slipingRatio);
-
-                Vector3 slipingVelocity = rb.velocity.magnitude * -transform.right * slipingRatio * traction;
-
-                //rb.AddForce(slipingVelocity, ForceMode.VelocityChange);
-            }
-
-            else
-            {
-                traction = 0.0f;
-            }
         }
 
         bool Accerating = Vector3.Dot(rb.velocity, transform.forward) > 0;

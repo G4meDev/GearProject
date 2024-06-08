@@ -91,12 +91,6 @@ public class VehicleWheel : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 tireWorldVelocity = transform.root.GetComponent<Rigidbody>().GetPointVelocity(transform.position);
-        float wheelForardVelocity = Vector3.Dot(tireWorldVelocity, refWheelTransform.transform.forward);
-        float rotationAngle = (wheelForardVelocity * 360 * Time.fixedDeltaTime * 3) / Mathf.PI * 2 * wheelRadius;
-
-        currentRoll += rotationAngle;
-
         transform.rotation = refWheelTransform.transform.rotation;
         transform.Rotate(0, currentYaw, 0);
 
@@ -111,7 +105,7 @@ public class VehicleWheel : MonoBehaviour
         if (isOnGround)
         {
             Vector3 SpringDir = transform.up;
-            //Vector3 tireWorldVelocity = transform.root.GetComponent<Rigidbody>().GetPointVelocity(transform.position);
+            Vector3 tireWorldVelocity = CarBody.GetPointVelocity(transform.position);
 
             offset = SuspensionRestLength - contactHit.distance;
             float vel = Vector3.Dot(SpringDir, tireWorldVelocity);
@@ -159,6 +153,13 @@ public class VehicleWheel : MonoBehaviour
         WheelBoneTransform.position = boneTarget;
 
         axelTransform.position = boneTarget;
+
+
+        Vector3 v = CarBody.GetPointVelocity(c);
+        float wheelForardVelocity = Vector3.Dot(v, refWheelTransform.transform.forward);
+        float rotationAngle = (wheelForardVelocity * 360 * Time.fixedDeltaTime) / Mathf.PI * 2 * wheelRadius;
+
+        currentRoll += rotationAngle;
 
         WheelBoneTransform.Rotate(currentRoll, 0, 0);
 
