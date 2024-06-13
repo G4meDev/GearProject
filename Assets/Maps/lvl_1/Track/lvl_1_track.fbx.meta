@@ -17,6 +17,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: minimap_mesh
+    second: {fileID: 2100000, guid: 4809dc5af07991e4c8d46ca57d458c4b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: outside
     second: {fileID: 2100000, guid: c68b269cd71511847a356758ef936e6d, type: 2}
   materials:
