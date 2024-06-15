@@ -186,7 +186,7 @@ public class VehicleMovementComponent : MonoBehaviour
             currentTorque = engineCurve.Evaluate(accelerating ? speedRatio : 0);
             currentTorque *= engineTorque;
         }
-        else
+        else if (vInput < 0)
         {         
             currentTorque = brakeCurve.Evaluate(accelerating ? 0 : speedRatio);
             currentTorque *= brakeTorque;
