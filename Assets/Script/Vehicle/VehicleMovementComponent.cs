@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using Unity.VisualScripting;
+//using System.Collections;
+//using System.Collections.Generic;
+//using System.Collections.Specialized;
+//using System.Linq;
+//using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Windows;
+//using UnityEngine.EventSystems;
+//using UnityEngine.Windows;
 
 public class VehicleMovementComponent : MonoBehaviour
 {
@@ -26,26 +26,29 @@ public class VehicleMovementComponent : MonoBehaviour
     [HideInInspector]
     public float currentTorque = 0.0f;
 
-    public float rotationTorque = 1000;
-    public AnimationCurve tractionCurve;
+    public float maxDownForce = 10;
 
     public AnimationCurve steerCurve;
+    [HideInInspector]
     public float steerValue;
 
     [HideInInspector]
     int numWheelsOnGround = 0;
 
     [HideInInspector]
-    public float speedR = 0;
+    public float speedRatio;
+    [HideInInspector]
+    public float forwardSpeed;
+    [HideInInspector]
+    public float rightSpeed;
+    [HideInInspector]
+    public float forwardSkid;
+    [HideInInspector]
+    public float rightSkid;
 
     [HideInInspector]
-    float slipingRatio;
+    public bool accelerating = false;
 
-    [HideInInspector]
-    public float slipingVelocity;
-
-    [HideInInspector]
-    float traction;
 
     VehicleWheel[] wheels = new VehicleWheel[4];
 
@@ -59,11 +62,6 @@ public class VehicleMovementComponent : MonoBehaviour
         rb.centerOfMass += Vector3.up * centreOfMassOffset;
 
         wheels = GetComponentsInChildren<VehicleWheel>();
-
-        if(RoadSpline)
-            gravityDirection = -RoadSpline.GetClosestRoadSplinePoint(transform.position).up;
-        else
-            gravityDirection = Vector3.down;
 
     }
 
@@ -79,80 +77,28 @@ public class VehicleMovementComponent : MonoBehaviour
         size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(numberOfWheelsOnGroundText));
         GUI.Label(new Rect(TextPosition + new Vector2(0, size.y), new Vector2(size.x, size.y)), numberOfWheelsOnGroundText);
 
-        string tractionText = "traction : " + Mathf.Floor(traction * 100) / 100;
-        size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(tractionText));
-        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 2), new Vector2(size.x, size.y)), tractionText);
-
         string vinputText = "vInput : " + Mathf.Floor(vInput * 100) / 100;
         size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(vinputText));
-        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 3), new Vector2(size.x, size.y)), vinputText);
+        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 2), new Vector2(size.x, size.y)), vinputText);
 
         string hInputText = "hInput : " + Mathf.Floor(hInput * 100) / 100;
         size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(hInputText));
-        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 4), new Vector2(size.x, size.y)), hInputText);
+        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 3), new Vector2(size.x, size.y)), hInputText);
 
         string torqueText = "Torque : " + Mathf.Floor(currentTorque);
         size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(torqueText));
-        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 5), new Vector2(size.x, size.y)), torqueText);
+        GUI.Label(new Rect(TextPosition + new Vector2(0, size.y * 4), new Vector2(size.x, size.y)), torqueText);
     }
 
     void FixedUpdate()
     {
-        speedR = rb.velocity.magnitude == 0 ? 0 : Mathf.Clamp01(rb.velocity.magnitude / maxSpeed);
-
-        // Gravity
-        Vector3 GravityForce = gravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
-        rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
+        UpdateSpeedParams();
+        Gravity();
+        UpdateNumWheelsOnGround();
+        DownForce();
+        EngineTorque();
 
         //DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
-
-        numWheelsOnGround = 0;
-        foreach (var wheel in wheels)
-        {
-            if (wheel.isOnGround)
-                numWheelsOnGround++;
-        }
-
-        if (numWheelsOnGround > 2) 
-        {
-            //slipingVelocity = Vector3.Dot(transform.right, rb.velocity);
-            //Debug.Log(slipingVelocity);
-            slipingRatio = rb.velocity.magnitude == 0 ? 0.0f : Vector3.Dot(transform.right, rb.velocity) / rb.velocity.magnitude;
-        }
-
-        bool Accerating = Vector3.Dot(rb.velocity, transform.forward) > 0;
-
-        if(vInput > 0)
-        {
-            float speedRatio = rb.velocity.magnitude / maxSpeed;
-            speedRatio = Accerating ? speedRatio : 0;
-
-            if (speedRatio < 1)
-            {
-                currentTorque = engineCurve.Evaluate(speedRatio);
-                currentTorque *= engineTorque;
-            }
-            else
-            {
-                currentTorque = 0.0f;
-            }
-        }
-        else
-        {
-            float speedRatio = rb.velocity.magnitude / maxBrake;
-            speedRatio = Accerating ? 0 : speedRatio;
-
-            if (speedRatio < 1)
-            {
-                currentTorque = brakeCurve.Evaluate(speedRatio);
-                currentTorque *= brakeTorque;
-            }
-            else
-            {
-                currentTorque = 0.0f;
-            }
-
-        }
 
     }
 
@@ -180,10 +126,71 @@ public class VehicleMovementComponent : MonoBehaviour
         float axisValue = Mathf.InverseLerp(-40, 40, angle) * 2 - 1;
         hInput += axisValue;
 
-
-        float speedRatio = Mathf.Clamp01(rb.velocity.magnitude == 0 ? 0 : rb.velocity.magnitude / maxSpeed);
+        float forwardSpeedRatio = Vector3.Dot(rb.velocity, transform.forward);
+        float speedRatio = Mathf.Clamp01(forwardSpeedRatio == 0 ? 0 : forwardSpeedRatio / maxSpeed);
         steerValue = steerCurve.Evaluate(speedRatio);
     }
 
+    private void Gravity()
+    {
+        if (RoadSpline)
+            gravityDirection = -RoadSpline.GetClosestRoadSplinePoint(transform.position).up;
+        else
+            gravityDirection = Vector3.down;
 
+        Vector3 GravityForce = gravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
+        rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
+    }
+
+    private void UpdateSpeedParams()
+    {
+        speedRatio = rb.velocity.magnitude == 0 ? 0 : Mathf.Clamp01(rb.velocity.magnitude / maxSpeed);
+
+        forwardSpeed = Vector3.Dot(transform.forward, rb.velocity);
+        rightSpeed = Vector3.Dot(transform.right, rb.velocity);
+
+        forwardSkid = rb.velocity.magnitude == 0 ? 0 : Mathf.Clamp01(forwardSpeed / rb.velocity.magnitude);
+        rightSkid = rb.velocity.magnitude == 0 ? 0 : Mathf.Clamp01(rightSpeed / rb.velocity.magnitude);
+
+        accelerating = forwardSpeed > 0;
+    }
+
+    private void UpdateNumWheelsOnGround()
+    {
+         numWheelsOnGround = 0;
+         foreach (var wheel in wheels)
+         {
+             if (wheel.isOnGround)
+                 numWheelsOnGround++;
+         }
+ 
+         if (numWheelsOnGround > 2) 
+         {
+ 
+         }
+    }
+
+    private void DownForce()
+    {
+        if(numWheelsOnGround == 4)
+        {
+            float downForce = speedRatio * maxDownForce;
+            rb.AddForce(downForce * gravityDirection);
+        }
+    }
+
+    private void EngineTorque()
+    {
+        if (vInput > 0)
+        {
+            currentTorque = engineCurve.Evaluate(accelerating ? speedRatio : 0);
+            currentTorque *= engineTorque;
+        }
+        else
+        {         
+            currentTorque = brakeCurve.Evaluate(accelerating ? 0 : speedRatio);
+            currentTorque *= brakeTorque;
+        }
+    }
 }
+
