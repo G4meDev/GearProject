@@ -278,7 +278,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxSpeed: 50
+  maxSpeed: 40
   engineTorque: 4
   brakeCurve:
     serializedVersion: 2
@@ -307,28 +307,28 @@ MonoBehaviour:
   maxBrake: 5
   brakeTorque: 6
   currentTorque: 0
-  maxDownForce: 5
+  maxDownForce: 1.3
   steerCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: -0.9
-      outSlope: -0.9
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0.1
-      inSlope: -0.9
-      outSlope: -0.9
-      tangentMode: 34
+      inSlope: -1.5345477
+      outSlope: -1.5345477
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0
+      outWeight: 0.051400058
+    - serializedVersion: 3
+      time: 1
+      value: 0.05
+      inSlope: -0.14944251
+      outSlope: -0.14944251
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.090278745
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

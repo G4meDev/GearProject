@@ -8,9 +8,6 @@ public class VehicleWheel : MonoBehaviour
     [HideInInspector]
     public Transform axelTransform;
 
-    public bool CanSteer;
-    public bool EffectedByEngine;
-
     [HideInInspector]
     public bool isOnGround = false;
 
@@ -137,8 +134,9 @@ public class VehicleWheel : MonoBehaviour
             float desirdVelocityChange = -steerVelocity * traction;
             float desireAccel = desirdVelocityChange / Time.fixedDeltaTime;
 
-            
-            CarBody.AddForceAtPosition(steerDir * desireAccel * 0.25f, targetWorld, ForceMode.Acceleration);
+
+            //CarBody.AddForceAtPosition(steerDir * desireAccel * 0.25f, targetWorld, ForceMode.Acceleration);
+            CarBody.AddForceAtPosition(steerDir * desirdVelocityChange * 0.25f, targetWorld, ForceMode.VelocityChange);
         }
 
 
@@ -149,9 +147,9 @@ public class VehicleWheel : MonoBehaviour
         axelTransform.position = boneTarget;
 
 
-        Vector3 v = CarBody.GetPointVelocity(c);
-        float wheelForardVelocity = Vector3.Dot(v, refWheelTransform.transform.forward);
-        float rotationAngle = (wheelForardVelocity * 360 * Time.fixedDeltaTime) / Mathf.PI * 2 * wheelRadius;
+        Vector3 v = CarBody.GetPointVelocity(refWheelTransform.transform.position);
+        float wheelForwardVelocity = Vector3.Dot(v, CarBody.transform.forward);
+        float rotationAngle = (wheelForwardVelocity * 360 * Time.fixedDeltaTime) / Mathf.PI * 2 * wheelRadius;
 
         currentRoll += rotationAngle;
 
