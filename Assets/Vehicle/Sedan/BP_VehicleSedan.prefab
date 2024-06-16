@@ -279,7 +279,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxSpeed: 50
-  engineTorque: 5000
+  engineTorque: 4
   brakeCurve:
     serializedVersion: 2
     m_Curve:
@@ -305,9 +305,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxBrake: 5
-  brakeTorque: 10000
+  brakeTorque: 6
   currentTorque: 0
-  maxDownForce: 10
+  maxDownForce: 5
   steerCurve:
     serializedVersion: 2
     m_Curve:
@@ -463,11 +463,10 @@ MonoBehaviour:
   EffectedByEngine: 1
   isOnGround: 0
   offset: 0
-  mass: 200
   SuspensionLength: 0.4
   SuspensionRestLength: 0.35
-  springStrength: 40000
-  springDamper: 4000
+  springStrength: 25
+  springDamper: 3
   wheelRadius: 0.22
   tractionCurve:
     serializedVersion: 2
@@ -541,11 +540,10 @@ MonoBehaviour:
   EffectedByEngine: 1
   isOnGround: 0
   offset: 0
-  mass: 200
   SuspensionLength: 0.4
   SuspensionRestLength: 0.35
-  springStrength: 40000
-  springDamper: 4000
+  springStrength: 25
+  springDamper: 3
   wheelRadius: 0.22
   tractionCurve:
     serializedVersion: 2
@@ -610,11 +608,10 @@ MonoBehaviour:
   EffectedByEngine: 1
   isOnGround: 0
   offset: 0
-  mass: 200
   SuspensionLength: 0.4
   SuspensionRestLength: 0.35
-  springStrength: 40000
-  springDamper: 4000
+  springStrength: 25
+  springDamper: 3
   wheelRadius: 0.22
   tractionCurve:
     serializedVersion: 2
@@ -685,11 +682,10 @@ MonoBehaviour:
   EffectedByEngine: 1
   isOnGround: 0
   offset: 0
-  mass: 200
   SuspensionLength: 0.4
   SuspensionRestLength: 0.35
-  springStrength: 40000
-  springDamper: 4000
+  springStrength: 25
+  springDamper: 3
   wheelRadius: 0.22
   tractionCurve:
     serializedVersion: 2

@@ -75602,18 +75602,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab5c7d4c32e743048dfca98e2d5914f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1318991450 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 442505632140181907, guid: c93d28c7747040545a8b1fb488011774,
-    type: 3}
-  m_PrefabInstance: {fileID: 1318991447}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8691d71ec8767194ba0d901a79937292, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1347754032
 GameObject:
   m_ObjectHideFlags: 0
@@ -77865,7 +77853,7 @@ PrefabInstance:
     - target: {fileID: 214513462480731476, guid: 496d60a4afde1f948a9ff256aed1f771,
         type: 3}
       propertyPath: forceComOffset
-      value: -0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 214513462480731476, guid: 496d60a4afde1f948a9ff256aed1f771,
         type: 3}
@@ -78151,11 +78139,6 @@ PrefabInstance:
         type: 3}
       propertyPath: RoadSpline
       value: 
-      objectReference: {fileID: 1318991450}
-    - target: {fileID: 4320829956215920555, guid: 496d60a4afde1f948a9ff256aed1f771,
-        type: 3}
-      propertyPath: maxDownForce
-      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 4320829956215920555, guid: 496d60a4afde1f948a9ff256aed1f771,
         type: 3}
@@ -78275,7 +78258,7 @@ PrefabInstance:
     - target: {fileID: 5090885852110593917, guid: 496d60a4afde1f948a9ff256aed1f771,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.13
+      value: -12.18
       objectReference: {fileID: 0}
     - target: {fileID: 5090885852110593917, guid: 496d60a4afde1f948a9ff256aed1f771,
         type: 3}

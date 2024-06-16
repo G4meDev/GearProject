@@ -1,11 +1,4 @@
-//using System.Collections;
-//using System.Collections.Generic;
-//using System.Collections.Specialized;
-//using System.Linq;
-//using Unity.VisualScripting;
 using UnityEngine;
-//using UnityEngine.EventSystems;
-//using UnityEngine.Windows;
 
 public class VehicleMovementComponent : MonoBehaviour
 {
@@ -163,11 +156,6 @@ public class VehicleMovementComponent : MonoBehaviour
              if (wheel.isOnGround)
                  numWheelsOnGround++;
          }
- 
-         if (numWheelsOnGround > 2) 
-         {
- 
-         }
     }
 
     private void DownForce()
@@ -175,7 +163,7 @@ public class VehicleMovementComponent : MonoBehaviour
         if(numWheelsOnGround == 4)
         {
             float downForce = speedRatio * maxDownForce;
-            rb.AddForce(downForce * gravityDirection);
+            rb.AddForce(downForce * gravityDirection, ForceMode.Acceleration);
         }
     }
 

@@ -1,6 +1,3 @@
-//using System.Collections;
-//using System.Collections.Generic;
-//using Unity.VisualScripting;
 using UnityEngine;
 
 public class VehicleWheel : MonoBehaviour
@@ -22,8 +19,6 @@ public class VehicleWheel : MonoBehaviour
 
     [HideInInspector]
     public float offset = 0.0f;
-
-    public float mass = 20.0f;
 
     public float SuspensionLength = 0.5f;
     public float SuspensionRestLength = 0.25f;
@@ -111,7 +106,7 @@ public class VehicleWheel : MonoBehaviour
             float vel = Vector3.Dot(SpringDir, tireWorldVelocity);
 
             float suspenssionForce = (offset * springStrength) - (vel * springDamper);
-            CarBody.AddForceAtPosition(SpringDir * suspenssionForce, transform.position);
+            CarBody.AddForceAtPosition(SpringDir * suspenssionForce, transform.position, ForceMode.Acceleration);
 
 
             Vector3 t = transform.parent.InverseTransformPoint(CarBody.worldCenterOfMass);
@@ -130,7 +125,7 @@ public class VehicleWheel : MonoBehaviour
                 Debug.DrawLine(p, p + contactTangent);
 
                 Vector3 throtleForce = MovmentComp.vInput * MovmentComp.currentTorque * contactTangent;
-                CarBody.AddForceAtPosition(throtleForce, targetWorld);
+                CarBody.AddForceAtPosition(throtleForce, targetWorld, ForceMode.Acceleration);
             }
 
             Vector3 steerDir = transform.right;
@@ -143,8 +138,7 @@ public class VehicleWheel : MonoBehaviour
             float desireAccel = desirdVelocityChange / Time.fixedDeltaTime;
 
             
-            CarBody.AddForceAtPosition(steerDir * desireAccel * mass, targetWorld);
-          
+            CarBody.AddForceAtPosition(steerDir * desireAccel * 0.25f, targetWorld, ForceMode.Acceleration);
         }
 
 
