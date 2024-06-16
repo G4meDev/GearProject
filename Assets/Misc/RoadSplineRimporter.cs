@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Splines;
 
 public struct RoadSplinePointData
@@ -107,7 +104,8 @@ public class RoadSplineRimporter : MonoBehaviour
 
                     spline.Spline.Add(new BezierKnot(pos));
                 }
-
+                
+                EditorUtility.SetDirty(spline);
                 markDirty = false;
             }
             if(lastVis != splineVissibility)
@@ -129,7 +127,6 @@ public class RoadSplineRimporter : MonoBehaviour
                 Debug.DrawLine(c, u, Color.blue);
             }
         }
-
 
 
     }

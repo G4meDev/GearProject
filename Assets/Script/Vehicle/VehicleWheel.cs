@@ -86,11 +86,6 @@ public class VehicleWheel : MonoBehaviour
         transform.rotation = refWheelTransform.transform.rotation;
         transform.Rotate(0, currentYaw, 0);
 
-        Debug.DrawLine(transform.position, transform.position + transform.forward * 0.5f, Color.blue);
-        Debug.DrawLine(transform.position, transform.position + transform.right * 0.5f, Color.red);
-
-
-
         Ray ray = new Ray(refWheelTransform.transform.position, -refWheelTransform.transform.up);
         isOnGround = Physics.Raycast(ray, out contactHit, SuspensionLength);
 
@@ -109,7 +104,6 @@ public class VehicleWheel : MonoBehaviour
             Vector3 t = transform.parent.InverseTransformPoint(CarBody.worldCenterOfMass);
             Vector3 targetLocal = new Vector3(transform.localPosition.x, t.y + forceComOffset, transform.localPosition.z);
             Vector3 targetWorld = transform.parent.TransformPoint(targetLocal);
-            DrawHelpers.DrawSphere(targetWorld, 0.2f, Color.blue);
 
             // ------------------------------------------------------
             if (effectedByEngine)
