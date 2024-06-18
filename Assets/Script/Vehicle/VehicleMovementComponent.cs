@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using UnityEngine;
 
 public class VehicleMovementComponent : MonoBehaviour
@@ -46,6 +47,16 @@ public class VehicleMovementComponent : MonoBehaviour
     VehicleWheel[] wheels = new VehicleWheel[4];
 
     public RoadSplineRimporter RoadSpline;
+
+    [Space]
+    public GearButton throttleButton;
+
+    public GearButton brakeButton;
+
+    public GearButton rightButton;
+
+    public GearButton leftButton;
+
 
     void Start()
     {
@@ -100,24 +111,28 @@ public class VehicleMovementComponent : MonoBehaviour
         vInput = UnityEngine.Input.GetAxis("Vertical");
         hInput = UnityEngine.Input.GetAxis("Horizontal");
 
-        foreach (Touch t in UnityEngine.Input.touches)
-        {
-            Vector2 p = t.position;
+        vInput += throttleButton.value - brakeButton.value;
+        hInput += rightButton.value - leftButton.value;
 
-            if (p.x < Screen.width / 2)
-                vInput -= 1;
-            else
-                vInput += 1;
-        }
 
-        float angle = 0;
-        if (UnityEngine.Input.acceleration != Vector3.zero)
-        {
-            angle = Mathf.Atan2(UnityEngine.Input.acceleration.x, -UnityEngine.Input.acceleration.y) * Mathf.Rad2Deg;
-        }
-
-        float axisValue = Mathf.InverseLerp(-40, 40, angle) * 2 - 1;
-        hInput += axisValue;
+//         foreach (Touch t in UnityEngine.Input.touches)
+//         {
+//             Vector2 p = t.position;
+// 
+//             if (p.x < Screen.width / 2)
+//                 vInput -= 1;
+//             else
+//                 vInput += 1;
+//         }
+// 
+//         float angle = 0;
+//         if (UnityEngine.Input.acceleration != Vector3.zero)
+//         {
+//             angle = Mathf.Atan2(UnityEngine.Input.acceleration.x, -UnityEngine.Input.acceleration.y) * Mathf.Rad2Deg;
+//         }
+// 
+//         float axisValue = Mathf.InverseLerp(-40, 40, angle) * 2 - 1;
+//         hInput += axisValue;
 
         float forwardSpeedRatio = Vector3.Dot(rb.velocity, transform.forward);
         float speedRatio = Mathf.Clamp01(forwardSpeedRatio == 0 ? 0 : forwardSpeedRatio / maxSpeed);

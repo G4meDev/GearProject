@@ -74,7 +74,7 @@ public class RoadSplineRimporter : MonoBehaviour
                 Tangenets.Clear();
                 Ups.Clear();
 
-#if (UNITY_EDITOR) 
+#if UNITY_EDITOR
                 GizmoUtility.SetGizmoEnabled(typeof(SplineContainer), false, true);
 #endif
                 foreach (Point p in ParsedData.points)
@@ -104,10 +104,13 @@ public class RoadSplineRimporter : MonoBehaviour
 
                     spline.Spline.Add(new BezierKnot(pos));
                 }
-                
+
+#if UNITY_EDITOR
                 EditorUtility.SetDirty(spline);
                 EditorUtility.SetDirty(this);
                 markDirty = false;
+
+#endif
             }
             if(lastVis != splineVissibility)
             {
