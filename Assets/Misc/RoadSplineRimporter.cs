@@ -106,6 +106,7 @@ public class RoadSplineRimporter : MonoBehaviour
                 }
                 
                 EditorUtility.SetDirty(spline);
+                EditorUtility.SetDirty(this);
                 markDirty = false;
             }
             if(lastVis != splineVissibility)
