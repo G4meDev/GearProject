@@ -146,6 +146,8 @@ public class VehicleMovementComponent : MonoBehaviour
         else
             gravityDirection = Vector3.down;
 
+        Debug.DrawLine(transform.position, transform.position + gravityDirection * -2);
+
         Vector3 GravityForce = gravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
         rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
     }

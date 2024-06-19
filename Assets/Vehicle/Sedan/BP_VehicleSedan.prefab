@@ -340,6 +340,10 @@ MonoBehaviour:
   rightSkid: 0
   accelerating: 0
   RoadSpline: {fileID: 0}
+  throttleButton: {fileID: 0}
+  brakeButton: {fileID: 0}
+  rightButton: {fileID: 0}
+  leftButton: {fileID: 0}
 --- !u!65 &4846820830711406233
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -463,8 +467,8 @@ MonoBehaviour:
   offset: 0
   SuspensionLength: 0.4
   SuspensionRestLength: 0.35
-  springStrength: 25
-  springDamper: 3
+  springStrength: 100
+  springDamper: 5
   wheelRadius: 0.22
   tractionCurve:
     serializedVersion: 2
@@ -481,24 +485,24 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0.35
       value: 0.5
-      inSlope: -0.4000001
-      outSlope: -0.4000001
+      inSlope: -0.40000013
+      outSlope: -0.40000013
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.5
-      value: 0.1
-      inSlope: -0.30769238
-      outSlope: -0.30769238
+      value: 0.02
+      inSlope: 0
+      outSlope: 0
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.05
+      value: 0.02
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -538,15 +542,15 @@ MonoBehaviour:
   offset: 0
   SuspensionLength: 0.4
   SuspensionRestLength: 0.35
-  springStrength: 25
-  springDamper: 3
+  springStrength: 100
+  springDamper: 5
   wheelRadius: 0.22
   tractionCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.8
+      value: 0.55
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -555,7 +559,16 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.35
-      value: 0.1
+      value: 0.5
+      inSlope: -0.4000001
+      outSlope: -0.4000001
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.05
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -564,7 +577,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.1
+      value: 0.05
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -574,7 +587,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  effectedByEngine: 0
+  effectedByEngine: 1
   effectedBySteer: 1
   maxSteerAngle: 40
   forceComOffset: 0
@@ -604,15 +617,15 @@ MonoBehaviour:
   offset: 0
   SuspensionLength: 0.4
   SuspensionRestLength: 0.35
-  springStrength: 25
-  springDamper: 3
+  springStrength: 100
+  springDamper: 5
   wheelRadius: 0.22
   tractionCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.8
+      value: 0.55
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -621,7 +634,16 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.35
-      value: 0.1
+      value: 0.5
+      inSlope: -0.4000001
+      outSlope: -0.4000001
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.05
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -630,7 +652,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.1
+      value: 0.05
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -640,7 +662,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  effectedByEngine: 0
+  effectedByEngine: 1
   effectedBySteer: 1
   maxSteerAngle: 40
   forceComOffset: 0
@@ -676,8 +698,8 @@ MonoBehaviour:
   offset: 0
   SuspensionLength: 0.4
   SuspensionRestLength: 0.35
-  springStrength: 25
-  springDamper: 3
+  springStrength: 100
+  springDamper: 5
   wheelRadius: 0.22
   tractionCurve:
     serializedVersion: 2
@@ -694,24 +716,24 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0.35
       value: 0.5
-      inSlope: -0.4000001
-      outSlope: -0.4000001
+      inSlope: -0.40000013
+      outSlope: -0.40000013
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.5
-      value: 0.1
-      inSlope: -0.30769238
-      outSlope: -0.30769238
+      value: 0.02
+      inSlope: 0
+      outSlope: 0
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.05
+      value: 0.02
       inSlope: 0
       outSlope: 0
       tangentMode: 136
