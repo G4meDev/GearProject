@@ -9,7 +9,7 @@ using UnityEngine.Splines;
 
 using Vector3 = UnityEngine.Vector3;
 
-public struct RoadSplinePointDataTemp
+public struct RoadSplinePointData
 {
     public Vector3 position;
     public Vector3 tangent;

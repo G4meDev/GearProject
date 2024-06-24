@@ -46,7 +46,10 @@ public class VehicleMovementComponent : MonoBehaviour
 
     VehicleWheel[] wheels = new VehicleWheel[4];
 
-    public RoadSplineRimporter RoadSpline;
+    public GameObject roadSplineObject;
+
+    [HideInInspector]
+    public HEU_RoadSplineImporter roadSpline;
 
     [Space]
     public GearButton throttleButton;
@@ -66,6 +69,9 @@ public class VehicleMovementComponent : MonoBehaviour
         rb.centerOfMass += Vector3.up * centreOfMassOffset;
 
         wheels = GetComponentsInChildren<VehicleWheel>();
+
+        if(roadSplineObject)
+            roadSpline = roadSplineObject.GetComponentInChildren<HEU_RoadSplineImporter>();
 
     }
 
@@ -141,8 +147,8 @@ public class VehicleMovementComponent : MonoBehaviour
 
     private void Gravity()
     {
-        if (RoadSpline)
-            gravityDirection = -RoadSpline.GetClosestRoadSplinePoint(transform.position).up;
+        if (roadSpline)
+            gravityDirection = -roadSpline.GetClosestRoadSplinePoint(transform.position).up;
         else
             gravityDirection = Vector3.down;
 
