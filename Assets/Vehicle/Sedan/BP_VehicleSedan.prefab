@@ -466,9 +466,9 @@ MonoBehaviour:
   axelTransform: {fileID: 0}
   isOnGround: 0
   offset: 0
-  SuspensionLength: 0.4
-  SuspensionRestLength: 0.35
-  springStrength: 100
+  SuspensionLength: 0.35
+  SuspensionRestLength: 0.25
+  springStrength: 300
   springDamper: 5
   wheelRadius: 0.22
   tractionCurve:
@@ -541,9 +541,9 @@ MonoBehaviour:
   axelTransform: {fileID: 0}
   isOnGround: 0
   offset: 0
-  SuspensionLength: 0.4
-  SuspensionRestLength: 0.35
-  springStrength: 100
+  SuspensionLength: 0.35
+  SuspensionRestLength: 0.25
+  springStrength: 300
   springDamper: 5
   wheelRadius: 0.22
   tractionCurve:
@@ -616,9 +616,9 @@ MonoBehaviour:
   axelTransform: {fileID: 0}
   isOnGround: 0
   offset: 0
-  SuspensionLength: 0.4
-  SuspensionRestLength: 0.35
-  springStrength: 100
+  SuspensionLength: 0.35
+  SuspensionRestLength: 0.25
+  springStrength: 300
   springDamper: 5
   wheelRadius: 0.22
   tractionCurve:
@@ -697,9 +697,9 @@ MonoBehaviour:
   axelTransform: {fileID: 0}
   isOnGround: 0
   offset: 0
-  SuspensionLength: 0.4
-  SuspensionRestLength: 0.35
-  springStrength: 100
+  SuspensionLength: 0.35
+  SuspensionRestLength: 0.25
+  springStrength: 300
   springDamper: 5
   wheelRadius: 0.22
   tractionCurve:

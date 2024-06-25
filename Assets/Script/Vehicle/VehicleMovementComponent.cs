@@ -72,7 +72,7 @@ public class VehicleMovementComponent : MonoBehaviour
 
         if(roadSplineObject)
             roadSpline = roadSplineObject.GetComponentInChildren<HEU_RoadSplineImporter>();
-
+        
     }
 
     void OnGUI()
