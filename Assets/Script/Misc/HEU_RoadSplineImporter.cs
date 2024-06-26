@@ -131,6 +131,12 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
         GameObject miniMapMesh = GameObject.FindGameObjectWithTag(miniMap_Tag_Layer_Name);
         miniMapMesh.layer = LayerMask.NameToLayer(miniMap_Tag_Layer_Name);
+
+        MeshRenderer meshRenderer = miniMapMesh.GetComponent<MeshRenderer>();
+        meshRenderer.staticShadowCaster = false;
+        meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        meshRenderer.receiveShadows = false;
+
         EditorUtility.SetDirty(miniMapMesh);
 
         Debug.Log(arg);
