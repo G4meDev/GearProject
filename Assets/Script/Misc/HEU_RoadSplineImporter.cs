@@ -19,6 +19,8 @@ public struct RoadSplinePointData
 [ExecuteInEditMode]
 public class HEU_RoadSplineImporter : MonoBehaviour
 {
+    private string miniMap_Tag_Layer_Name = "MiniMap";
+
     public class Rootobject
     {
         public Point[] points;
@@ -125,6 +127,11 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
         EditorUtility.SetDirty(splineComp);
         EditorUtility.SetDirty(this);
+
+
+        GameObject miniMapMesh = GameObject.FindGameObjectWithTag(miniMap_Tag_Layer_Name);
+        miniMapMesh.layer = LayerMask.NameToLayer(miniMap_Tag_Layer_Name);
+        EditorUtility.SetDirty(miniMapMesh);
 
         Debug.Log(arg);
 #endif

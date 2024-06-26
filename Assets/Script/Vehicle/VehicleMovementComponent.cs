@@ -117,8 +117,8 @@ public class VehicleMovementComponent : MonoBehaviour
         vInput = UnityEngine.Input.GetAxis("Vertical");
         hInput = UnityEngine.Input.GetAxis("Horizontal");
 
-//         vInput += throttleButton.value - brakeButton.value;
-//         hInput += rightButton.value - leftButton.value;
+        vInput += throttleButton.value - brakeButton.value;
+        hInput += rightButton.value - leftButton.value;
 
 
 //         foreach (Touch t in UnityEngine.Input.touches)
