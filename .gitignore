@@ -73,3 +73,5 @@ crashlytics-build.properties
 
 **/backup
 Assets/HoudiniEngineAssetCache
+
+Assets/Scenes/SampleScene
