@@ -345,6 +345,8 @@ MonoBehaviour:
   brakeButton: {fileID: 0}
   rightButton: {fileID: 0}
   leftButton: {fileID: 0}
+  SpeedMeterArrow: {fileID: 0}
+  maxMeterArrowAngle: -270
 --- !u!65 &4846820830711406233
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -352,7 +354,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4138780187681453698}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 4e7b3ba3ce353154b97d8b41d0d3c4be, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -861,7 +863,7 @@ PrefabInstance:
     - target: {fileID: 5452062954445420164, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.008908109
+      value: -0.4050396
       objectReference: {fileID: 0}
     - target: {fileID: 5452062954445420164, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
@@ -871,7 +873,7 @@ PrefabInstance:
     - target: {fileID: 5452062954445420164, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.99996036
+      value: -0.91429913
       objectReference: {fileID: 0}
     - target: {fileID: 5452062954445420164, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
@@ -921,17 +923,17 @@ PrefabInstance:
     - target: {fileID: 7365065335394803327, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: lastPositionWs.x
-      value: -0.111262046
+      value: -244.71738
       objectReference: {fileID: 0}
     - target: {fileID: 7365065335394803327, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: lastPositionWs.y
-      value: 2.23
+      value: -37.579
       objectReference: {fileID: 0}
     - target: {fileID: 7365065335394803327, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: lastPositionWs.z
-      value: 1.9393659
+      value: -719.76245
       objectReference: {fileID: 0}
     - target: {fileID: 7365065335394803327, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}

@@ -1,5 +1,8 @@
 using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class VehicleMovementComponent : MonoBehaviour
 {
@@ -59,6 +62,9 @@ public class VehicleMovementComponent : MonoBehaviour
     public GearButton rightButton;
 
     public GearButton leftButton;
+
+    public UnityEngine.UI.Image SpeedMeterArrow;
+    public float maxMeterArrowAngle = -270;
 
 
     void Start()
@@ -143,6 +149,9 @@ public class VehicleMovementComponent : MonoBehaviour
         float forwardSpeedRatio = Vector3.Dot(rb.velocity, transform.forward);
         float speedRatio = Mathf.Clamp01(forwardSpeedRatio == 0 ? 0 : forwardSpeedRatio / maxSpeed);
         steerValue = steerCurve.Evaluate(speedRatio);
+
+        float noise = Mathf.PerlinNoise(Time.time * 10, Time.time * 10) - 0.5f;
+        SpeedMeterArrow.transform.rotation = Quaternion.Euler(0, 0, speedRatio * maxMeterArrowAngle + (speedRatio * noise * 10));
     }
 
     private void Gravity()
