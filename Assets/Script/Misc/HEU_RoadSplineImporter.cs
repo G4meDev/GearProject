@@ -143,6 +143,13 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
         octree.Init(boundary, center, 50);
 
+        foreach (var pos in Positions)
+        {
+            octree.Insert(pos);
+        }
+
+        octree.PostEdit();
+
         EditorUtility.SetDirty(octree);
 
 
