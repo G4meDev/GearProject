@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 using Random = UnityEngine.Random;
 
+[ExecuteInEditMode]
 public class Octree : MonoBehaviour
 {
     public List<Vector3> points = new();
@@ -22,6 +24,8 @@ public class Octree : MonoBehaviour
 
     public MaterialPropertyBlock matBlock;
 
+    public List<Octree> leafs = new();
+     
     // from top face, north west, clockwise
 
     public GameObject child_1;
@@ -68,6 +72,7 @@ public class Octree : MonoBehaviour
         }
 
         boundary = new(max_x - min_x, max_y - min_y, max_z - min_z);
+        boundary += new Vector3(1, 1, 1);
         center = new Vector3(min_x, min_y, min_z) + boundary / 2;
     }
 
@@ -78,6 +83,16 @@ public class Octree : MonoBehaviour
         return boundary.x / 2 >= Mathf.Abs(d.x)
             && boundary.y / 2 >= Mathf.Abs(d.y) 
             && boundary.z / 2 >= Mathf.Abs(d.z);
+    }
+
+    bool IsBoundaryIntersecting(Vector3 center_1, Vector3 boundary_1, Vector3 center_2, Vector3 boundary_2)
+    {
+        Vector3 d = center_1 - center_2;
+        Vector3 halfSumBoundary = (boundary_1 + boundary_2) / 2;
+
+        return Mathf.Abs(d.x) <= halfSumBoundary.x
+            && Mathf.Abs(d.y) <= halfSumBoundary.y
+            && Mathf.Abs(d.z) <= halfSumBoundary.z;
     }
 
     public bool Insert(Vector3 point)
@@ -207,28 +222,64 @@ public class Octree : MonoBehaviour
 
         Octree[] comps = transform.GetComponentsInChildren<Octree>();
 
-        foreach(Octree comp in comps)
+        foreach(var comp in comps)
         {
             if(!comp.divided)
             {
-                comp.transform.position = comp.center;
-                comp.transform.localScale = comp.boundary;
+                leafs.Add(comp);
+            }
+        }
 
-                MeshFilter meshFilter = comp.AddComponent<MeshFilter>();
-                meshFilter.sharedMesh = unitPreviewBox;
+        foreach(Octree comp in leafs)
+        {
+            comp.transform.position = comp.center;
+            comp.transform.localScale = comp.boundary;
 
-                MeshRenderer meshRenderer = comp.AddComponent<MeshRenderer>();
+            MeshFilter meshFilter = comp.AddComponent<MeshFilter>();
+            meshFilter.sharedMesh = unitPreviewBox;
 
-                comp.randColor = Random.ColorHSV();
+            MeshRenderer meshRenderer = comp.AddComponent<MeshRenderer>();
 
-                Material material = Resources.Load<Material>("OctreePreviewMaterial");
-                material.enableInstancing = true;
+            comp.randColor = Random.ColorHSV();
 
-                meshRenderer.material = material;
-                meshRenderer.material.SetColor("_Color", comp.randColor);
+            Material material = Resources.Load<Material>("OctreePreviewMaterial");
+            material.enableInstancing = true;
+
+            meshRenderer.material = material;
+            meshRenderer.material.SetColor("_Color", comp.randColor);
+        }
+    }
+
+    public void Query(Vector3 inCenter, Vector3 inBounds, out List<Vector3> result)
+    {
+        result = new();
+
+        foreach (Octree comp in leafs)
+        {
+            if (comp.IsBoundaryIntersecting(comp.center, comp.boundary, inCenter, inBounds))
+            {
+                result.AddRange(comp.points);
             }
         }
     }
 
+    private void Update()
+    {
+        if (!Application.isPlaying)
+        {
+            if (!divided)
+            {
+                float dist = Vector3.Distance(SceneView.lastActiveSceneView.camera.transform.position, center);
+                if (dist < 200)
+                {
+                    foreach (Vector3 pos in points)
+                    {
+                        DrawHelpers.DrawSphere(pos, 1, randColor);
+                    }
+                }
+            }
+        }
 
+
+    }
 }

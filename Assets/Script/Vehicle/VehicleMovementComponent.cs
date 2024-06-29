@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -53,6 +54,8 @@ public class VehicleMovementComponent : MonoBehaviour
 
     [HideInInspector]
     public HEU_RoadSplineImporter roadSpline;
+
+    public Octree splineOctree;
 
     [Space]
     public GearButton throttleButton;
@@ -115,6 +118,14 @@ public class VehicleMovementComponent : MonoBehaviour
         EngineTorque();
 
         //DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
+
+        List<Vector3> points;
+        splineOctree.Query(transform.position, new Vector3(50, 50, 50), out points);
+
+        foreach(var point in points)
+        {
+            DrawHelpers.DrawSphere(point, 1, Color.red);
+        }
 
     }
 

@@ -141,7 +141,7 @@ public class HEU_RoadSplineImporter : MonoBehaviour
         Vector3 boundary;
         Octree.CalculateCenterAndBoundFromPoints(Positions.ToArray(), out center, out boundary);
 
-        octree.Init(boundary, center, 50);
+        octree.Init(boundary, center, 16);
 
         foreach (var pos in Positions)
         {
@@ -160,8 +160,6 @@ public class HEU_RoadSplineImporter : MonoBehaviour
     public RoadSplinePointData GetClosestRoadSplinePoint(Vector3 position)
     {
         float3 fpos = new (position.x, position.y, position.z);
-        //float3 Nearest;
-        //float t;
 
         SplineUtility.GetNearestPoint<Spline>(splineComp.Spline, fpos, out float3 _1, out float t);
 
