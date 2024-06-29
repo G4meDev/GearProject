@@ -45,6 +45,9 @@ public class HEU_RoadSplineImporter : MonoBehaviour
     public SplineContainer splineComp;
 
     [HideInInspector]
+    public Octree octree;
+
+    [HideInInspector]
     public Rootobject ParsedData;
 
     [HideInInspector]
@@ -125,6 +128,23 @@ public class HEU_RoadSplineImporter : MonoBehaviour
         meshRenderer.receiveShadows = false;
 
         EditorUtility.SetDirty(miniMapMesh);
+
+
+        octree = GetComponent<Octree>();
+
+        if (!octree)
+        {
+            octree = transform.AddComponent<Octree>();
+        }
+
+        Vector3 center;
+        Vector3 boundary;
+        Octree.CalculateCenterAndBoundFromPoints(Positions.ToArray(), out center, out boundary);
+
+        octree.Init(boundary, center, 50);
+
+        EditorUtility.SetDirty(octree);
+
 
         Debug.Log(arg);
 #endif
