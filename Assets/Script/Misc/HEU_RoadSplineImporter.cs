@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using Unity.Collections;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -19,7 +20,7 @@ public struct RoadSplinePointData
 [ExecuteInEditMode]
 public class HEU_RoadSplineImporter : MonoBehaviour
 {
-    private string miniMap_Tag_Layer_Name = "MiniMap";
+    public string miniMap_Tag_Layer_Name = "MiniMap";
 
     public class Rootobject
     {
@@ -55,10 +56,10 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
     public bool drawDebug = true;
 
-    void Start()
-    {
-        
-    }
+//     void Start()
+//     {
+//         
+//     }
 
     void Update()
     {
@@ -100,23 +101,9 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
         foreach (Point p in ParsedData.points)
         {
-            Vector3 pos = new Vector3(p.x, p.y, p.z);
-            float y = pos.y;
-            pos.y = pos.z;
-            pos.z = y;
-            pos.x = -pos.x;
-
-            Vector3 Tangent = new Vector3(p.n_x, p.n_y, p.n_z);
-            y = Tangent.y;
-            Tangent.y = Tangent.z;
-            Tangent.z = y;
-            Tangent.x = -Tangent.x;
-
-            Vector3 Up = new Vector3(p.up_x, p.up_y, p.up_z);
-            y = Up.y;
-            Up.y = Up.z;
-            Up.z = y;
-            Up.x = -Up.x;
+            Vector3 pos = new(-p.x, p.z, p.y);
+            Vector3 Tangent = new(-p.n_x, p.n_z, p.n_y);
+            Vector3 Up = new(-p.up_x, p.up_z, p.up_y);
 
             Positions.Add(pos);
             Tangenets.Add(Tangent);
@@ -145,13 +132,13 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
     public RoadSplinePointData GetClosestRoadSplinePoint(Vector3 position)
     {
-        float3 fpos = new float3(position.x, position.y, position.z);
-        float3 Nearest;
-        float t;
+        float3 fpos = new (position.x, position.y, position.z);
+        //float3 Nearest;
+        //float t;
 
-        SplineUtility.GetNearestPoint<Spline>(splineComp.Spline, fpos, out Nearest, out t);
+        SplineUtility.GetNearestPoint<Spline>(splineComp.Spline, fpos, out float3 _1, out float t);
 
-        RoadSplinePointData closest = new RoadSplinePointData();
+        RoadSplinePointData closest = new();
         t = SplineUtility.ConvertIndexUnit<Spline>(splineComp.Spline, t, PathIndexUnit.Knot);
 
         int ix1 = Mathf.Clamp(Mathf.FloorToInt(t), 0, Positions.Count);

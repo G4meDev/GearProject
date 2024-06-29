@@ -83,7 +83,7 @@ public class VehicleMovementComponent : MonoBehaviour
 
     void OnGUI()
     {
-        Vector2 TextPosition = new Vector2(Screen.width - 200, 50);
+        Vector2 TextPosition = new(Screen.width - 200, 50);
 
         string speedText = "speed : " + Mathf.Floor(rb.velocity.magnitude);
         Vector2 size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(speedText));
@@ -163,7 +163,7 @@ public class VehicleMovementComponent : MonoBehaviour
 
         Debug.DrawLine(transform.position, transform.position + gravityDirection * -2);
 
-        Vector3 GravityForce = gravityDirection * Physics.gravity.magnitude * Time.fixedDeltaTime;
+        Vector3 GravityForce = (gravityDirection * Physics.gravity.magnitude) * Time.fixedDeltaTime;
         rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
     }
 
