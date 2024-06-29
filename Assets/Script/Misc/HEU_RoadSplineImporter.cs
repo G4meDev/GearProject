@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Splines;
-
+using UnityEngine.Timeline;
 using Vector3 = UnityEngine.Vector3;
 
 public struct RoadSplinePointData
@@ -15,6 +15,17 @@ public struct RoadSplinePointData
     public Vector3 position;
     public Vector3 tangent;
     public Vector3 up;
+}
+
+[Serializable]
+public class RoadNode
+{
+    public Vector3 position;
+    public Vector3 tangent;
+    public Vector3 up;
+
+    public List<int> nextNodes = new();
+    public List<int> prevNodes = new();
 }
 
 [ExecuteInEditMode]
@@ -40,6 +51,8 @@ public class HEU_RoadSplineImporter : MonoBehaviour
         public float up_y;
         public float up_z;
     }
+
+
 
     [HideInInspector]
     public SplineContainer splineComp;
@@ -129,6 +142,29 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
         EditorUtility.SetDirty(miniMapMesh);
 
+        List<RoadNode> allNodes = new();
+
+        for(int i = 0; i < Positions.Count; i++)
+        {
+            RoadNode newNode = new RoadNode();
+            newNode.position = Positions[i];
+            newNode.tangent = Tangenets[i];
+            newNode.up = Ups[i];
+
+            allNodes.Add(newNode);
+        }
+
+        for (int i = 0; i < allNodes.Count; i++)
+        {
+            int prev = i - 1;
+            int next = i + 1;
+
+            prev = prev < 0 ? allNodes.Count - 1 : prev;
+            next = next == allNodes.Count ? 0 : next;
+
+            allNodes[i].prevNodes.Add(prev);
+            allNodes[i].nextNodes.Add(next);
+        }
 
         octree = GetComponent<Octree>();
 
@@ -137,15 +173,17 @@ public class HEU_RoadSplineImporter : MonoBehaviour
             octree = transform.AddComponent<Octree>();
         }
 
+        octree.allNodes = allNodes;
+
         Vector3 center;
         Vector3 boundary;
         Octree.CalculateCenterAndBoundFromPoints(Positions.ToArray(), out center, out boundary);
 
         octree.Init(boundary, center, 16);
 
-        foreach (var pos in Positions)
+        foreach (var node in allNodes)
         {
-            octree.Insert(pos);
+            octree.Insert(node);
         }
 
         octree.PostEdit();

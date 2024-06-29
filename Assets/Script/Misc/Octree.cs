@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 using Random = UnityEngine.Random;
@@ -11,7 +12,9 @@ using Random = UnityEngine.Random;
 [ExecuteInEditMode]
 public class Octree : MonoBehaviour
 {
-    public List<Vector3> points = new();
+    public List<RoadNode> nodes = new();
+
+    public List<RoadNode> allNodes = new();
     
     public Vector3 boundary;
     public Vector3 center;
@@ -76,9 +79,9 @@ public class Octree : MonoBehaviour
         center = new Vector3(min_x, min_y, min_z) + boundary / 2;
     }
 
-    bool IsPointInBoundary(Vector3 point, Vector3 boundary, Vector3 center)
+    bool IsNodeInBoundary(RoadNode inNode, Vector3 boundary, Vector3 center)
     {
-        Vector3 d = point - center;
+        Vector3 d = inNode.position - center;
 
         return boundary.x / 2 >= Mathf.Abs(d.x)
             && boundary.y / 2 >= Mathf.Abs(d.y) 
@@ -95,37 +98,37 @@ public class Octree : MonoBehaviour
             && Mathf.Abs(d.z) <= halfSumBoundary.z;
     }
 
-    public bool Insert(Vector3 point)
+    public bool Insert(RoadNode inNode)
     {
-        if (!IsPointInBoundary(point, boundary, center))
+        if (!IsNodeInBoundary(inNode, boundary, center))
             return false;
 
         if(divided)
         {
-            if (octree_1.Insert(point))
+            if (octree_1.Insert(inNode))
                 return true;
-            if (octree_2.Insert(point))
+            if (octree_2.Insert(inNode))
                 return true;
-            if (octree_3.Insert(point))
+            if (octree_3.Insert(inNode))
                 return true;
-            if (octree_4.Insert(point))
+            if (octree_4.Insert(inNode))
                 return true;
-            if (octree_5.Insert(point))
+            if (octree_5.Insert(inNode))
                 return true;
-            if (octree_6.Insert(point))
+            if (octree_6.Insert(inNode))
                 return true;
-            if (octree_7.Insert(point))
+            if (octree_7.Insert(inNode))
                 return true;
-            if (octree_8.Insert(point))
+            if (octree_8.Insert(inNode))
                 return true;
 
             return false;
         }
 
 
-        points.Add(point);
+        nodes.Add(inNode);
 
-        if (points.Count == Capcity)
+        if (nodes.Count == Capcity)
             Subdivide();
 
         return true;
@@ -182,27 +185,27 @@ public class Octree : MonoBehaviour
             octree_7.Init(halfBoundary, center + Vector3.Scale(quadBoundary, new Vector3(-1, -1, -1)),   Capcity);
             octree_8.Init(halfBoundary, center + Vector3.Scale(quadBoundary, new Vector3(-1, -1, 1)),    Capcity);
 
-            foreach(Vector3 point in points)
+            foreach(RoadNode node in nodes)
             {
-                if (octree_1.Insert(point))
+                if (octree_1.Insert(node))
                     continue;
-                if (octree_2.Insert(point))
+                if (octree_2.Insert(node))
                     continue;
-                if (octree_3.Insert(point))
+                if (octree_3.Insert(node))
                     continue;
-                if (octree_4.Insert(point))
+                if (octree_4.Insert(node))
                     continue;
-                if (octree_5.Insert(point))
+                if (octree_5.Insert(node))
                     continue;
-                if (octree_6.Insert(point))
+                if (octree_6.Insert(node))
                     continue;
-                if (octree_7.Insert(point))
+                if (octree_7.Insert(node))
                     continue;
-                if (octree_8.Insert(point))
+                if (octree_8.Insert(node))
                     continue;
             }
 
-            points.Clear();
+            nodes.Clear();
         }
     }
 
@@ -250,7 +253,7 @@ public class Octree : MonoBehaviour
         }
     }
 
-    public void Query(Vector3 inCenter, Vector3 inBounds, out List<Vector3> result)
+    public void Query(Vector3 inCenter, Vector3 inBounds, out List<RoadNode> result)
     {
         result = new();
 
@@ -258,7 +261,7 @@ public class Octree : MonoBehaviour
         {
             if (comp.IsBoundaryIntersecting(comp.center, comp.boundary, inCenter, inBounds))
             {
-                result.AddRange(comp.points);
+                result.AddRange(comp.nodes);
             }
         }
     }
@@ -272,9 +275,9 @@ public class Octree : MonoBehaviour
                 float dist = Vector3.Distance(SceneView.lastActiveSceneView.camera.transform.position, center);
                 if (dist < 200)
                 {
-                    foreach (Vector3 pos in points)
+                    foreach (RoadNode node in nodes)
                     {
-                        DrawHelpers.DrawSphere(pos, 1, randColor);
+                        DrawHelpers.DrawSphere(node.position, 1, randColor);
                     }
                 }
             }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -119,12 +120,29 @@ public class VehicleMovementComponent : MonoBehaviour
 
         //DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
 
-        List<Vector3> points;
-        splineOctree.Query(transform.position, new Vector3(50, 50, 50), out points);
+        List<RoadNode> nodes;
+        splineOctree.Query(transform.position, new Vector3(50, 50, 50), out nodes);
 
-        foreach(var point in points)
+        RoadNode nearest = null;
+        float minDist = float.MaxValue;
+
+        foreach(var node in nodes)
         {
-            DrawHelpers.DrawSphere(point, 1, Color.red);
+            DrawHelpers.DrawSphere(node.position, 1, Color.red);
+            float dist = Vector3.Distance(transform.position, node.position);
+
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = node;
+            }
+        }
+
+        if (nearest != null)
+        {
+            DrawHelpers.DrawSphere(nearest.position + nearest.up * 2, 1, Color.yellow);
+
+
         }
 
     }
