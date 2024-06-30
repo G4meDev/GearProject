@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 using Random = UnityEngine.Random;
@@ -221,6 +216,7 @@ public class Octree : MonoBehaviour
 
     public void PostEdit()
     {
+#if UNITY_EDITOR
         if (!unitPreviewBox)
             unitPreviewBox = Resources.GetBuiltinResource<Mesh>("Cube.fbx");
 
@@ -254,6 +250,7 @@ public class Octree : MonoBehaviour
 
             comp.transform.gameObject.layer = LayerMask.NameToLayer("Octree");
         }
+#endif
     }
 
     public void Query(Vector3 inCenter, Vector3 inBounds, out List<RoadNode> result)
