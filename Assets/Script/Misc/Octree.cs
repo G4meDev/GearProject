@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 using Random = UnityEngine.Random;
@@ -264,6 +265,67 @@ public class Octree : MonoBehaviour
                 result.AddRange(comp.nodes);
             }
         }
+    }
+
+    Vector3 ClosestPointOnLine(Vector3 start, Vector3 end, Vector3 position, out float t)
+    {
+        Vector3 heading = end - start;
+        float mag = heading.magnitude;
+        heading.Normalize();
+
+        Vector3 lhs = position - start;
+        float dotP = Vector3.Dot(lhs, heading);
+        dotP = Mathf.Clamp(dotP, 0.0f, mag);
+        t = dotP / mag;
+
+        return start + heading * dotP;
+    }
+
+
+    public RoadNode GetNearestNodeToPosition(Vector3 position)
+    {
+        RoadNode result = new();
+       
+        List<RoadNode> nodes;
+        Query(position, new Vector3(50, 50, 50), out nodes);
+
+        RoadNode nearest = null;
+        float minDist = float.MaxValue;
+
+        foreach (var node in nodes)
+        {
+            float dist = Vector3.Distance(position, node.position);
+
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = node;
+            }
+        }
+
+        if (nearest != null)
+        {
+            float prev_t;
+            Vector3 prevNearest = ClosestPointOnLine(allNodes[nearest.prevNodes[0]].position, nearest.position, position, out prev_t);
+            float next_t;
+            Vector3 nextNearest = ClosestPointOnLine(nearest.position, allNodes[nearest.nextNodes[0]].position, position, out next_t);
+
+            bool isPrevNearest = Vector3.Distance(prevNearest, position) < Vector3.Distance(nextNearest, position);
+
+            RoadNode startNode = isPrevNearest ? allNodes[nearest.prevNodes[0]] : nearest;
+            RoadNode endNode = isPrevNearest ? nearest : allNodes[nearest.nextNodes[0]];
+            float t = isPrevNearest ? prev_t : next_t;
+
+            Vector3 interpPosition = Vector3.Lerp(startNode.position, endNode.position, t);
+            Vector3 interpTangent = Vector3.Lerp(startNode.tangent, endNode.tangent, t);
+            Vector3 interpUp = Vector3.Lerp(startNode.up, endNode.up, t);
+
+            result.position = interpPosition;
+            result.tangent = interpTangent;
+            result.up = interpUp;
+        }
+
+        return result;
     }
 
     private void Update()

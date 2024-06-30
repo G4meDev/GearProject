@@ -120,30 +120,7 @@ public class VehicleMovementComponent : MonoBehaviour
 
         //DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
 
-        List<RoadNode> nodes;
-        splineOctree.Query(transform.position, new Vector3(50, 50, 50), out nodes);
 
-        RoadNode nearest = null;
-        float minDist = float.MaxValue;
-
-        foreach(var node in nodes)
-        {
-            DrawHelpers.DrawSphere(node.position, 1, Color.red);
-            float dist = Vector3.Distance(transform.position, node.position);
-
-            if (dist < minDist)
-            {
-                minDist = dist;
-                nearest = node;
-            }
-        }
-
-        if (nearest != null)
-        {
-            DrawHelpers.DrawSphere(nearest.position + nearest.up * 2, 1, Color.yellow);
-
-
-        }
 
     }
 
@@ -154,7 +131,6 @@ public class VehicleMovementComponent : MonoBehaviour
 
         vInput += throttleButton.value - brakeButton.value;
         hInput += rightButton.value - leftButton.value;
-
 
 //         foreach (Touch t in UnityEngine.Input.touches)
 //         {
@@ -185,8 +161,14 @@ public class VehicleMovementComponent : MonoBehaviour
 
     private void Gravity()
     {
-        if (roadSpline)
-            gravityDirection = -roadSpline.GetClosestRoadSplinePoint(transform.position).up;
+        if(splineOctree)
+        {
+            RoadNode nearest = splineOctree.GetNearestNodeToPosition(transform.position);
+            gravityDirection = -nearest.up;
+        }
+
+        //if (roadSpline)
+        //    gravityDirection = -roadSpline.GetClosestRoadSplinePoint(transform.position).up;
         else
             gravityDirection = Vector3.down;
 
