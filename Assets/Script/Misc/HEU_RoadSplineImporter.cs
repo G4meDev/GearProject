@@ -146,11 +146,11 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
         for(int i = 0; i < Positions.Count; i++)
         {
-            RoadNode newNode = new RoadNode();
+            RoadNode newNode = new();
             newNode.position = Positions[i];
             newNode.tangent = Tangenets[i];
             newNode.up = Ups[i];
-
+            
             allNodes.Add(newNode);
         }
 
@@ -177,9 +177,7 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
         octree.allNodes = allNodes;
 
-        Vector3 center;
-        Vector3 boundary;
-        Octree.CalculateCenterAndBoundFromPoints(Positions.ToArray(), out center, out boundary);
+        Octree.CalculateCenterAndBoundFromPoints(Positions.ToArray(), out Vector3 center, out Vector3 boundary);
 
         octree.Init(boundary, center, 16);
 

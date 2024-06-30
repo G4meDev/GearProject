@@ -288,8 +288,7 @@ public class Octree : MonoBehaviour
     {
         RoadNode result = new();
        
-        List<RoadNode> nodes;
-        Query(position, new Vector3(50, 50, 50), out nodes);
+        Query(position, new Vector3(50, 50, 50), out List<RoadNode> nodes);
 
         RoadNode nearest = null;
         float minDist = float.MaxValue;
@@ -307,10 +306,8 @@ public class Octree : MonoBehaviour
 
         if (nearest != null)
         {
-            float prev_t;
-            Vector3 prevNearest = ClosestPointOnLine(allNodes[nearest.prevNodes[0]].position, nearest.position, position, out prev_t);
-            float next_t;
-            Vector3 nextNearest = ClosestPointOnLine(nearest.position, allNodes[nearest.nextNodes[0]].position, position, out next_t);
+            Vector3 prevNearest = ClosestPointOnLine(allNodes[nearest.prevNodes[0]].position, nearest.position, position, out float prev_t);
+            Vector3 nextNearest = ClosestPointOnLine(nearest.position, allNodes[nearest.nextNodes[0]].position, position, out float next_t);
 
             bool isPrevNearest = Vector3.Distance(prevNearest, position) < Vector3.Distance(nextNearest, position);
 
