@@ -51,11 +51,6 @@ public class VehicleMovementComponent : MonoBehaviour
 
     VehicleWheel[] wheels = new VehicleWheel[4];
 
-    public GameObject roadSplineObject;
-
-    [HideInInspector]
-    public HEU_RoadSplineImporter roadSpline;
-
     public Octree splineOctree;
 
     [Space]
@@ -80,8 +75,9 @@ public class VehicleMovementComponent : MonoBehaviour
 
         wheels = GetComponentsInChildren<VehicleWheel>();
 
-        if(roadSplineObject)
-            roadSpline = roadSplineObject.GetComponentInChildren<HEU_RoadSplineImporter>();
+        //TODO: make hard reference
+        GameObject roadOctreeObj = GameObject.FindGameObjectWithTag("RoadOctree");
+        splineOctree = roadOctreeObj.GetComponent<Octree>();
         
     }
 
@@ -166,9 +162,6 @@ public class VehicleMovementComponent : MonoBehaviour
             RoadNode nearest = splineOctree.GetNearestNodeToPosition(transform.position);
             gravityDirection = -nearest.up;
         }
-
-        //if (roadSpline)
-        //    gravityDirection = -roadSpline.GetClosestRoadSplinePoint(transform.position).up;
         else
             gravityDirection = Vector3.down;
 

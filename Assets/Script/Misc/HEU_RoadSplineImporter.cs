@@ -173,6 +173,8 @@ public class HEU_RoadSplineImporter : MonoBehaviour
             octree = transform.AddComponent<Octree>();
         }
 
+        tag = "RoadOctree";
+
         octree.allNodes = allNodes;
 
         Vector3 center;

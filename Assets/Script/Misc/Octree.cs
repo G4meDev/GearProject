@@ -251,6 +251,8 @@ public class Octree : MonoBehaviour
 
             meshRenderer.material = material;
             meshRenderer.material.SetColor("_Color", comp.randColor);
+
+            comp.transform.gameObject.layer = LayerMask.NameToLayer("Octree");
         }
     }
 
@@ -332,17 +334,23 @@ public class Octree : MonoBehaviour
     {
         if (!Application.isPlaying)
         {
-            if (!divided)
+#if UNITY_EDITOR
+            if ((Tools.visibleLayers & 1 << LayerMask.NameToLayer("Octree")) > 0)
             {
-                float dist = Vector3.Distance(SceneView.lastActiveSceneView.camera.transform.position, center);
-                if (dist < 200)
+                if (!divided)
                 {
-                    foreach (RoadNode node in nodes)
+                    float dist = Vector3.Distance(SceneView.lastActiveSceneView.camera.transform.position, center);
+                    if (dist < 200)
                     {
-                        DrawHelpers.DrawSphere(node.position, 1, randColor);
+                        foreach (RoadNode node in nodes)
+                        {
+                            DrawHelpers.DrawSphere(node.position, 1, randColor);
+                        }
                     }
                 }
             }
+
+#endif
         }
 
 
