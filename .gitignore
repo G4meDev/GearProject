@@ -75,3 +75,5 @@ crashlytics-build.properties
 Assets/HoudiniEngineAssetCache
 
 Assets/Scenes/SampleScene
+
+**/.autosave
