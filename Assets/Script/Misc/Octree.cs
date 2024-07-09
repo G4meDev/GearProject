@@ -71,6 +71,8 @@ public class Octree : MonoBehaviour
         }
 
         boundary = new(max_x - min_x, max_y - min_y, max_z - min_z);
+
+        //offset
         boundary += new Vector3(1, 1, 1);
         center = new Vector3(min_x, min_y, min_z) + boundary / 2;
     }
