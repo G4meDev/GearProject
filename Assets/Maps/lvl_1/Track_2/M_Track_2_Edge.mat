@@ -76,6 +76,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 8879273786c282247a38343c4962e999, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_247976461a6949acb6ca6984e7220199_Out_0:
+        m_Texture: {fileID: 2800000, guid: 8879273786c282247a38343c4962e999, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BUILTIN_QueueControl: 0
