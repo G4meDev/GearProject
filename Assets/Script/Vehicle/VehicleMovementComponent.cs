@@ -183,7 +183,7 @@ public class VehicleMovementComponent : MonoBehaviour
          numWheelsOnGround = 0;
          foreach (var wheel in wheels)
          {
-             if (wheel.isOnGround)
+             if (wheel.onGround)
                  numWheelsOnGround++;
          }
     }

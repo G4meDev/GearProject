@@ -180,7 +180,7 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
             Octree.CalculateCenterAndBoundFromPoints(Positions.ToArray(), out Vector3 center, out Vector3 boundary);
 
-            octree.Init(boundary, center, 16);
+            octree.Init(boundary, center, 64);
 
             foreach (var node in allNodes)
             {

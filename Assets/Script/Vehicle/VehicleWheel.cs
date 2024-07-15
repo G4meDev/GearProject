@@ -8,8 +8,8 @@ public class VehicleWheel : MonoBehaviour
     [HideInInspector]
     public Transform axelTransform;
 
-    [HideInInspector]
-    public bool isOnGround = false;
+//     [HideInInspector]
+//     public bool isOnGround = false;
 
     [HideInInspector]
     public RaycastHit contactHit = new RaycastHit();
@@ -34,10 +34,10 @@ public class VehicleWheel : MonoBehaviour
     public float forceComOffset;
 
     [HideInInspector]
-    public float currentYaw = 0;
-
-    [HideInInspector]
-    public float currentRoll = 0;
+    private float currentYaw = 0;
+// 
+//     [HideInInspector]
+//     private float currentRoll = 0;
 
     [HideInInspector]
     VehicleMovementComponent MovmentComp;
@@ -48,6 +48,10 @@ public class VehicleWheel : MonoBehaviour
     [HideInInspector]
     GameObject refWheelTransform;
 
+    [HideInInspector]
+    public bool onGround;
+    [HideInInspector]
+    public GameObject wheelTransform;
 
 
     void Start()
@@ -67,10 +71,16 @@ public class VehicleWheel : MonoBehaviour
         CarBody = transform.root.GetComponent<Rigidbody>();
         MovmentComp = CarBody.GetComponent<VehicleMovementComponent>();
 
+
+        // ref is initial transform
         refWheelTransform = new GameObject(name + "_Refrence");
-        refWheelTransform.transform.parent = transform.parent;
+        refWheelTransform.transform.parent = transform.root;
         refWheelTransform.transform.transform.position = transform.position;
         refWheelTransform.transform.transform.rotation = transform.rotation;
+
+        // updated transform
+        wheelTransform = new GameObject(name + "_Transform");
+        wheelTransform.transform.transform.parent = refWheelTransform.transform;
     }
 
     private void Update()
@@ -83,33 +93,33 @@ public class VehicleWheel : MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.rotation = refWheelTransform.transform.rotation;
-        transform.Rotate(0, currentYaw, 0);
+        wheelTransform.transform.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        wheelTransform.transform.Rotate(0, currentYaw, 0);
 
         Ray ray = new Ray(refWheelTransform.transform.position, -refWheelTransform.transform.up);
-        isOnGround = Physics.Raycast(ray, out contactHit, SuspensionLength);
+        onGround = Physics.Raycast(ray, out contactHit, SuspensionLength);
 
-        if (isOnGround)
+        if (onGround)
         {
-            Vector3 SpringDir = transform.up;
-            Vector3 tireWorldVelocity = CarBody.GetPointVelocity(transform.position);
+            Vector3 SpringDir = refWheelTransform.transform.up;
+            Vector3 tireWorldVelocity = CarBody.GetPointVelocity(wheelTransform.transform.position);
 
             offset = SuspensionRestLength - contactHit.distance;
             float vel = Vector3.Dot(SpringDir, tireWorldVelocity);
 
             float suspenssionForce = (offset * springStrength) - (vel * springDamper);
-            CarBody.AddForceAtPosition(SpringDir * suspenssionForce, transform.position, ForceMode.Acceleration);
+            CarBody.AddForceAtPosition(SpringDir * suspenssionForce, wheelTransform.transform.transform.position, ForceMode.Acceleration);
 
 
-            Vector3 t = transform.parent.InverseTransformPoint(CarBody.worldCenterOfMass);
-            Vector3 targetLocal = new Vector3(transform.localPosition.x, t.y + forceComOffset, transform.localPosition.z);
-            Vector3 targetWorld = transform.parent.TransformPoint(targetLocal);
+            Vector3 t = wheelTransform.transform.parent.InverseTransformPoint(CarBody.worldCenterOfMass);
+            Vector3 targetLocal = new Vector3(wheelTransform.transform.localPosition.x, t.y + forceComOffset, wheelTransform.transform.localPosition.z);
+            Vector3 targetWorld = wheelTransform.transform.transform.parent.TransformPoint(targetLocal);
 
             // ------------------------------------------------------
             if (effectedByEngine)
             {
                 Vector3 contactNormal = contactHit.normal;
-                Vector3 contactRightVector = Vector3.Cross(contactNormal, transform.forward);
+                Vector3 contactRightVector = Vector3.Cross(contactNormal, refWheelTransform.transform.forward);
                 Vector3 contactTangent = Vector3.Cross(contactRightVector, contactNormal);
 
                 Vector3 p = contactHit.point + new Vector3(0, 2, 0);
@@ -119,7 +129,7 @@ public class VehicleWheel : MonoBehaviour
                 CarBody.AddForceAtPosition(throtleForce, targetWorld, ForceMode.Acceleration);
             }
 
-            Vector3 steerDir = transform.right;
+            Vector3 steerDir = wheelTransform.transform.right;
             float steerVelocity = Vector3.Dot(steerDir, tireWorldVelocity);
             float steerRatio = steerVelocity == 0 ? 0 : steerVelocity / CarBody.velocity.magnitude;
             steerRatio = Mathf.Clamp(Mathf.Abs(steerRatio), 0, 1);
@@ -134,20 +144,21 @@ public class VehicleWheel : MonoBehaviour
         }
 
 
-        Vector3 c = isOnGround ? contactHit.point : refWheelTransform.transform.position - refWheelTransform.transform.parent.up * SuspensionLength;
+        Vector3 c = onGround ? contactHit.point : refWheelTransform.transform.position - refWheelTransform.transform.parent.up * SuspensionLength;
         Vector3 boneTarget = c + refWheelTransform.transform.parent.up * wheelRadius;
-        WheelBoneTransform.position = boneTarget;
+        //WheelBoneTransform.position = boneTarget;
 
-        axelTransform.position = boneTarget;
+        //axelTransform.position = boneTarget;
 
 
         Vector3 v = CarBody.GetPointVelocity(refWheelTransform.transform.position);
         float wheelForwardVelocity = Vector3.Dot(v, CarBody.transform.forward);
         float rotationAngle = (wheelForwardVelocity * 360 * Time.fixedDeltaTime) / Mathf.PI * 2 * wheelRadius;
 
-        currentRoll += rotationAngle;
-
-        WheelBoneTransform.Rotate(currentRoll, 0, 0);
+        //@TODO: animation
+        //currentRoll += rotationAngle;
+        //@TODO: animation
+        //WheelBoneTransform.Rotate(currentRoll, 0, 0);
 
     }
 }
