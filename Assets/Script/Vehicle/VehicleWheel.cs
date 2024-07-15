@@ -43,9 +43,6 @@ public class VehicleWheel : MonoBehaviour
     Rigidbody CarBody;
 
     [HideInInspector]
-    GameObject refWheelTransform;
-
-    [HideInInspector]
     public bool onGround;
     //[HideInInspector]
     public Transform wheelTransform;
@@ -90,6 +87,7 @@ public class VehicleWheel : MonoBehaviour
             Vector3 targetWorld = wheelTransform.parent.TransformPoint(targetLocal);
 
             // ------------------------------------------------------
+            
             if (effectedByEngine)
             {
                 Vector3 contactNormal = contactHit.normal;
@@ -103,6 +101,8 @@ public class VehicleWheel : MonoBehaviour
                 CarBody.AddForceAtPosition(throtleForce, targetWorld, ForceMode.Acceleration);
             }
 
+            // ------------------------------------------------------
+
             Vector3 steerDir = wheelTransform.right;
             float steerVelocity = Vector3.Dot(steerDir, tireWorldVelocity);
             float steerRatio = steerVelocity == 0 ? 0 : steerVelocity / CarBody.velocity.magnitude;
@@ -110,7 +110,7 @@ public class VehicleWheel : MonoBehaviour
             float traction = tractionCurve.Evaluate(steerRatio);
 
             float desirdVelocityChange = -steerVelocity * traction;
-            float desireAccel = desirdVelocityChange / Time.fixedDeltaTime;
+            //float desireAccel = desirdVelocityChange / Time.fixedDeltaTime;
 
 
             //CarBody.AddForceAtPosition(steerDir * desireAccel * 0.25f, targetWorld, ForceMode.Acceleration);
@@ -130,6 +130,5 @@ public class VehicleWheel : MonoBehaviour
 
         currentRoll += rotationAngle;
         wheelTransform.Rotate(currentRoll, 0, 0);
-
     }
 }
