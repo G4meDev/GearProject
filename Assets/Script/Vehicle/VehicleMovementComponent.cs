@@ -10,11 +10,7 @@ public class VehicleMovementComponent : MonoBehaviour
     public float vInput;
     public float hInput;
 
-    public AnimationCurve engineCurve;
-    public float maxSpeed = 20;
     public float engineTorque = 2000;
-    public AnimationCurve brakeCurve;
-    public float maxBrake = 5;
     public float brakeTorque = 2000;
     [HideInInspector]
     public float currentTorque = 0.0f;
@@ -142,7 +138,8 @@ public class VehicleMovementComponent : MonoBehaviour
 //         hInput += axisValue;
 
         float forwardSpeedRatio = Vector3.Dot(rb.velocity, transform.forward);
-        float speedRatio = Mathf.Clamp01(forwardSpeedRatio == 0 ? 0 : forwardSpeedRatio / maxSpeed);
+        //float speedRatio = Mathf.Clamp01(forwardSpeedRatio == 0 ? 0 : forwardSpeedRatio / maxSpeed);
+        float speedRatio = 0;
         steerValue = steerCurve.Evaluate(speedRatio);
 
         float noise = Mathf.PerlinNoise(Time.time * 10, Time.time * 10) - 0.5f;
@@ -167,7 +164,8 @@ public class VehicleMovementComponent : MonoBehaviour
 
     private void UpdateSpeedParams()
     {
-        speedRatio = rb.velocity.magnitude == 0 ? 0 : Mathf.Clamp01(rb.velocity.magnitude / maxSpeed);
+        //speedRatio = rb.velocity.magnitude == 0 ? 0 : Mathf.Clamp01(rb.velocity.magnitude / maxSpeed);
+        speedRatio = 0;
 
         forwardSpeed = Vector3.Dot(transform.forward, rb.velocity);
         rightSpeed = Vector3.Dot(transform.right, rb.velocity);
@@ -201,13 +199,11 @@ public class VehicleMovementComponent : MonoBehaviour
     {
         if (vInput > 0)
         {
-            currentTorque = engineCurve.Evaluate(accelerating ? speedRatio : 0);
-            currentTorque *= engineTorque;
+            currentTorque = engineTorque;
         }
         else if (vInput < 0)
         {         
-            currentTorque = brakeCurve.Evaluate(accelerating ? 0 : speedRatio);
-            currentTorque *= brakeTorque;
+            currentTorque = brakeTorque;
         }
     }
 }

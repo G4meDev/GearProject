@@ -22,6 +22,8 @@ public class VehicleWheel : MonoBehaviour
 
     public float wheelRadius = 0.22f;
 
+    public float longFriction = 0.6f;
+
     public AnimationCurve tractionCurve;
 
     public bool effectedByEngine = true;
@@ -94,8 +96,8 @@ public class VehicleWheel : MonoBehaviour
                 Vector3 contactRightVector = Vector3.Cross(contactNormal, transform.forward);
                 Vector3 contactTangent = Vector3.Cross(contactRightVector, contactNormal);
 
-                Vector3 p = contactHit.point + new Vector3(0, 2, 0);
-                Debug.DrawLine(p, p + contactTangent);
+//                 Vector3 p = contactHit.point + new Vector3(0, 2, 0);
+//                 Debug.DrawLine(p, p + contactTangent);
 
                 Vector3 throtleForce = MovmentComp.vInput * MovmentComp.currentTorque * contactTangent;
                 CarBody.AddForceAtPosition(throtleForce, targetWorld, ForceMode.Acceleration);
@@ -105,16 +107,28 @@ public class VehicleWheel : MonoBehaviour
 
             Vector3 steerDir = wheelTransform.right;
             float steerVelocity = Vector3.Dot(steerDir, tireWorldVelocity);
-            float steerRatio = steerVelocity == 0 ? 0 : steerVelocity / CarBody.velocity.magnitude;
+            float steerRatio = steerVelocity == 0 ? 0 : steerVelocity / tireWorldVelocity.magnitude;
             steerRatio = Mathf.Clamp(Mathf.Abs(steerRatio), 0, 1);
             float traction = tractionCurve.Evaluate(steerRatio);
 
             float desirdVelocityChange = -steerVelocity * traction;
-            //float desireAccel = desirdVelocityChange / Time.fixedDeltaTime;
-
-
-            //CarBody.AddForceAtPosition(steerDir * desireAccel * 0.25f, targetWorld, ForceMode.Acceleration);
             CarBody.AddForceAtPosition(steerDir * desirdVelocityChange * 0.25f, targetWorld, ForceMode.VelocityChange);
+
+            // ------------------------------------------------------
+
+            Vector3 wheelForwardVector = Vector3.Normalize(Vector3.Cross(wheelTransform.right, transform.up));
+            float forwardSpeed = Vector3.Dot(wheelForwardVector, tireWorldVelocity);
+
+            float surfaceFriction = contactHit.collider ? contactHit.collider.material.dynamicFriction : 0.6f;
+            float friction = surfaceFriction * longFriction;
+
+            //Debug.DrawLine(transform.position, transform.position + wheelForwardVector * 1);
+
+            Debug.Log(friction);
+
+            DrawHelpers.DrawSphere(targetWorld, 0.2f, Color.red);
+
+            CarBody.AddForceAtPosition(wheelForwardVector * -forwardSpeed * friction * 0.25f, targetWorld, ForceMode.VelocityChange);
         }
 
 

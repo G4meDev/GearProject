@@ -740,7 +740,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maxSpeed: 40
-  engineTorque: 4
+  engineTorque: 100
   brakeCurve:
     serializedVersion: 2
     m_Curve:
