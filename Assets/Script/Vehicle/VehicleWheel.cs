@@ -96,10 +96,10 @@ public class VehicleWheel : MonoBehaviour
                 Vector3 contactRightVector = Vector3.Cross(contactNormal, transform.forward);
                 Vector3 contactTangent = Vector3.Cross(contactRightVector, contactNormal);
 
-//                 Vector3 p = contactHit.point + new Vector3(0, 2, 0);
-//                 Debug.DrawLine(p, p + contactTangent);
+                //                 Vector3 p = contactHit.point + new Vector3(0, 2, 0);
+                //                 Debug.DrawLine(p, p + contactTangent);
 
-                Vector3 throtleForce = MovmentComp.vInput * MovmentComp.currentTorque * contactTangent;
+                Vector3 throtleForce = MovmentComp.currentTorque * contactTangent;
                 CarBody.AddForceAtPosition(throtleForce, targetWorld, ForceMode.Acceleration);
             }
 

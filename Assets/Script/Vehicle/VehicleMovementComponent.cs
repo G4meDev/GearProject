@@ -10,7 +10,11 @@ public class VehicleMovementComponent : MonoBehaviour
     public float vInput;
     public float hInput;
 
+    public bool Boosting;
+
     public float engineTorque = 2000;
+    public float boostTorque = 2000;
+
     public float brakeTorque = 2000;
     [HideInInspector]
     public float currentTorque = 0.0f;
@@ -118,6 +122,10 @@ public class VehicleMovementComponent : MonoBehaviour
         vInput += throttleButton.value - brakeButton.value;
         hInput += rightButton.value - leftButton.value;
 
+        Boosting = UnityEngine.Input.GetButton("Boost");
+
+        Debug.Log(Boosting.ToString());
+
 //         foreach (Touch t in UnityEngine.Input.touches)
 //         {
 //             Vector2 p = t.position;
@@ -137,10 +145,11 @@ public class VehicleMovementComponent : MonoBehaviour
 //         float axisValue = Mathf.InverseLerp(-40, 40, angle) * 2 - 1;
 //         hInput += axisValue;
 
-        float forwardSpeedRatio = Vector3.Dot(rb.velocity, transform.forward);
+        //float forwardSpeedRatio = Vector3.Dot(rb.velocity, transform.forward);
         //float speedRatio = Mathf.Clamp01(forwardSpeedRatio == 0 ? 0 : forwardSpeedRatio / maxSpeed);
-        float speedRatio = 0;
-        steerValue = steerCurve.Evaluate(speedRatio);
+        float forwardSpeed = Vector3.Dot(rb.velocity, transform.forward);
+        //float speedRatio = 0;
+        steerValue = steerCurve.Evaluate(forwardSpeed);
 
         float noise = Mathf.PerlinNoise(Time.time * 10, Time.time * 10) - 0.5f;
         SpeedMeterArrow.transform.rotation = Quaternion.Euler(0, 0, speedRatio * maxMeterArrowAngle + (speedRatio * noise * 10));
@@ -197,13 +206,23 @@ public class VehicleMovementComponent : MonoBehaviour
 
     private void EngineTorque()
     {
-        if (vInput > 0)
+        if(Boosting)
         {
-            currentTorque = engineTorque;
+            currentTorque = boostTorque;
+        }
+
+        else if (vInput > 0)
+        {
+            currentTorque = engineTorque * vInput;
         }
         else if (vInput < 0)
         {         
-            currentTorque = brakeTorque;
+            currentTorque = brakeTorque * vInput;
+        }
+
+        else
+        {
+            currentTorque = 0;
         }
     }
 }
