@@ -157,15 +157,17 @@ public class VehicleMovementComponent : MonoBehaviour
 
     private void Gravity()
     {
-        if(splineOctree)
-        {
-            RoadNode nearest = splineOctree.GetNearestNodeToPosition(transform.position);
-            gravityDirection = -nearest.up;
-        }
-        else
-            gravityDirection = Vector3.down;
+        //         if(splineOctree)
+        //         {
+        //             RoadNode nearest = splineOctree.GetNearestNodeToPosition(transform.position);
+        //             gravityDirection = -nearest.up;
+        //         }
+        //         else
+        //             gravityDirection = Vector3.down;
 
-        Debug.DrawLine(transform.position, transform.position + gravityDirection * -2);
+        gravityDirection = Vector3.down;
+
+        //Debug.DrawLine(transform.position, transform.position + gravityDirection * -2);
 
         Vector3 GravityForce = (gravityDirection * Physics.gravity.magnitude) * Time.fixedDeltaTime;
         rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
