@@ -685,87 +685,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81de862f6d1e6ce49acc736f5140b352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravityDirection: {x: 0, y: 0, z: 0}
   centreOfMassOffset: 0
   vInput: 0
   hInput: 0
-  engineCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.5
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.4
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.5
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.8
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  maxSpeed: 40
+  Boosting: 0
   engineTorque: 100
-  brakeCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: -1
-      outSlope: -1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -1
-      outSlope: -1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  maxBrake: 5
+  boostTorque: 2000
   brakeTorque: 6
   currentTorque: 0
   maxDownForce: 1.3
@@ -1542,7 +1468,7 @@ PrefabInstance:
     - target: {fileID: 5452062954445420164, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9627605
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5452062954445420164, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
@@ -1552,12 +1478,17 @@ PrefabInstance:
     - target: {fileID: 5452062954445420164, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.2703558
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5452062954445420164, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6209312244728181438, guid: e39e6aa1d37eeeb49a903212140bc058,
+        type: 3}
+      propertyPath: far clip plane
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 6209312244728181438, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
@@ -1602,17 +1533,17 @@ PrefabInstance:
     - target: {fileID: 7365065335394803327, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: lastPositionWs.x
-      value: -201.0823
+      value: -555.2
       objectReference: {fileID: 0}
     - target: {fileID: 7365065335394803327, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: lastPositionWs.y
-      value: -38.96
+      value: 1.7
       objectReference: {fileID: 0}
     - target: {fileID: 7365065335394803327, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: lastPositionWs.z
-      value: -654.3153
+      value: -3.7999995
       objectReference: {fileID: 0}
     - target: {fileID: 7365065335394803327, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}

@@ -69,7 +69,7 @@ public class VehicleCameraArm : MonoBehaviour
 
             lastPositionWs = socket.position;
 
-            socket.rotation = Quaternion.LookRotation(target.position - socket.position, transform.parent.up);
+            socket.rotation = Quaternion.LookRotation(target.position - socket.position, -MovementComp.gravityDirection);
         }
 
         else

@@ -3,7 +3,7 @@ using UnityEngine;
 public class VehicleMovementComponent : MonoBehaviour
 {
     private Rigidbody rb;
-    private Vector3 gravityDirection;
+    public Vector3 gravityDirection;
 
     public float centreOfMassOffset = -1f;
 
