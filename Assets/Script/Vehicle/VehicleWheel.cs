@@ -14,7 +14,6 @@ public class VehicleWheel : MonoBehaviour
     [HideInInspector]
     public float offset = 0.0f;
 
-    public float SuspensionLength = 0.5f;
     public float SuspensionRestLength = 0.25f;
 
     public float springStrength = 1000;
@@ -70,18 +69,23 @@ public class VehicleWheel : MonoBehaviour
         wheelTransform.Rotate(0, currentYaw, 0);
 
         Ray ray = new Ray(transform.position, -transform.up);
-        onGround = Physics.Raycast(ray, out contactHit, SuspensionLength);
+        onGround = Physics.Raycast(ray, out contactHit, SuspensionRestLength);
 
         if (onGround)
         {
             Vector3 SpringDir = transform.up;
-            Vector3 tireWorldVelocity = CarBody.GetPointVelocity(wheelTransform.position);
+            Vector3 tireWorldVelocity = CarBody.GetPointVelocity(transform.position);
 
             offset = SuspensionRestLength - contactHit.distance;
             float vel = Vector3.Dot(SpringDir, tireWorldVelocity);
 
             float suspenssionForce = (offset * springStrength) - (vel * springDamper);
+
+            Debug.Log("str" + offset * springStrength + "       dam" + vel * springDamper);
+            
             CarBody.AddForceAtPosition(SpringDir * suspenssionForce, wheelTransform.position, ForceMode.Acceleration);
+
+            //Debug.DrawLine(wheelTransform.position, wheelTransform.position + Vector3.Normalize(SpringDir * suspenssionForce));
 
 
             Vector3 t = wheelTransform.parent.InverseTransformPoint(CarBody.worldCenterOfMass);
@@ -101,6 +105,8 @@ public class VehicleWheel : MonoBehaviour
 
                 Vector3 throtleForce = MovmentComp.currentTorque * contactTangent;
                 CarBody.AddForceAtPosition(throtleForce, targetWorld, ForceMode.Acceleration);
+
+                //Debug.DrawLine(wheelTransform.position, wheelTransform.position + Vector3.Normalize(throtleForce));
             }
 
             // ------------------------------------------------------
@@ -126,13 +132,13 @@ public class VehicleWheel : MonoBehaviour
 
             Debug.Log(friction);
 
-            DrawHelpers.DrawSphere(targetWorld, 0.2f, Color.red);
+            //DrawHelpers.DrawSphere(targetWorld, 0.2f, Color.red);
 
             CarBody.AddForceAtPosition(wheelForwardVector * -forwardSpeed * friction * 0.25f, targetWorld, ForceMode.VelocityChange);
         }
 
 
-        Vector3 c = onGround ? contactHit.point : transform.position - transform.parent.up * SuspensionLength;
+        Vector3 c = onGround ? contactHit.point : transform.position - transform.parent.up * SuspensionRestLength;
         Vector3 boneTarget = c + transform.parent.up * wheelRadius;
 
         wheelTransform.position = boneTarget;
