@@ -80,8 +80,6 @@ public class VehicleWheel : MonoBehaviour
             float vel = Vector3.Dot(SpringDir, tireWorldVelocity);
 
             float suspenssionForce = (offset * springStrength) - (vel * springDamper);
-
-            Debug.Log("str" + offset * springStrength + "       dam" + vel * springDamper);
             
             CarBody.AddForceAtPosition(SpringDir * suspenssionForce, wheelTransform.position, ForceMode.Acceleration);
 
@@ -127,12 +125,6 @@ public class VehicleWheel : MonoBehaviour
 
             float surfaceFriction = contactHit.collider ? contactHit.collider.material.dynamicFriction : 0.6f;
             float friction = surfaceFriction * longFriction;
-
-            //Debug.DrawLine(transform.position, transform.position + wheelForwardVector * 1);
-
-            Debug.Log(friction);
-
-            //DrawHelpers.DrawSphere(targetWorld, 0.2f, Color.red);
 
             CarBody.AddForceAtPosition(wheelForwardVector * -forwardSpeed * friction * 0.25f, targetWorld, ForceMode.VelocityChange);
         }

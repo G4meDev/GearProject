@@ -60,6 +60,11 @@ public class VehicleMovementComponent : MonoBehaviour
     public float maxMeterArrowAngle = -270;
 
 
+    [HideInInspector]
+    private float lastResetTime = 0;
+    [HideInInspector]
+    private float resetTimeTreshold = 2.0f;
+
     void Start()
     {
         Application.targetFrameRate = 60;
@@ -124,7 +129,8 @@ public class VehicleMovementComponent : MonoBehaviour
 
         Boosting = UnityEngine.Input.GetButton("Boost");
 
-        Debug.Log(Boosting.ToString());
+        if (UnityEngine.Input.GetButton("Reset"))
+            Reset();
 
 //         foreach (Touch t in UnityEngine.Input.touches)
 //         {
@@ -153,6 +159,30 @@ public class VehicleMovementComponent : MonoBehaviour
 
         float noise = Mathf.PerlinNoise(Time.time * 10, Time.time * 10) - 0.5f;
         SpeedMeterArrow.transform.rotation = Quaternion.Euler(0, 0, speedRatio * maxMeterArrowAngle + (speedRatio * noise * 10));
+    }
+
+    private void Reset()
+    {
+        if(Time.time - lastResetTime > resetTimeTreshold)
+        {
+            lastResetTime = Time.time;
+
+            if (splineOctree)
+            {
+                RoadNode nearest = splineOctree.GetNearestNodeToPosition(transform.position);
+                
+                Vector3 targetPos = nearest.position + nearest.up * 1;
+                Quaternion targetRot = Quaternion.LookRotation(-nearest.tangent, nearest.up);
+
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                
+                rb.position = targetPos;
+                rb.rotation = targetRot;
+            }
+
+        }
+
     }
 
     private void Gravity()
