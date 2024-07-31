@@ -56,9 +56,9 @@ public class VehicleMovementComponent : MonoBehaviour
 
     public GearButton leftButton;
 
-    public UnityEngine.UI.Image SpeedMeterArrow;
-    public float maxMeterArrowAngle = -270;
+    public GearButton boostButton;
 
+    public GearButton resetButton;
 
     [HideInInspector]
     private float lastResetTime = 0;
@@ -77,7 +77,7 @@ public class VehicleMovementComponent : MonoBehaviour
         //TODO: make hard reference
         GameObject roadOctreeObj = GameObject.FindGameObjectWithTag("RoadOctree");
         splineOctree = roadOctreeObj.GetComponent<Octree>();
-        
+
     }
 
     void OnGUI()
@@ -129,7 +129,9 @@ public class VehicleMovementComponent : MonoBehaviour
 
         Boosting = UnityEngine.Input.GetButton("Boost");
 
-        if (UnityEngine.Input.GetButton("Reset"))
+        Boosting |= boostButton.value > 0.01;
+
+        if (UnityEngine.Input.GetButton("Reset") || resetButton.value > 0.01)
             Reset();
 
 //         foreach (Touch t in UnityEngine.Input.touches)
@@ -156,9 +158,6 @@ public class VehicleMovementComponent : MonoBehaviour
         float forwardSpeed = Vector3.Dot(rb.velocity, transform.forward);
         //float speedRatio = 0;
         steerValue = steerCurve.Evaluate(forwardSpeed);
-
-        float noise = Mathf.PerlinNoise(Time.time * 10, Time.time * 10) - 0.5f;
-        SpeedMeterArrow.transform.rotation = Quaternion.Euler(0, 0, speedRatio * maxMeterArrowAngle + (speedRatio * noise * 10));
     }
 
     private void Reset()
