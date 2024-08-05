@@ -3,12 +3,7 @@ guid: f946c0b53d263f542bcd12113c94533d
 ModelImporter:
   serializedVersion: 22103
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: principledshader.002
-    second: {fileID: 2100000, guid: 1fda5b3b6325b42479bd2c33a9df0cbe, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0

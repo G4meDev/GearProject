@@ -3,7 +3,17 @@ guid: bb169c6728626124db2cac6580ca43bb
 ModelImporter:
   serializedVersion: 22103
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cliff
+    second: {fileID: 2100000, guid: 5abdb015dc3e309488061676e38a7c46, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: principledshader.002
+    second: {fileID: 2100000, guid: 1fda5b3b6325b42479bd2c33a9df0cbe, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
