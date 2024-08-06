@@ -60,7 +60,7 @@ public class VehicleCameraArm : MonoBehaviour
     {
         if (Application.isPlaying) 
         {
-            camComp.fieldOfView = Mathf.Lerp(minFOV, maxFOV, MovementComp.speedRatio);
+            //camComp.fieldOfView = Mathf.Lerp(minFOV, maxFOV, MovementComp.speedRatio);
 
             updateTransforms();
 

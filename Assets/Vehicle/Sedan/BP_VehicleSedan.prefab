@@ -731,8 +731,8 @@ MonoBehaviour:
   brakeButton: {fileID: 0}
   rightButton: {fileID: 0}
   leftButton: {fileID: 0}
-  SpeedMeterArrow: {fileID: 0}
-  maxMeterArrowAngle: -270
+  boostButton: {fileID: 0}
+  resetButton: {fileID: 0}
 --- !u!65 &4846820830711406233
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1518,7 +1518,7 @@ PrefabInstance:
     - target: {fileID: 7365065335394803327, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}
       propertyPath: armLength
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7365065335394803327, guid: e39e6aa1d37eeeb49a903212140bc058,
         type: 3}

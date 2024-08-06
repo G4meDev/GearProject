@@ -162,9 +162,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armLength: 1
+  socketOffset: {x: 0, y: 0, z: 0}
+  lagSpeed: 15
+  minFOV: 60
+  maxFOV: 70
+  MovementComp: {fileID: 0}
   target: {fileID: 4091990470107439786}
   socket: {fileID: 5452062954445420164}
   cam: {fileID: 0}
+  camComp: {fileID: 0}
+  lastPositionWs: {x: 0, y: 0, z: 0}
 --- !u!1 &7948287022827229657
 GameObject:
   m_ObjectHideFlags: 0

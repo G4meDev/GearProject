@@ -7,6 +7,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Checker
+    second: {fileID: 2100000, guid: 3f884bfb26721644f8ded93371279292, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: cliff
     second: {fileID: 2100000, guid: 5abdb015dc3e309488061676e38a7c46, type: 2}
   - first:
