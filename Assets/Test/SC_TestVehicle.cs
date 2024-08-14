@@ -18,9 +18,9 @@ public class SC_TestVehicle : MonoBehaviour
     public Vector3 offset = Vector3.zero;
 
     public float enginePower = 20.0f;
-    public float rotationRate = 200.0f;
 
-    public float traction = 0.4f;
+    public AnimationCurve tractionCurve;
+    public AnimationCurve steerCurve;
 
     public float orientationLerppRate = 0.01f;
 
@@ -52,18 +52,25 @@ public class SC_TestVehicle : MonoBehaviour
             Quaternion q = Quaternion.LookRotation(newForward, hit.normal);
             vehicleMesh.transform.rotation = Quaternion.Slerp(vehicleMesh.transform.rotation, q, Mathf.Clamp01(Time.fixedTime * orientationLerppRate));
 
-            vehicleMesh.transform.rotation = vehicleMesh.transform.rotation * Quaternion.AngleAxis(hInput * Time.fixedDeltaTime * rotationRate, vehicleMesh.transform.up);
+            float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleMesh.transform.forward);
+
+            float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
+            steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
+
+            vehicleMesh.transform.rotation = vehicleMesh.transform.rotation * Quaternion.AngleAxis( steerValue, vehicleMesh.transform.up);
             vehicleProxy.AddForce(vehicleMesh.transform.forward * vInput * enginePower, ForceMode.Acceleration);
 
-            float slipingSpeedRatio = Vector3.Dot(vehicleProxy.velocity, vehicleMesh.transform.right) / vehicleProxy.velocity.magnitude;
-            float calcTraction = slipingSpeedRatio * -traction;
+            float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleMesh.transform.right);
+            float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : slipingSpeed / vehicleProxy.velocity.magnitude;
+
+            float traction = tractionCurve.Evaluate(Mathf.Abs(slipingSpeedRatio));
 
 
             if (Mathf.Abs(slipingSpeedRatio) > 0)
             {
-                vehicleProxy.AddForce(vehicleProxy.velocity.magnitude * calcTraction * vehicleMesh.transform.right, ForceMode.VelocityChange);
+                vehicleProxy.AddForce(-slipingSpeed * traction * vehicleMesh.transform.right, ForceMode.VelocityChange);
 
-                tractionText.text = string.Format("Traction = {0:F2}", calcTraction);
+                tractionText.text = string.Format("Traction = {0:F2}", traction);
             }
         }
 
