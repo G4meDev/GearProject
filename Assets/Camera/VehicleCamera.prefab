@@ -166,6 +166,7 @@ MonoBehaviour:
   lagSpeed: 15
   minFOV: 60
   maxFOV: 70
+  cameraShakeStr: 0.0001
   MovementComp: {fileID: 0}
   target: {fileID: 4091990470107439786}
   socket: {fileID: 5452062954445420164}

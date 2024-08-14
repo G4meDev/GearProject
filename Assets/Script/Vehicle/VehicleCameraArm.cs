@@ -1,3 +1,5 @@
+using TreeEditor;
+using Unity.Mathematics;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -9,9 +11,11 @@ public class VehicleCameraArm : MonoBehaviour
 
     public float lagSpeed = 10;
 
-    public float minFOV = 60;
+    public float FOV = 60;
 
-    public float maxFOV = 90;
+    public float FOVChangeStr = 0.001f;
+
+    public float cameraShakeStr = 0.6f;
 
 
     [HideInInspector]
@@ -60,16 +64,25 @@ public class VehicleCameraArm : MonoBehaviour
     {
         if (Application.isPlaying) 
         {
-            //camComp.fieldOfView = Mathf.Lerp(minFOV, maxFOV, MovementComp.speedRatio);
+            camComp.fieldOfView = FOV + (MovementComp.forwardSpeed * MovementComp.forwardSpeed * FOVChangeStr);
 
             updateTransforms();
-
+            Debug.Log(lagSpeed * Time.deltaTime);
             socket.position = Vector3.Lerp(lastPositionWs, socket.position, Mathf.Clamp01(lagSpeed * Time.deltaTime));
 
 
             lastPositionWs = socket.position;
 
             socket.rotation = Quaternion.LookRotation(target.position - socket.position, -MovementComp.gravityDirection);
+
+            float t = Time.time;
+            float x = Mathf.PerlinNoise(t, t);
+            float y = Mathf.PerlinNoise((t+3) + 13, t);
+            float z = Mathf.PerlinNoise((t + 7) + 5, t);
+
+            Vector3 d = new Vector3(x - 0.5f, y - 0.5f, z - 0.5f);
+
+            cam.transform.localPosition = d * cameraShakeStr * MovementComp.forwardSpeed * MovementComp.forwardSpeed;
         }
 
         else

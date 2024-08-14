@@ -143,7 +143,7 @@ public class VehicleMovementComponent : MonoBehaviour
             airborn = true;
         }
 
-        Debug.Log("airborn : " + airborn);
+        //Debug.Log("airborn : " + airborn);
 
         rb.AddForce(-rb.velocity * dragCof, ForceMode.Acceleration);
 
