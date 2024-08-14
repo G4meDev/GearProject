@@ -22,6 +22,8 @@ public class SC_TestVehicle : MonoBehaviour
     public AnimationCurve tractionCurve;
     public AnimationCurve steerCurve;
 
+    public float airSteerStr = 0.4f;
+
     public float orientationLerppRate = 0.01f;
 
     [HideInInspector]
@@ -46,7 +48,22 @@ public class SC_TestVehicle : MonoBehaviour
         RaycastHit hit;
         Ray ray = new Ray(vehicleProxy.transform.position, -Vector3.up);
 
-        bool bhit = Physics.Raycast(ray, out hit, vehicleProxy.transform.localScale.x * 1.5f);
+        bool bhit = Physics.Raycast(ray, out hit, vehicleProxy.transform.localScale.x * 1.2f);
+        if (!bhit)
+        {
+            float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
+
+            float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime * airSteerStr;
+            steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
+
+            vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
+            Vector3 newForward = Vector3.Normalize(new Vector3(vehicleMesh.transform.forward.x, 0, vehicleMesh.transform.forward.z));
+
+            Vector3 xyVelocity = new Vector3(vehicleProxy.velocity.x, 0, vehicleProxy.velocity.z);
+            Vector3 dirVelocity = newForward * xyVelocity.magnitude;
+
+            vehicleProxy.velocity = dirVelocity + new Vector3(0, vehicleProxy.velocity.y, 0);
+        }
         if (bhit)
         {
             Vector3 newForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, hit.normal));
