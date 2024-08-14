@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Windows;
 
 public class SC_TestVehicle : MonoBehaviour
@@ -10,10 +12,15 @@ public class SC_TestVehicle : MonoBehaviour
     public GameObject vehicleMesh;
     public Camera camera;
 
+    public Text speedText;
+    public Text tractionText;
+
     public Vector3 offset = Vector3.zero;
 
     public float enginePower = 20.0f;
     public float rotationRate = 200.0f;
+
+    public float traction = 0.4f;
 
     public float orientationLerppRate = 0.01f;
 
@@ -47,10 +54,23 @@ public class SC_TestVehicle : MonoBehaviour
 
             vehicleMesh.transform.rotation = vehicleMesh.transform.rotation * Quaternion.AngleAxis(hInput * Time.fixedDeltaTime * rotationRate, vehicleMesh.transform.up);
             vehicleProxy.AddForce(vehicleMesh.transform.forward * vInput * enginePower, ForceMode.Acceleration);
+
+            float slipingSpeedRatio = Vector3.Dot(vehicleProxy.velocity, vehicleMesh.transform.right) / vehicleProxy.velocity.magnitude;
+            float calcTraction = slipingSpeedRatio * -traction;
+
+
+            if (Mathf.Abs(slipingSpeedRatio) > 0)
+            {
+                vehicleProxy.AddForce(vehicleProxy.velocity.magnitude * calcTraction * vehicleMesh.transform.right, ForceMode.VelocityChange);
+
+                tractionText.text = string.Format("Traction = {0:F2}", calcTraction);
+            }
         }
 
         camera.transform.position = vehicleMesh.transform.position + (vehicleMesh.transform.forward * -5) + (Vector3.up * 2);
         camera.transform.LookAt(vehicleMesh.transform);
+
+        speedText.text = string.Format("Speed : {0:F2}", vehicleProxy.velocity.magnitude);
     }
 
     void Update()
