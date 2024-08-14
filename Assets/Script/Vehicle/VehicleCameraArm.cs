@@ -1,5 +1,6 @@
 using TreeEditor;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -67,9 +68,8 @@ public class VehicleCameraArm : MonoBehaviour
             camComp.fieldOfView = FOV + (MovementComp.forwardSpeed * MovementComp.forwardSpeed * FOVChangeStr);
 
             updateTransforms();
-            Debug.Log(lagSpeed * Time.deltaTime);
+            
             socket.position = Vector3.Lerp(lastPositionWs, socket.position, Mathf.Clamp01(lagSpeed * Time.deltaTime));
-
 
             lastPositionWs = socket.position;
 

@@ -57,6 +57,8 @@ public class VehicleMovementComponent : MonoBehaviour
 
     public Octree splineOctree;
 
+    public RoadNode NearestNode;
+
     [Space]
     public GearButton throttleButton;
 
@@ -117,6 +119,12 @@ public class VehicleMovementComponent : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (splineOctree)
+        {
+            NearestNode = splineOctree.GetNearestNodeToPosition(transform.position);
+        }
+
+
         UpdateSpeedParams();
         Gravity();
         UpdateNumWheelsOnGround();
@@ -202,20 +210,14 @@ public class VehicleMovementComponent : MonoBehaviour
         {
             lastResetTime = Time.time;
 
-            if (splineOctree)
-            {
-                RoadNode nearest = splineOctree.GetNearestNodeToPosition(transform.position);
-                
-                Vector3 targetPos = nearest.position + nearest.up * 1;
-                Quaternion targetRot = Quaternion.LookRotation(-nearest.tangent, nearest.up);
+            Vector3 targetPos = NearestNode.position + NearestNode.up * 1;
+            Quaternion targetRot = Quaternion.LookRotation(-NearestNode.tangent, NearestNode.up);
 
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
                 
-                rb.position = targetPos;
-                rb.rotation = targetRot;
-            }
-
+            rb.position = targetPos;
+            rb.rotation = targetRot;
         }
 
     }
