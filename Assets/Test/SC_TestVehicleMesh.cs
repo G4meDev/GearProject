@@ -16,6 +16,6 @@ public class SC_TestVehicleMesh : MonoBehaviour
     void Update()
     {
         transform.position = VehicleBox.transform.TransformPoint(meshOffset);
-        transform.rotation = VehicleBox.transform.rotation;
+        transform.rotation = Quaternion.Slerp(transform.rotation, VehicleBox.transform.rotation, Time.deltaTime * 10.0f);
     }
 }

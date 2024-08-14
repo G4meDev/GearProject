@@ -51,7 +51,8 @@ public class SC_TestVehicle : MonoBehaviour
         {
             Vector3 newForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, hit.normal));
             Quaternion q = Quaternion.LookRotation(newForward, hit.normal);
-            vehicleBox.transform.rotation = Quaternion.Slerp(vehicleBox.transform.rotation, q, Mathf.Clamp01(Time.fixedTime * orientationLerppRate));
+            //vehicleBox.transform.rotation = Quaternion.Slerp(vehicleBox.transform.rotation, q, Mathf.Clamp01(Time.fixedTime * orientationLerppRate));
+            vehicleBox.transform.rotation = q;
 
             float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
 
@@ -75,8 +76,8 @@ public class SC_TestVehicle : MonoBehaviour
             }
         }
 
-        camera.transform.position = vehicleBox.transform.position + (vehicleBox.transform.forward * -5) + (Vector3.up * 2);
-        camera.transform.LookAt(vehicleBox.transform);
+        //camera.transform.position = vehicleBox.transform.position + (vehicleBox.transform.forward * -5) + (Vector3.up * 2);
+        //camera.transform.LookAt(vehicleBox.transform);
 
         speedText.text = string.Format("Speed : {0:F2}", vehicleProxy.velocity.magnitude);
     }
