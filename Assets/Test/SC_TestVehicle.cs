@@ -17,7 +17,7 @@ public class SC_TestVehicle : MonoBehaviour
 
     public Vector3 offset = Vector3.zero;
 
-    public float enginePower = 20.0f;
+    public AnimationCurve engineCurve;
 
     public AnimationCurve tractionCurve;
     public AnimationCurve steerCurve;
@@ -76,6 +76,8 @@ public class SC_TestVehicle : MonoBehaviour
             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
 
             vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis( steerValue, vehicleBox.transform.up);
+
+            float enginePower = engineCurve.Evaluate(vehicleProxy.velocity.magnitude);
             vehicleProxy.AddForce(vehicleBox.transform.forward * vInput * enginePower, ForceMode.Acceleration);
 
             float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
