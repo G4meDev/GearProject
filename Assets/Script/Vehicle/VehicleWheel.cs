@@ -123,10 +123,11 @@ public class VehicleWheel : MonoBehaviour
             Vector3 wheelForwardVector = Vector3.Normalize(Vector3.Cross(wheelTransform.right, transform.up));
             float forwardSpeed = Vector3.Dot(wheelForwardVector, tireWorldVelocity);
 
-            float surfaceFriction = contactHit.collider ? contactHit.collider.material.dynamicFriction : 0.6f;
+            //float surfaceFriction = contactHit.collider ? contactHit.collider.material.dynamicFriction : 0.0036f;
+            float surfaceFriction = 1.8f;
             float friction = surfaceFriction * longFriction;
 
-            CarBody.AddForceAtPosition(wheelForwardVector * -forwardSpeed * friction * 0.25f, targetWorld, ForceMode.VelocityChange);
+            CarBody.AddForceAtPosition(wheelForwardVector * -forwardSpeed * friction * 0.25f, targetWorld, ForceMode.Acceleration);
         }
 
 

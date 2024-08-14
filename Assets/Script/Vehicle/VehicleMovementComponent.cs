@@ -12,6 +12,16 @@ public class VehicleMovementComponent : MonoBehaviour
 
     public bool Boosting;
 
+    [HideInInspector]
+    public float lastTimeOnGround = 0.0f;
+    [HideInInspector]
+    public float airbornTimeTreshold = 1.0f;
+
+    [HideInInspector]
+    public bool airborn = false;
+
+    public float dragCof = 0.42f;
+
     public float engineTorque = 2000;
     public float boostTorque = 2000;
 
@@ -115,8 +125,34 @@ public class VehicleMovementComponent : MonoBehaviour
 
         //DrawHelpers.DrawSphere(rb.worldCenterOfMass, .2f, Color.black);
 
+        if (numWheelsOnGround != 0)
+        {
+            lastTimeOnGround = Time.time;
+            
+            if (airborn)
+            {
+                airborn = false;
+                // -------
+                //rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                //rb.angularVelocity = Vector3.zero;
+            }
+        }
 
+        else if(Time.time - lastTimeOnGround > airbornTimeTreshold)
+        {
+            airborn = true;
+        }
 
+        Debug.Log("airborn : " + airborn);
+
+        rb.AddForce(-rb.velocity * dragCof, ForceMode.Acceleration);
+
+        if (numWheelsOnGround == 0)
+        {
+            Vector3 t = transform.forward.y * Vector3.right * 1000;
+            rb.AddRelativeTorque(t);
+
+        }
     }
 
     private void Update()
@@ -198,8 +234,8 @@ public class VehicleMovementComponent : MonoBehaviour
 
         //Debug.DrawLine(transform.position, transform.position + gravityDirection * -2);
 
-        Vector3 GravityForce = (gravityDirection * Physics.gravity.magnitude) * Time.fixedDeltaTime;
-        rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.VelocityChange);
+        Vector3 GravityForce = (gravityDirection * Physics.gravity.magnitude);
+        rb.AddForce(GravityForce.x, GravityForce.y, GravityForce.z, ForceMode.Acceleration);
     }
 
     private void UpdateSpeedParams()
@@ -228,11 +264,13 @@ public class VehicleMovementComponent : MonoBehaviour
 
     private void DownForce()
     {
-        if(numWheelsOnGround == 4)
+        if(numWheelsOnGround != 0)
         {
-            float downForce = speedRatio * maxDownForce;
+            float downForce = maxDownForce * rb.velocity.magnitude;
             rb.AddForce(downForce * gravityDirection, ForceMode.Acceleration);
         }
+
+
     }
 
     private void EngineTorque()
