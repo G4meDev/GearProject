@@ -9,7 +9,7 @@ using UnityEngine.Windows;
 public class SC_TestVehicle : MonoBehaviour
 {
     public Rigidbody vehicleProxy;
-    public GameObject vehicleMesh;
+    public GameObject vehicleBox;
     public Camera camera;
 
     public Text speedText;
@@ -40,7 +40,8 @@ public class SC_TestVehicle : MonoBehaviour
         vInput = UnityEngine.Input.GetAxis("Vertical");
         hInput = UnityEngine.Input.GetAxis("Horizontal");
 
-        vehicleMesh.transform.position = vehicleProxy.transform.position + offset;
+        //vehicleMesh.transform.position = vehicleProxy.transform.position + offset;
+        vehicleBox.transform.position = vehicleProxy.transform.position;
 
         RaycastHit hit;
         Ray ray = new Ray(vehicleProxy.transform.position, -Vector3.up);
@@ -48,19 +49,19 @@ public class SC_TestVehicle : MonoBehaviour
         bool bhit = Physics.Raycast(ray, out hit, vehicleProxy.transform.localScale.x * 1.5f);
         if (bhit)
         {
-            Vector3 newForward = Vector3.Normalize(Vector3.Cross(vehicleMesh.transform.right, hit.normal));
+            Vector3 newForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, hit.normal));
             Quaternion q = Quaternion.LookRotation(newForward, hit.normal);
-            vehicleMesh.transform.rotation = Quaternion.Slerp(vehicleMesh.transform.rotation, q, Mathf.Clamp01(Time.fixedTime * orientationLerppRate));
+            vehicleBox.transform.rotation = Quaternion.Slerp(vehicleBox.transform.rotation, q, Mathf.Clamp01(Time.fixedTime * orientationLerppRate));
 
-            float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleMesh.transform.forward);
+            float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
 
             float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
 
-            vehicleMesh.transform.rotation = vehicleMesh.transform.rotation * Quaternion.AngleAxis( steerValue, vehicleMesh.transform.up);
-            vehicleProxy.AddForce(vehicleMesh.transform.forward * vInput * enginePower, ForceMode.Acceleration);
+            vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis( steerValue, vehicleBox.transform.up);
+            vehicleProxy.AddForce(vehicleBox.transform.forward * vInput * enginePower, ForceMode.Acceleration);
 
-            float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleMesh.transform.right);
+            float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
             float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : slipingSpeed / vehicleProxy.velocity.magnitude;
 
             float traction = tractionCurve.Evaluate(Mathf.Abs(slipingSpeedRatio));
@@ -68,14 +69,14 @@ public class SC_TestVehicle : MonoBehaviour
 
             if (Mathf.Abs(slipingSpeedRatio) > 0)
             {
-                vehicleProxy.AddForce(-slipingSpeed * traction * vehicleMesh.transform.right, ForceMode.VelocityChange);
+                vehicleProxy.AddForce(-slipingSpeed * traction * vehicleBox.transform.right, ForceMode.VelocityChange);
 
                 tractionText.text = string.Format("Traction = {0:F2}", traction);
             }
         }
 
-        camera.transform.position = vehicleMesh.transform.position + (vehicleMesh.transform.forward * -5) + (Vector3.up * 2);
-        camera.transform.LookAt(vehicleMesh.transform);
+        camera.transform.position = vehicleBox.transform.position + (vehicleBox.transform.forward * -5) + (Vector3.up * 2);
+        camera.transform.LookAt(vehicleBox.transform);
 
         speedText.text = string.Format("Speed : {0:F2}", vehicleProxy.velocity.magnitude);
     }
