@@ -18,6 +18,7 @@ public class SC_TestVehicle : MonoBehaviour
     public Vector3 offset = Vector3.zero;
 
     public AnimationCurve engineCurve;
+    public AnimationCurve boostCurve;
 
     public float traction = 0.8f;
     public float driftTraction = 0.2f;
@@ -31,6 +32,9 @@ public class SC_TestVehicle : MonoBehaviour
 
     [HideInInspector]
     public bool drifting = false;
+
+    [HideInInspector]
+    public bool boosting = false;
 
     [HideInInspector]
     float lastjumpTime = 0;
@@ -55,6 +59,7 @@ public class SC_TestVehicle : MonoBehaviour
         hInput = UnityEngine.Input.GetAxis("Horizontal");
 
         bool jumping = UnityEngine.Input.GetButton("Jump");
+        boosting = UnityEngine.Input.GetButton("Boost");
 
         if (drifting && !jumping)
         {
@@ -97,8 +102,9 @@ public class SC_TestVehicle : MonoBehaviour
 
             vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis( steerValue, vehicleBox.transform.up);
 
-            float enginePower = engineCurve.Evaluate(vehicleProxy.velocity.magnitude);
-            vehicleProxy.AddForce(vehicleBox.transform.forward * vInput * enginePower, ForceMode.Acceleration);
+            float enginePower = boosting ? boostCurve.Evaluate(vehicleProxy.velocity.magnitude) : vInput * engineCurve.Evaluate(vehicleProxy.velocity.magnitude);
+
+            vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
 
             float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
             float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : slipingSpeed / vehicleProxy.velocity.magnitude;
