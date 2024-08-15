@@ -24,6 +24,10 @@ public class SC_TestVehicle : MonoBehaviour
 
     public float rayDist = 1.0f;
 
+    public SC_SpeedModifier boostpadModifier;
+
+    public SpeedModifierData boostpadModifierData;
+
     public AnimationCurve engineCurve;
     public AnimationCurve boostCurve;
 
@@ -84,6 +88,14 @@ public class SC_TestVehicle : MonoBehaviour
         bool jumping = UnityEngine.Input.GetButton("Jump");
         boosting = UnityEngine.Input.GetButton("Boost");
 
+        if (boosting)
+        {
+            boostpadModifier.Register(boostpadModifierData);
+        }
+
+        Debug.Log(boostpadModifier.alive);
+        Debug.Log(boostpadModifier.value);
+
         float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
 
         if (true)
@@ -96,9 +108,7 @@ public class SC_TestVehicle : MonoBehaviour
         else 
             boostIndicator.material = boostOffMaterial;
 
-        Debug.Log(boosting);
-
-        if (drifting && !jumping)
+        if (drifting && !jumping) 
         {
             drifting = false;
         }
