@@ -150,9 +150,13 @@ MonoBehaviour:
   vehicleProxy: {fileID: 3017573830326654721}
   vehicleBox: {fileID: 188936559622972655}
   vehicleMesh: {fileID: 1706573743033637836}
+  boostIndicator: {fileID: 7829255249813983696}
+  boostOffMaterial: {fileID: 2100000, guid: c9c7af39d7feacc418018f2057eef3aa, type: 2}
+  boostOnMaterial: {fileID: 2100000, guid: 9ea7cf6df2188844da611c34f2c644c1, type: 2}
   speedText: {fileID: 0}
   tractionText: {fileID: 0}
   offset: {x: 0, y: -0.5, z: 0}
+  rayDist: 1
   engineCurve:
     serializedVersion: 2
     m_Curve:
@@ -236,11 +240,14 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  groundDrag: 0.42
+  airDrag: 0.55
   airSteerStr: 0.5
   orientationLerppRate: 0.003
   jumpStr: {x: 0, y: 300, z: 0}
   drifting: 0
   boosting: 0
+  boostAmount: 0
   vInput: 0
   hInput: 0
 --- !u!1 &4464370783046510623
@@ -367,7 +374,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5177595242150146046}
-  m_LocalRotation: {x: 0.022709673, y: -0.00000016391277, z: 0.0000000041909516, w: 0.99974215}
+  m_LocalRotation: {x: -1e-45, y: -0.000002130866, z: 0, w: 1}
   m_LocalPosition: {x: 0.000021338463, y: 2.0000005, z: -4.999991}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -683,6 +690,89 @@ MonoBehaviour:
   m_YawDamping: 1
   m_RollDamping: 0
   m_AngularDamping: 0
+--- !u!1 &7417783819118272802
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4172925285372180049}
+  - component: {fileID: 8133420888647663228}
+  - component: {fileID: 7829255249813983696}
+  m_Layer: 0
+  m_Name: BoostIndicator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4172925285372180049
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7417783819118272802}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: -1.1179875}
+  m_LocalScale: {x: 0.71446955, y: 0.14204895, z: 0.27523}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2082113745696784758}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &8133420888647663228
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7417783819118272802}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &7829255249813983696
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7417783819118272802}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7566143381370780299
 GameObject:
   m_ObjectHideFlags: 0
@@ -707,8 +797,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7566143381370780299}
-  m_LocalRotation: {x: 0.02191403, y: -0.000000074505806, z: 0.0000000018626451, w: 0.9997599}
-  m_LocalPosition: {x: 0.00000834465, y: 2.0000005, z: -6.999991}
+  m_LocalRotation: {x: -1e-45, y: -0.000002130866, z: 0, w: 1}
+  m_LocalPosition: {x: 0.000021338463, y: 2.0000005, z: -4.999991}
   m_LocalScale: {x: 0.99999976, y: 1, z: 0.99999976}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -828,7 +918,11 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4172925285372180049}
   m_SourcePrefab: {fileID: 100100000, guid: cf3fec9ad018ba84eb10d45abccc1a5e, type: 3}
 --- !u!1 &1706573743033637836 stripped
 GameObject:

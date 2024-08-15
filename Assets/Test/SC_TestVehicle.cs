@@ -12,10 +12,17 @@ public class SC_TestVehicle : MonoBehaviour
     public GameObject vehicleBox;
     public GameObject vehicleMesh;
 
+    public MeshRenderer boostIndicator;
+
+    public Material boostOffMaterial;
+    public Material boostOnMaterial;
+
     public Text speedText;
     public Text tractionText;
 
     public Vector3 offset = Vector3.zero;
+
+    public float rayDist = 1.0f;
 
     public AnimationCurve engineCurve;
     public AnimationCurve boostCurve;
@@ -23,6 +30,9 @@ public class SC_TestVehicle : MonoBehaviour
     public float traction = 0.8f;
     public float driftTraction = 0.2f;
     public AnimationCurve steerCurve;
+
+    public float groundDrag = 0.42f;
+    public float airDrag = 0.62f;
 
     public float airSteerStr = 0.4f;
 
@@ -36,10 +46,15 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     public bool boosting = false;
 
-    float minAirbornTime = 0.5f;
+    [HideInInspector]
+    public float boostAmount = 0.0f;
 
-    float lastAirbornTime = 0.0f;
-    float airbornDiuration = 0.0f;
+    bool isBoosting()
+    {
+        return boostAmount > 0 || boosting;
+    }
+
+    float minAirbornTime = 0.5f;
 
     float lastTimeOnGround = 0.0f;
     bool airborn = false;
@@ -47,7 +62,7 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     float lastjumpTime = 0;
 
-    float jumpTimeTreshold = 2.0f;
+    float jumpTimeTreshold = 0.5f;
 
     [HideInInspector]
     public float vInput;
@@ -69,10 +84,17 @@ public class SC_TestVehicle : MonoBehaviour
         bool jumping = UnityEngine.Input.GetButton("Jump");
         boosting = UnityEngine.Input.GetButton("Boost");
 
-        if(!boosting && Time.time - lastAirbornTime < airbornDiuration)
+        float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
+
+        if (true)
         {
-            boosting = true;
+            boostAmount = Mathf.Max(boostAmount - Time.fixedDeltaTime, 0.0f);
         }
+
+        if (isBoosting())
+            boostIndicator.material = boostOnMaterial;
+        else 
+            boostIndicator.material = boostOffMaterial;
 
         Debug.Log(boosting);
 
@@ -81,31 +103,36 @@ public class SC_TestVehicle : MonoBehaviour
             drifting = false;
         }
 
-        Debug.Log(drifting);
-
         vehicleBox.transform.position = vehicleProxy.transform.position;
 
         RaycastHit hit;
         Ray ray = new Ray(vehicleProxy.transform.position, -Vector3.up);
 
-        bool bhit = Physics.Raycast(ray, out hit, vehicleProxy.transform.localScale.x * 1.0f);
+        Debug.DrawLine(vehicleProxy.transform.position, vehicleProxy.transform.position - Vector3.up * rayDist);
+
+        bool bhit = Physics.Raycast(ray, out hit, rayDist);
         if (!bhit)
         {
-            float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
+            
 
             float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime * airSteerStr;
             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
 
+            Vector3 xyVelocity = new Vector3(vehicleProxy.velocity.x, 0, vehicleProxy.velocity.z); 
+
             vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
             Vector3 newForward = Vector3.Normalize(new Vector3(vehicleMesh.transform.forward.x, 0, vehicleMesh.transform.forward.z));
 
-            Vector3 xyVelocity = new Vector3(vehicleProxy.velocity.x, 0, vehicleProxy.velocity.z);
             Vector3 dirVelocity = newForward * xyVelocity.magnitude;
 
             vehicleProxy.velocity = dirVelocity + new Vector3(0, vehicleProxy.velocity.y, 0);
+
+            vehicleProxy.drag = airDrag;
         }
         if (bhit)
         {
+            vehicleProxy.drag = groundDrag;
+
             if (airborn && Time.time - lastTimeOnGround > 0.1f)
             {
                 airborn = false;
@@ -113,8 +140,7 @@ public class SC_TestVehicle : MonoBehaviour
 
                 if (d > minAirbornTime)
                 {
-                    lastAirbornTime = Time.time;
-                    airbornDiuration = d;
+                    boostAmount += d;
                 }
             }
 
@@ -123,14 +149,12 @@ public class SC_TestVehicle : MonoBehaviour
             Quaternion q = Quaternion.LookRotation(newForward, hit.normal);
             vehicleBox.transform.rotation = q;
 
-            float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
-
             float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
 
             vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis( steerValue, vehicleBox.transform.up);
 
-            float enginePower = boosting ? boostCurve.Evaluate(vehicleProxy.velocity.magnitude) : vInput * engineCurve.Evaluate(vehicleProxy.velocity.magnitude);
+            float enginePower = isBoosting() ? boostCurve.Evaluate(vehicleProxy.velocity.magnitude) : vInput * engineCurve.Evaluate(vehicleProxy.velocity.magnitude);
 
             vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
 
@@ -161,7 +185,7 @@ public class SC_TestVehicle : MonoBehaviour
             }
         }
 
-        speedText.text = string.Format("Speed : {0:F2}", vehicleProxy.velocity.magnitude);
+        speedText.text = string.Format("Speed : {0:F2}", forwardSpeed);
     }
 
     void Update()
