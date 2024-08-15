@@ -19,12 +19,23 @@ public class SC_TestVehicle : MonoBehaviour
 
     public AnimationCurve engineCurve;
 
-    public AnimationCurve tractionCurve;
+    public float traction = 0.8f;
+    public float driftTraction = 0.2f;
     public AnimationCurve steerCurve;
 
     public float airSteerStr = 0.4f;
 
     public float orientationLerppRate = 0.01f;
+
+    public Vector3 jumpStr = Vector3.zero;
+
+    [HideInInspector]
+    public bool drifting = false;
+
+    [HideInInspector]
+    float lastjumpTime = 0;
+
+    float jumpTimeTreshold = 2.0f;
 
     [HideInInspector]
     public float vInput;
@@ -43,12 +54,21 @@ public class SC_TestVehicle : MonoBehaviour
         vInput = UnityEngine.Input.GetAxis("Vertical");
         hInput = UnityEngine.Input.GetAxis("Horizontal");
 
+        bool jumping = UnityEngine.Input.GetButton("Jump");
+
+        if (drifting && !jumping)
+        {
+            drifting = false;
+        }
+
+        Debug.Log(drifting);
+
         vehicleBox.transform.position = vehicleProxy.transform.position;
 
         RaycastHit hit;
         Ray ray = new Ray(vehicleProxy.transform.position, -Vector3.up);
 
-        bool bhit = Physics.Raycast(ray, out hit, vehicleProxy.transform.localScale.x * 1.2f);
+        bool bhit = Physics.Raycast(ray, out hit, vehicleProxy.transform.localScale.x * 1.0f);
         if (!bhit)
         {
             float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
@@ -83,14 +103,23 @@ public class SC_TestVehicle : MonoBehaviour
             float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
             float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : slipingSpeed / vehicleProxy.velocity.magnitude;
 
-            float traction = tractionCurve.Evaluate(Mathf.Abs(slipingSpeedRatio));
-
 
             if (Mathf.Abs(slipingSpeedRatio) > 0)
             {
-                vehicleProxy.AddForce(-slipingSpeed * traction * vehicleBox.transform.right, ForceMode.VelocityChange);
+                float t = drifting ? driftTraction : traction;
 
-                tractionText.text = string.Format("Traction = {0:F2}", traction);
+                vehicleProxy.AddForce(-slipingSpeed * t * vehicleBox.transform.right, ForceMode.VelocityChange);
+
+                tractionText.text = string.Format("Traction = {0:F2}", t);
+            }
+
+            if (jumping && !drifting && Time.time - lastjumpTime > jumpTimeTreshold)
+            {
+                vehicleProxy.AddForce(jumpStr, ForceMode.Acceleration);
+
+                drifting = true;
+
+                lastjumpTime = Time.time;
             }
         }
 
