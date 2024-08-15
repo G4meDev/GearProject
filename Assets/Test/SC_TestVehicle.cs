@@ -36,6 +36,14 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     public bool boosting = false;
 
+    float minAirbornTime = 0.5f;
+
+    float lastAirbornTime = 0.0f;
+    float airbornDiuration = 0.0f;
+
+    float lastTimeOnGround = 0.0f;
+    bool airborn = false;
+
     [HideInInspector]
     float lastjumpTime = 0;
 
@@ -60,6 +68,13 @@ public class SC_TestVehicle : MonoBehaviour
 
         bool jumping = UnityEngine.Input.GetButton("Jump");
         boosting = UnityEngine.Input.GetButton("Boost");
+
+        if(!boosting && Time.time - lastAirbornTime < airbornDiuration)
+        {
+            boosting = true;
+        }
+
+        Debug.Log(boosting);
 
         if (drifting && !jumping)
         {
@@ -91,6 +106,19 @@ public class SC_TestVehicle : MonoBehaviour
         }
         if (bhit)
         {
+            if (airborn && Time.time - lastTimeOnGround > 0.1f)
+            {
+                airborn = false;
+                float d = Time.time - lastTimeOnGround;
+
+                if (d > minAirbornTime)
+                {
+                    lastAirbornTime = Time.time;
+                    airbornDiuration = d;
+                }
+            }
+
+
             Vector3 newForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, hit.normal));
             Quaternion q = Quaternion.LookRotation(newForward, hit.normal);
             vehicleBox.transform.rotation = q;
@@ -123,9 +151,13 @@ public class SC_TestVehicle : MonoBehaviour
             {
                 vehicleProxy.AddForce(jumpStr, ForceMode.Acceleration);
 
-                drifting = true;
+                //drifting = true;
 
                 lastjumpTime = Time.time;
+
+                lastTimeOnGround = Time.time;
+
+                airborn = true;
             }
         }
 
