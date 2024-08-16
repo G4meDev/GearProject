@@ -151,14 +151,14 @@ MonoBehaviour:
   vehicleBox: {fileID: 188936559622972655}
   vehicleMesh: {fileID: 1706573743033637836}
   boostIndicator: {fileID: 7829255249813983696}
-  boostOffMaterial: {fileID: 2100000, guid: c9c7af39d7feacc418018f2057eef3aa, type: 2}
-  boostOnMaterial: {fileID: 2100000, guid: 9ea7cf6df2188844da611c34f2c644c1, type: 2}
   speedText: {fileID: 0}
   tractionText: {fileID: 0}
-  offset: {x: 0, y: -0.5, z: 0}
+  boostText: {fileID: 0}
+  reserveText: {fileID: 0}
+  maxSpeed: 21
   rayDist: 1
   speedModifierIntensity: 0
-  speedModifierReserverTime: 0
+  speedModifierReserveTime: 0
   boostpadModifierData: {fileID: 11400000, guid: 180e4f92763ea45418ca5ac657fca4db,
     type: 2}
   engineCurve:
@@ -246,6 +246,7 @@ MonoBehaviour:
   drifting: 0
   boosting: 0
   boostAmount: 0
+  forwardSpeed: 0
   vInput: 0
   hInput: 0
 --- !u!1 &4464370783046510623
@@ -373,7 +374,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5177595242150146046}
   m_LocalRotation: {x: -1e-45, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: -5}
+  m_LocalPosition: {x: 0, y: 1.8529, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -749,7 +750,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: c9c7af39d7feacc418018f2057eef3aa, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -796,7 +797,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7566143381370780299}
   m_LocalRotation: {x: -1e-45, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: -5}
+  m_LocalPosition: {x: 0, y: 1.8529, z: -5}
   m_LocalScale: {x: 0.99999976, y: 1, z: 0.99999976}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -868,7 +869,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: -0.6471
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
         type: 3}
@@ -1002,7 +1003,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VehicleBox: {fileID: 188936559622972655}
   cameraTarget: {fileID: 4464370783046510623}
-  meshOffset: {x: 0, y: -0.5, z: 0}
+  meshOffset: {x: 0, y: -0.65, z: 0}
   lerpRate: 5
 --- !u!4 &2082113745696784758 stripped
 Transform:

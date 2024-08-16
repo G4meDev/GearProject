@@ -14,18 +14,17 @@ public class SC_TestVehicle : MonoBehaviour
 
     public MeshRenderer boostIndicator;
 
-    public Material boostOffMaterial;
-    public Material boostOnMaterial;
-
     public Text speedText;
     public Text tractionText;
+    public Text boostText;
+    public Text reserveText;
 
-    public Vector3 offset = Vector3.zero;
+    public float maxSpeed = 21.0f;
 
     public float rayDist = 1.0f;
 
     public float speedModifierIntensity;
-    public float speedModifierReserverTime;
+    public float speedModifierReserveTime;
 
     public SpeedModifierData boostpadModifierData;
 
@@ -51,6 +50,11 @@ public class SC_TestVehicle : MonoBehaviour
 
     [HideInInspector]
     public float boostAmount = 0.0f;
+
+    [HideInInspector]
+    public float forwardSpeed = 0.0f;
+
+    float maxSpeedModifier = 20.0f;
 
     bool isBoosting()
     {
@@ -81,11 +85,20 @@ public class SC_TestVehicle : MonoBehaviour
 
     public void ApplySpeedModifier(ref SpeedModifierData data)
     {
-        speedModifierReserverTime += data.reserverTime;
+        speedModifierReserveTime += data.reserverTime;
 
         if (speedModifierIntensity < data.intensity)
         {
             speedModifierIntensity = data.intensity;
+        }
+    }
+
+    public void IncreaseSpeedToMax()
+    {
+        if (forwardSpeed < maxSpeed)
+        {
+            //vehicleProxy.velocity = (vehicleBox.transform.forward * maxSpeed) + (Vector3.up * vehicleProxy.velocity.y);
+            vehicleProxy.velocity = (vehicleBox.transform.forward * maxSpeed);
         }
     }
 
@@ -97,26 +110,26 @@ public class SC_TestVehicle : MonoBehaviour
         bool jumping = UnityEngine.Input.GetButton("Jump");
         boosting = UnityEngine.Input.GetButton("Boost");
 
-        speedModifierReserverTime -= Time.fixedDeltaTime;
-        if (speedModifierReserverTime < 0)
+        speedModifierReserveTime -= Time.fixedDeltaTime;
+        if (speedModifierReserveTime < 0)
         {
-            speedModifierReserverTime = 0;
+            speedModifierReserveTime = 0;
             speedModifierIntensity = 0;
         }
 
-        Debug.Log("speed : " + speedModifierIntensity + "    time : " + speedModifierReserverTime);
+        float speedModifierAlpha = speedModifierIntensity / maxSpeedModifier;
 
-        float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
+        boostIndicator.GetComponent<MeshRenderer>().material.SetFloat("_a", speedModifierAlpha);
+
+        boostText.text = string.Format("Boost : {0:F2}", speedModifierIntensity);
+        reserveText.text = string.Format("Reserve : {0:F2}", speedModifierReserveTime);
+
+        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
 
         if (true)
         {
             boostAmount = Mathf.Max(boostAmount - Time.fixedDeltaTime, 0.0f);
         }
-
-        if (isBoosting())
-            boostIndicator.material = boostOnMaterial;
-        else 
-            boostIndicator.material = boostOffMaterial;
 
         if (drifting && !jumping) 
         {
@@ -177,6 +190,12 @@ public class SC_TestVehicle : MonoBehaviour
             vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis( steerValue, vehicleBox.transform.up);
 
             float modifier = Mathf.Max(speedModifierIntensity, isBoosting() ? boostIntensity : 0);
+
+            if (modifier > 0)
+            {
+                IncreaseSpeedToMax();
+            }
+
             float enginePower = vInput * engineCurve.Evaluate(vehicleProxy.velocity.magnitude) + modifier;
 
             vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
