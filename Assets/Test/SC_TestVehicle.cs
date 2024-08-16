@@ -24,12 +24,13 @@ public class SC_TestVehicle : MonoBehaviour
 
     public float rayDist = 1.0f;
 
-    public SC_SpeedModifier boostpadModifier;
+    public float speedModifierIntensity;
+    public float speedModifierReserverTime;
 
     public SpeedModifierData boostpadModifierData;
 
     public AnimationCurve engineCurve;
-    public AnimationCurve boostCurve;
+    public float boostIntensity = 10.0f;
 
     public float traction = 0.8f;
     public float driftTraction = 0.2f;
@@ -78,6 +79,16 @@ public class SC_TestVehicle : MonoBehaviour
         //Time.fixedDeltaTime = 0.01f;
     }
 
+    public void ApplySpeedModifier(ref SpeedModifierData data)
+    {
+        speedModifierReserverTime += data.reserverTime;
+
+        if (speedModifierIntensity < data.intensity)
+        {
+            speedModifierIntensity = data.intensity;
+        }
+    }
+
     private void FixedUpdate()
     {
         vInput = UnityEngine.Input.GetAxis("Vertical");
@@ -86,13 +97,14 @@ public class SC_TestVehicle : MonoBehaviour
         bool jumping = UnityEngine.Input.GetButton("Jump");
         boosting = UnityEngine.Input.GetButton("Boost");
 
-        if (boosting)
+        speedModifierReserverTime -= Time.fixedDeltaTime;
+        if (speedModifierReserverTime < 0)
         {
-            boostpadModifier.Register(boostpadModifierData);
+            speedModifierReserverTime = 0;
+            speedModifierIntensity = 0;
         }
 
-        Debug.Log(boostpadModifier.alive);
-        Debug.Log(boostpadModifier.value);
+        Debug.Log("speed : " + speedModifierIntensity + "    time : " + speedModifierReserverTime);
 
         float forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
 
@@ -120,7 +132,9 @@ public class SC_TestVehicle : MonoBehaviour
 
         Vector3 boxUp = Vector3.up;
 
-        bool bhit = Physics.Raycast(ray, out hit, rayDist);
+        // TODO: make track surface and track wall layer
+        LayerMask layerMask = LayerMask.GetMask("Default");
+        bool bhit = Physics.Raycast(ray, out hit, rayDist, layerMask);
         if (!bhit)
         {
             
@@ -162,7 +176,8 @@ public class SC_TestVehicle : MonoBehaviour
 
             vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis( steerValue, vehicleBox.transform.up);
 
-            float enginePower = isBoosting() ? boostCurve.Evaluate(vehicleProxy.velocity.magnitude) : vInput * engineCurve.Evaluate(vehicleProxy.velocity.magnitude);
+            float modifier = Mathf.Max(speedModifierIntensity, isBoosting() ? boostIntensity : 0);
+            float enginePower = vInput * engineCurve.Evaluate(vehicleProxy.velocity.magnitude) + modifier;
 
             vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
 
