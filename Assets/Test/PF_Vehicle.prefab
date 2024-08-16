@@ -279,7 +279,6 @@ MonoBehaviour:
   groundDrag: 0.42
   airDrag: 0.55
   airSteerStr: 0.5
-  orientationLerppRate: 0.003
   jumpStr: {x: 0, y: 300, z: 0}
   drifting: 0
   boosting: 0
@@ -1029,6 +1028,7 @@ MonoBehaviour:
   VehicleBox: {fileID: 188936559622972655}
   cameraTarget: {fileID: 4464370783046510623}
   meshOffset: {x: 0, y: -0.5, z: 0}
+  lerpRate: 5
 --- !u!4 &2082113745696784758 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cf3fec9ad018ba84eb10d45abccc1a5e,

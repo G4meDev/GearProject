@@ -40,8 +40,6 @@ public class SC_TestVehicle : MonoBehaviour
 
     public float airSteerStr = 0.4f;
 
-    public float orientationLerppRate = 0.01f;
-
     public Vector3 jumpStr = Vector3.zero;
 
     [HideInInspector]
@@ -120,6 +118,8 @@ public class SC_TestVehicle : MonoBehaviour
 
         Debug.DrawLine(vehicleProxy.transform.position, vehicleProxy.transform.position - Vector3.up * rayDist);
 
+        Vector3 boxUp = Vector3.up;
+
         bool bhit = Physics.Raycast(ray, out hit, rayDist);
         if (!bhit)
         {
@@ -154,10 +154,8 @@ public class SC_TestVehicle : MonoBehaviour
                 }
             }
 
+            boxUp = hit.normal;
 
-            Vector3 newForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, hit.normal));
-            Quaternion q = Quaternion.LookRotation(newForward, hit.normal);
-            vehicleBox.transform.rotation = q;
 
             float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
@@ -194,6 +192,10 @@ public class SC_TestVehicle : MonoBehaviour
                 airborn = true;
             }
         }
+
+        Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, boxUp));
+        Quaternion q = Quaternion.LookRotation(nForward, boxUp);
+        vehicleBox.transform.rotation = q;
 
         speedText.text = string.Format("Speed : {0:F2}", forwardSpeed);
     }
