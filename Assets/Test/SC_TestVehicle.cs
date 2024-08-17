@@ -19,7 +19,8 @@ public class SC_TestVehicle : MonoBehaviour
     public Text boostText;
     public Text reserveText;
 
-    public float maxSpeed = 21.0f;
+    public float maxSpeed = 20.0f;
+    public float accel = 20.0f;
 
     public float rayDist = 1.0f;
 
@@ -28,7 +29,6 @@ public class SC_TestVehicle : MonoBehaviour
 
     public SpeedModifierData boostpadModifierData;
 
-    public AnimationCurve engineCurve;
     public float boostIntensity = 10.0f;
 
     public float traction = 0.8f;
@@ -93,9 +93,9 @@ public class SC_TestVehicle : MonoBehaviour
         }
     }
 
-    public void IncreaseSpeedToMax()
+    public void IncreaseSpeedTo(float targetSpeed)
     {
-        if (forwardSpeed < maxSpeed)
+        if (forwardSpeed < targetSpeed)
         {
             //vehicleProxy.velocity = (vehicleBox.transform.forward * maxSpeed) + (Vector3.up * vehicleProxy.velocity.y);
             vehicleProxy.velocity = (vehicleBox.transform.forward * maxSpeed);
@@ -152,19 +152,19 @@ public class SC_TestVehicle : MonoBehaviour
         {
             
 
-            float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime * airSteerStr;
-            steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
-
-            Vector3 xyVelocity = new Vector3(vehicleProxy.velocity.x, 0, vehicleProxy.velocity.z); 
-
-            vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
-            Vector3 newForward = Vector3.Normalize(new Vector3(vehicleMesh.transform.forward.x, 0, vehicleMesh.transform.forward.z));
-
-            Vector3 dirVelocity = newForward * xyVelocity.magnitude;
-
-            vehicleProxy.velocity = dirVelocity + new Vector3(0, vehicleProxy.velocity.y, 0);
-
-            vehicleProxy.drag = airDrag;
+//             float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime * airSteerStr;
+//             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
+// 
+//             Vector3 xyVelocity = new Vector3(vehicleProxy.velocity.x, 0, vehicleProxy.velocity.z); 
+// 
+//             vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
+//             Vector3 newForward = Vector3.Normalize(new Vector3(vehicleMesh.transform.forward.x, 0, vehicleMesh.transform.forward.z));
+// 
+//             Vector3 dirVelocity = newForward * xyVelocity.magnitude;
+// 
+//             vehicleProxy.velocity = dirVelocity + new Vector3(0, vehicleProxy.velocity.y, 0);
+// 
+//             vehicleProxy.drag = airDrag;
         }
         if (bhit)
         {
@@ -193,10 +193,11 @@ public class SC_TestVehicle : MonoBehaviour
 
             if (modifier > 0)
             {
-                IncreaseSpeedToMax();
+                //IncreaseSpeedToMax();
             }
 
-            float enginePower = vInput * engineCurve.Evaluate(vehicleProxy.velocity.magnitude) + modifier;
+            float enginePower = Mathf.Abs(forwardSpeed) < maxSpeed + modifier ? accel : 0;
+            enginePower *= modifier > 0 ? 1 : vInput;
 
             vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
 
@@ -225,6 +226,7 @@ public class SC_TestVehicle : MonoBehaviour
 
                 airborn = true;
             }
+
         }
 
         Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, boxUp));
