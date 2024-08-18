@@ -155,7 +155,8 @@ MonoBehaviour:
   tractionText: {fileID: 0}
   boostText: {fileID: 0}
   reserveText: {fileID: 0}
-  gravityStr: 35
+  gravityStr: 40
+  counterForceStr: 0.03
   maxSpeed: 30
   accel: 35
   rayDist: 0.8

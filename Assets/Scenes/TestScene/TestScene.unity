@@ -290,11 +290,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
-      propertyPath: rayDist
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
       propertyPath: traction
       value: 1
       objectReference: {fileID: 0}
@@ -308,11 +303,6 @@ PrefabInstance:
       propertyPath: speedText
       value: 
       objectReference: {fileID: 1423466786}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
-      propertyPath: gravityStr
-      value: 30
-      objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: groundDrag

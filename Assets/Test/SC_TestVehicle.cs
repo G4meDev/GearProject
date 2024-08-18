@@ -21,6 +21,8 @@ public class SC_TestVehicle : MonoBehaviour
 
     public float gravityStr = 25.0f;
 
+    public float counterForceStr = 0.1f;
+
     public float maxSpeed = 20.0f;
     public float accel = 20.0f;
 
@@ -245,6 +247,8 @@ public class SC_TestVehicle : MonoBehaviour
 
 
         vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
+
+        vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
 
         speedText.text = string.Format("Speed : {0:F2}", forwardSpeed);
     }
