@@ -155,6 +155,7 @@ MonoBehaviour:
   tractionText: {fileID: 0}
   boostText: {fileID: 0}
   reserveText: {fileID: 0}
+  aeroMeter: {fileID: 0}
   gravityStr: 40
   counterForceStr: 0.03
   maxSpeed: 30
@@ -204,6 +205,17 @@ MonoBehaviour:
   boosting: 0
   boostAmount: 0
   forwardSpeed: 0
+  coyoteTime: 0.1
+  jumpDelayTime: 0.1
+  lowJumpTime: 0.6
+  lowJumpSpeedModifier: {fileID: 11400000, guid: 33d4059ff8d7b6449a9beae85ecdaffd,
+    type: 2}
+  midJumpTime: 1
+  midJumpSpeedModifier: {fileID: 11400000, guid: f1145087fd540d0419db104abfbe0929,
+    type: 2}
+  highJumpTime: 1.4
+  highJumpSpeedModifier: {fileID: 11400000, guid: fa92da64d99c80f439232841f38af8d1,
+    type: 2}
   vInput: 0
   hInput: 0
 --- !u!1 &4464370783046510623

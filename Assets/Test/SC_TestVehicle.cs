@@ -28,6 +28,8 @@ public class SC_TestVehicle : MonoBehaviour
     public Text boostText;
     public Text reserveText;
 
+    public Image aeroMeter;
+
     public float gravityStr = 25.0f;
 
     public float counterForceStr = 0.03f;
@@ -70,6 +72,15 @@ public class SC_TestVehicle : MonoBehaviour
 
     public float jumpDelayTime = 0.1f;
 
+    public float lowJumpTime = 0.6f;
+    public SpeedModifierData lowJumpSpeedModifier;
+
+    public float midJumpTime = 1.0f;
+    public SpeedModifierData midJumpSpeedModifier;
+
+    public float highJumpTime = 1.4f;
+    public SpeedModifierData highJumpSpeedModifier;
+
     [HideInInspector]
     float lastjumpTime = 0;
 
@@ -95,6 +106,9 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     VehicleAeroState aeroState = VehicleAeroState.OnGround;
 
+    [HideInInspector]
+    private float airborneTime = 0.0f;
+
     bool isBoosting()
     {
         return boostAmount > 0 || boosting;
@@ -119,9 +133,20 @@ public class SC_TestVehicle : MonoBehaviour
 
     private void OnEndJump()
     {
-        float airborneTime = Time.time - lastjumpTime;
+        if (airborneTime > highJumpTime)
+        {
+            ApplySpeedModifier(ref highJumpSpeedModifier);
+        }
 
-        Debug.Log(airborneTime);
+        else if (airborneTime > midJumpTime)
+        {
+            ApplySpeedModifier(ref midJumpSpeedModifier);
+        }
+
+        else if (airborneTime > lowJumpTime)
+        {
+            ApplySpeedModifier(ref lowJumpSpeedModifier);
+        }
     }
 
     private float GetContactSurfaceFriction()
@@ -252,6 +277,10 @@ public class SC_TestVehicle : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         //Time.fixedDeltaTime = 0.01f;
+
+        aeroMeter.material.SetFloat("_low", lowJumpTime);
+        aeroMeter.material.SetFloat("_mid", midJumpTime);
+        aeroMeter.material.SetFloat("_high", highJumpTime);
     }
 
     private void FixedUpdate()
@@ -297,7 +326,14 @@ public class SC_TestVehicle : MonoBehaviour
 
         maxSpeedWithModifier = GetMaxSpeedWithModifiers();
 
+        airborneTime = aeroState == VehicleAeroState.Jumping ? Time.time - lastjumpTime : 0.0f;
+        aeroMeter.material.SetFloat("_airborneTime", airborneTime);
+
+        Debug.Log(airborneTime);
+
         UpdateAeroState();
+
+
 
         if (!bHit)
         {
