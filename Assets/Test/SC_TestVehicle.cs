@@ -72,6 +72,8 @@ public class SC_TestVehicle : MonoBehaviour
 
     public float jumpDelayTime = 0.1f;
 
+    public float jumpResetTime = 0.4f;
+
     public float lowJumpTime = 0.6f;
     public SpeedModifierData lowJumpSpeedModifier;
 
@@ -116,7 +118,7 @@ public class SC_TestVehicle : MonoBehaviour
 
     private bool CanJump()
     {
-        return aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote;
+        return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote) && Time.time > lastjumpTime + jumpResetTime;
     }
 
     private void OnStartJump()
@@ -328,8 +330,6 @@ public class SC_TestVehicle : MonoBehaviour
 
         airborneTime = aeroState == VehicleAeroState.Jumping ? Time.time - lastjumpTime : 0.0f;
         aeroMeter.material.SetFloat("_airborneTime", airborneTime);
-
-        Debug.Log(airborneTime);
 
         UpdateAeroState();
 

@@ -207,6 +207,7 @@ MonoBehaviour:
   forwardSpeed: 0
   coyoteTime: 0.1
   jumpDelayTime: 0.1
+  jumpResetTime: 0.4
   lowJumpTime: 0.6
   lowJumpSpeedModifier: {fileID: 11400000, guid: 33d4059ff8d7b6449a9beae85ecdaffd,
     type: 2}
