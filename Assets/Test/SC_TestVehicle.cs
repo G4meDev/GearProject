@@ -81,9 +81,39 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     private float steerValue;
 
+    [HideInInspector]
+    private float maxSpeedWithModifier;
+
     bool isBoosting()
     {
         return boostAmount > 0 || boosting;
+    }
+
+    private float GetSpeedModifier()
+    {
+        if (speedModifierReserveTime > 0)
+        {
+            return speedModifierIntensity;
+        }
+
+        return 0;
+    }
+
+    private float GetContactSurfaceFriction()
+    {
+        if (bHit)
+        {
+            return hit.collider.material.dynamicFriction;
+        }
+
+        return 0;
+    }
+
+    public float GetMaxSpeedWithModifiers()
+    {
+        float modifier = Mathf.Max(GetSpeedModifier(), isBoosting() ? boostIntensity : 0);
+
+        return maxSpeed + modifier - GetContactSurfaceFriction() - (Mathf.Abs(steerValue) * steerVelocityFriction);
     }
 
     public void ApplySpeedModifier(ref SpeedModifierData data)
@@ -100,8 +130,7 @@ public class SC_TestVehicle : MonoBehaviour
     {
         if (forwardSpeed < targetSpeed)
         {
-            //vehicleProxy.velocity = (vehicleBox.transform.forward * maxSpeed) + (Vector3.up * vehicleProxy.velocity.y);
-            vehicleProxy.velocity = (vehicleBox.transform.forward * maxSpeed);
+            vehicleProxy.AddForce((targetSpeed - forwardSpeed) * vehicleBox.transform.forward, ForceMode.VelocityChange);
         }
     }
 
@@ -195,6 +224,7 @@ public class SC_TestVehicle : MonoBehaviour
 
         AlignWithContactSurface();
 
+        maxSpeedWithModifier = GetMaxSpeedWithModifiers();
 
         if (!bHit)
         {
@@ -214,20 +244,14 @@ public class SC_TestVehicle : MonoBehaviour
                 }
             }
 
-
-
-
-            float modifier = Mathf.Max(speedModifierIntensity, isBoosting() ? boostIntensity : 0);
-
-            if (modifier > 0)
+            // if boosting set speed to max
+            if(maxSpeed < maxSpeedWithModifier)
             {
-                //IncreaseSpeedToMax();
+                IncreaseSpeedTo(maxSpeedWithModifier);
             }
 
-            float friction = hit.collider.material.dynamicFriction;
-
-            float enginePower = Mathf.Abs(forwardSpeed) < (maxSpeed + modifier - friction - (Mathf.Abs(steerValue) * steerVelocityFriction)) ? accel : 0;
-            enginePower *= modifier > 0 ? 1 : vInput;
+            float enginePower = Mathf.Abs(forwardSpeed) < maxSpeedWithModifier ? accel : 0;
+            enginePower *= vInput;
 
             vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
 
