@@ -155,9 +155,10 @@ MonoBehaviour:
   tractionText: {fileID: 0}
   boostText: {fileID: 0}
   reserveText: {fileID: 0}
+  gravityStr: 35
   maxSpeed: 30
   accel: 35
-  rayDist: 1
+  rayDist: 0.8
   speedModifierIntensity: 0
   speedModifierReserveTime: 0
   boostpadModifierData: {fileID: 11400000, guid: 180e4f92763ea45418ca5ac657fca4db,
@@ -201,7 +202,7 @@ MonoBehaviour:
   groundDrag: 0.42
   airDrag: 0.55
   airSteerStr: 0.5
-  jumpStr: {x: 0, y: 300, z: 0}
+  jumpStr: 300
   drifting: 0
   boosting: 0
   boostAmount: 0

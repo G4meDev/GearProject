@@ -19,6 +19,8 @@ public class SC_TestVehicle : MonoBehaviour
     public Text boostText;
     public Text reserveText;
 
+    public float gravityStr = 25.0f;
+
     public float maxSpeed = 20.0f;
     public float accel = 20.0f;
 
@@ -40,7 +42,7 @@ public class SC_TestVehicle : MonoBehaviour
 
     public float airSteerStr = 0.4f;
 
-    public Vector3 jumpStr = Vector3.zero;
+    public float jumpStr = 300.0f;
 
     [HideInInspector]
     public bool drifting = false;
@@ -145,6 +147,8 @@ public class SC_TestVehicle : MonoBehaviour
 
         Vector3 boxUp = Vector3.up;
 
+        Vector3 gravityDir = -Vector3.up;
+
         // TODO: make track surface and track wall layer
         LayerMask layerMask = LayerMask.GetMask("Default");
         bool bhit = Physics.Raycast(ray, out hit, rayDist, layerMask);
@@ -218,7 +222,7 @@ public class SC_TestVehicle : MonoBehaviour
 
             if (jumping && !drifting && Time.time - lastjumpTime > jumpTimeTreshold)
             {
-                vehicleProxy.AddForce(jumpStr, ForceMode.Acceleration);
+                vehicleProxy.AddForce(jumpStr * hit.normal, ForceMode.Acceleration);
 
                 //drifting = true;
 
@@ -229,11 +233,18 @@ public class SC_TestVehicle : MonoBehaviour
                 airborn = true;
             }
 
+            if (vInput != 0)
+            {
+                gravityDir = -hit.normal;
+            }
         }
 
         Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, boxUp));
         Quaternion q = Quaternion.LookRotation(nForward, boxUp);
         vehicleBox.transform.rotation = q;
+
+
+        vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
 
         speedText.text = string.Format("Speed : {0:F2}", forwardSpeed);
     }
