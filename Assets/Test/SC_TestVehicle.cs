@@ -6,6 +6,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Windows;
 
+public enum VehicleAeroState
+{
+    
+    OnGround,
+    Coyote,
+    Jumping,
+    Falling
+}
+
 public class SC_TestVehicle : MonoBehaviour
 {
     public Rigidbody vehicleProxy;
@@ -55,15 +64,14 @@ public class SC_TestVehicle : MonoBehaviour
     float maxSpeedModifier = 20.0f;
 
 
-    float minAirbornTime = 0.5f;
-
     float lastTimeOnGround = 0.0f;
-    bool airborn = false;
+
+    public float coyoteTime = 0.1f;
+
+    public float jumpDelayTime = 0.1f;
 
     [HideInInspector]
     float lastjumpTime = 0;
-
-    float jumpTimeTreshold = 0.5f;
 
     [HideInInspector]
     public float vInput;
@@ -84,19 +92,36 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     private float maxSpeedWithModifier;
 
+    [HideInInspector]
+    VehicleAeroState aeroState = VehicleAeroState.OnGround;
+
     bool isBoosting()
     {
         return boostAmount > 0 || boosting;
     }
 
-    private float GetSpeedModifier()
+    private bool CanJump()
     {
-        if (speedModifierReserveTime > 0)
-        {
-            return speedModifierIntensity;
-        }
+        return aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote;
+    }
 
-        return 0;
+    private void OnStartJump()
+    {
+        if (CanJump())
+        {
+            vehicleProxy.AddForce(jumpStr * hit.normal, ForceMode.Acceleration);
+
+            aeroState = VehicleAeroState.Jumping;
+
+            lastjumpTime = Time.time;
+        }
+    }
+
+    private void OnEndJump()
+    {
+        float airborneTime = Time.time - lastjumpTime;
+
+        Debug.Log(airborneTime);
     }
 
     private float GetContactSurfaceFriction()
@@ -109,11 +134,61 @@ public class SC_TestVehicle : MonoBehaviour
         return 0;
     }
 
+    void UpdateAeroState()
+    {
+        if (!bHit)
+        {
+            if (aeroState != VehicleAeroState.Jumping)
+            {
+                if (Time.time < lastTimeOnGround + coyoteTime)
+                {
+                    aeroState = VehicleAeroState.Coyote;
+                }
+                else
+                {
+                    aeroState = VehicleAeroState.Falling;
+                }
+            }
+
+        }
+
+        else
+        {
+            if (aeroState == VehicleAeroState.Jumping)
+            {
+                // add delay to let ray get out of surface (ray is longer than vehicle proxy radius)
+                if (Time.time > lastjumpTime + jumpDelayTime)
+                {
+                    aeroState = VehicleAeroState.OnGround;
+                    lastTimeOnGround = Time.time;
+
+                    OnEndJump();
+                }
+            }
+
+            else
+            {
+                aeroState = VehicleAeroState.OnGround;
+                lastTimeOnGround = Time.time;
+            }
+        }
+    }
+
     public float GetMaxSpeedWithModifiers()
     {
-        float modifier = Mathf.Max(GetSpeedModifier(), isBoosting() ? boostIntensity : 0);
+        float modifier = Mathf.Max(speedModifierIntensity, isBoosting() ? boostIntensity : 0);
 
         return maxSpeed + modifier - GetContactSurfaceFriction() - (Mathf.Abs(steerValue) * steerVelocityFriction);
+    }
+
+    private void UpdateSpeedModifiers()
+    {
+        speedModifierReserveTime -= Time.fixedDeltaTime;
+        if (speedModifierReserveTime < 0)
+        {
+            speedModifierReserveTime = 0;
+            speedModifierIntensity = 0;
+        }
     }
 
     public void ApplySpeedModifier(ref SpeedModifierData data)
@@ -185,17 +260,13 @@ public class SC_TestVehicle : MonoBehaviour
         hInput = UnityEngine.Input.GetAxis("Horizontal");
 
         bool jumping = UnityEngine.Input.GetButton("Jump");
+
+
         boosting = UnityEngine.Input.GetButton("Boost");
 
-        speedModifierReserveTime -= Time.fixedDeltaTime;
-        if (speedModifierReserveTime < 0)
-        {
-            speedModifierReserveTime = 0;
-            speedModifierIntensity = 0;
-        }
+        UpdateSpeedModifiers();
 
         float speedModifierAlpha = speedModifierIntensity / maxSpeedModifier;
-
         boostIndicator.GetComponent<MeshRenderer>().material.SetFloat("_a", speedModifierAlpha);
 
         boostText.text = string.Format("Boost : {0:F2}", speedModifierIntensity);
@@ -226,26 +297,18 @@ public class SC_TestVehicle : MonoBehaviour
 
         maxSpeedWithModifier = GetMaxSpeedWithModifiers();
 
+        UpdateAeroState();
+
         if (!bHit)
         {
+
 
         }
         if (bHit)
         {
 
-            if (airborn && Time.time - lastTimeOnGround > 0.1f)
-            {
-                airborn = false;
-                float d = Time.time - lastTimeOnGround;
-
-                if (d > minAirbornTime)
-                {
-                    boostAmount += d;
-                }
-            }
-
             // if boosting set speed to max
-            if(maxSpeed < maxSpeedWithModifier)
+            if (maxSpeed < maxSpeedWithModifier)
             {
                 IncreaseSpeedTo(maxSpeedWithModifier);
             }
@@ -268,24 +331,15 @@ public class SC_TestVehicle : MonoBehaviour
                 tractionText.text = string.Format("Traction = {0:F2}", t);
             }
 
-            if (jumping && !drifting && Time.time - lastjumpTime > jumpTimeTreshold)
-            {
-                vehicleProxy.AddForce(jumpStr * hit.normal, ForceMode.Acceleration);
-
-                //drifting = true;
-
-                lastjumpTime = Time.time;
-
-                lastTimeOnGround = Time.time;
-
-                airborn = true;
-            }
-
         }
 
 
-
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
+
+        if (jumping)
+        {
+            OnStartJump();
+        }
 
         speedText.text = string.Format("Speed : {0:F2}", forwardSpeed);
     }
