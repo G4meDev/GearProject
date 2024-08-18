@@ -196,7 +196,9 @@ public class SC_TestVehicle : MonoBehaviour
                 //IncreaseSpeedToMax();
             }
 
-            float enginePower = Mathf.Abs(forwardSpeed) < maxSpeed + modifier ? accel : 0;
+            float friction = hit.collider.material.dynamicFriction;
+
+            float enginePower = Mathf.Abs(forwardSpeed) < (maxSpeed + modifier - friction) ? accel : 0;
             enginePower *= modifier > 0 ? 1 : vInput;
 
             vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);

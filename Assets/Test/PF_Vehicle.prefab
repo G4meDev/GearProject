@@ -155,8 +155,8 @@ MonoBehaviour:
   tractionText: {fileID: 0}
   boostText: {fileID: 0}
   reserveText: {fileID: 0}
-  maxSpeed: 20
-  accel: 50
+  maxSpeed: 30
+  accel: 35
   rayDist: 1
   speedModifierIntensity: 0
   speedModifierReserveTime: 0
