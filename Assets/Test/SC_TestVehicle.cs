@@ -21,7 +21,7 @@ public class SC_TestVehicle : MonoBehaviour
 
     public float gravityStr = 25.0f;
 
-    public float counterForceStr = 0.1f;
+    public float counterForceStr = 0.03f;
 
     public float maxSpeed = 20.0f;
     public float accel = 20.0f;
@@ -31,19 +31,12 @@ public class SC_TestVehicle : MonoBehaviour
     public float speedModifierIntensity;
     public float speedModifierReserveTime;
 
-    public SpeedModifierData boostpadModifierData;
-
     public float boostIntensity = 10.0f;
 
-    public float traction = 0.8f;
-    public float driftTraction = 0.2f;
+    public float traction = 1.0f;
+    public float driftTraction = 0.0f;
     public AnimationCurve steerCurve;
-    public float steerVelocityFriction = 1.0f;
-
-    public float groundDrag = 0.42f;
-    public float airDrag = 0.62f;
-
-    public float airSteerStr = 0.4f;
+    public float steerVelocityFriction = 2.0f;
 
     public float jumpStr = 300.0f;
 
@@ -61,10 +54,6 @@ public class SC_TestVehicle : MonoBehaviour
 
     float maxSpeedModifier = 20.0f;
 
-    bool isBoosting()
-    {
-        return boostAmount > 0 || boosting;
-    }
 
     float minAirbornTime = 0.5f;
 
@@ -82,10 +71,19 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     public float hInput;
 
-    void Start()
+
+    [HideInInspector]
+    private RaycastHit hit;
+
+    [HideInInspector]
+    private bool bHit;
+
+    [HideInInspector]
+    private float steerValue;
+
+    bool isBoosting()
     {
-        Application.targetFrameRate = 60;
-        //Time.fixedDeltaTime = 0.01f;
+        return boostAmount > 0 || boosting;
     }
 
     public void ApplySpeedModifier(ref SpeedModifierData data)
@@ -105,6 +103,51 @@ public class SC_TestVehicle : MonoBehaviour
             //vehicleProxy.velocity = (vehicleBox.transform.forward * maxSpeed) + (Vector3.up * vehicleProxy.velocity.y);
             vehicleProxy.velocity = (vehicleBox.transform.forward * maxSpeed);
         }
+    }
+
+    private void RaycastForContactSurface()
+    {
+        Ray ray = new Ray(vehicleProxy.transform.position, -Vector3.up);
+
+        // TODO: make track surface and track wall layer
+        LayerMask layerMask = LayerMask.GetMask("Default");
+        bHit = Physics.Raycast(ray, out hit, rayDist, layerMask);
+
+        Debug.DrawLine(vehicleProxy.transform.position, vehicleProxy.transform.position - Vector3.up * rayDist);
+    }
+
+    private void Gravity()
+    {
+        // if in touch with ground or not attempting to move is world down vector otherwise is ground normal
+        Vector3 gravityDir = vInput != 0 && bHit ? -hit.normal : -Vector3.up;
+
+        // gravity force
+        vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
+    }
+
+    private void ApplySteer()
+    {
+        // applying vehicle yaw to the box
+        steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
+        steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
+
+        vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
+    }
+
+    private void AlignWithContactSurface()
+    {
+        // if in touch with ground align with surface normal otherwise align with world up 
+        Vector3 boxUp = bHit ? hit.normal : Vector3.up;
+        Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, boxUp));
+        Quaternion q = Quaternion.LookRotation(nForward, boxUp);
+
+        vehicleBox.transform.rotation = q;
+    }
+
+    void Start()
+    {
+        Application.targetFrameRate = 60;
+        //Time.fixedDeltaTime = 0.01f;
     }
 
     private void FixedUpdate()
@@ -143,32 +186,22 @@ public class SC_TestVehicle : MonoBehaviour
 
         vehicleBox.transform.position = vehicleProxy.transform.position;
 
-        RaycastHit hit;
-        Ray ray = new Ray(vehicleProxy.transform.position, -Vector3.up);
 
-        Debug.DrawLine(vehicleProxy.transform.position, vehicleProxy.transform.position - Vector3.up * rayDist);
+        RaycastForContactSurface();
 
-        Vector3 boxUp = Vector3.up;
+        Gravity();
 
-        Vector3 gravityDir = -Vector3.up;
+        ApplySteer();
 
-
-        float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
-        steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
-
-        vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
+        AlignWithContactSurface();
 
 
-        // TODO: make track surface and track wall layer
-        LayerMask layerMask = LayerMask.GetMask("Default");
-        bool bhit = Physics.Raycast(ray, out hit, rayDist, layerMask);
-        if (!bhit)
+        if (!bHit)
         {
 
         }
-        if (bhit)
+        if (bHit)
         {
-            vehicleProxy.drag = groundDrag;
 
             if (airborn && Time.time - lastTimeOnGround > 0.1f)
             {
@@ -180,8 +213,6 @@ public class SC_TestVehicle : MonoBehaviour
                     boostAmount += d;
                 }
             }
-
-            boxUp = hit.normal;
 
 
 
@@ -226,18 +257,9 @@ public class SC_TestVehicle : MonoBehaviour
                 airborn = true;
             }
 
-            if (vInput != 0)
-            {
-                gravityDir = -hit.normal;
-            }
         }
 
-        Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, boxUp));
-        Quaternion q = Quaternion.LookRotation(nForward, boxUp);
-        vehicleBox.transform.rotation = q;
 
-
-        vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
 
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
 
