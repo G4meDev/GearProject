@@ -38,6 +38,7 @@ public class SC_TestVehicle : MonoBehaviour
     public float traction = 0.8f;
     public float driftTraction = 0.2f;
     public AnimationCurve steerCurve;
+    public float steerVelocityFriction = 1.0f;
 
     public float groundDrag = 0.42f;
     public float airDrag = 0.62f;
@@ -151,26 +152,19 @@ public class SC_TestVehicle : MonoBehaviour
 
         Vector3 gravityDir = -Vector3.up;
 
+
+        float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
+        steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
+
+        vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
+
+
         // TODO: make track surface and track wall layer
         LayerMask layerMask = LayerMask.GetMask("Default");
         bool bhit = Physics.Raycast(ray, out hit, rayDist, layerMask);
         if (!bhit)
         {
-            
 
-//             float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime * airSteerStr;
-//             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
-// 
-//             Vector3 xyVelocity = new Vector3(vehicleProxy.velocity.x, 0, vehicleProxy.velocity.z); 
-// 
-//             vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
-//             Vector3 newForward = Vector3.Normalize(new Vector3(vehicleMesh.transform.forward.x, 0, vehicleMesh.transform.forward.z));
-// 
-//             Vector3 dirVelocity = newForward * xyVelocity.magnitude;
-// 
-//             vehicleProxy.velocity = dirVelocity + new Vector3(0, vehicleProxy.velocity.y, 0);
-// 
-//             vehicleProxy.drag = airDrag;
         }
         if (bhit)
         {
@@ -190,10 +184,7 @@ public class SC_TestVehicle : MonoBehaviour
             boxUp = hit.normal;
 
 
-            float steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
-            steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
 
-            vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis( steerValue, vehicleBox.transform.up);
 
             float modifier = Mathf.Max(speedModifierIntensity, isBoosting() ? boostIntensity : 0);
 
@@ -204,7 +195,7 @@ public class SC_TestVehicle : MonoBehaviour
 
             float friction = hit.collider.material.dynamicFriction;
 
-            float enginePower = Mathf.Abs(forwardSpeed) < (maxSpeed + modifier - friction) ? accel : 0;
+            float enginePower = Mathf.Abs(forwardSpeed) < (maxSpeed + modifier - friction - (Mathf.Abs(steerValue) * steerVelocityFriction)) ? accel : 0;
             enginePower *= modifier > 0 ? 1 : vInput;
 
             vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);

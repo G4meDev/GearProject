@@ -285,11 +285,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
-      propertyPath: airDrag
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
       propertyPath: traction
       value: 1
       objectReference: {fileID: 0}
@@ -303,11 +298,6 @@ PrefabInstance:
       propertyPath: speedText
       value: 
       objectReference: {fileID: 1423466786}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
-      propertyPath: groundDrag
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: reserveText
@@ -360,16 +350,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
-      propertyPath: steerCurve.m_Curve.Array.data[1].value
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
-      propertyPath: steerCurve.m_Curve.Array.data[2].value
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
       propertyPath: boostCurve.m_Curve.Array.data[1].inSlope
       value: 12
       objectReference: {fileID: 0}
@@ -412,11 +392,6 @@ PrefabInstance:
         type: 3}
       propertyPath: boostCurve.m_Curve.Array.data[3].inWeight
       value: 0.33333334
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
-      propertyPath: steerCurve.m_Curve.Array.data[0].outSlope
-      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}

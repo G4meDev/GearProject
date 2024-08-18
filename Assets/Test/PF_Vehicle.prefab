@@ -165,7 +165,7 @@ MonoBehaviour:
   boostpadModifierData: {fileID: 11400000, guid: 180e4f92763ea45418ca5ac657fca4db,
     type: 2}
   boostIntensity: 10
-  traction: 0.8
+  traction: 1
   driftTraction: 0
   steerCurve:
     serializedVersion: 2
@@ -174,14 +174,14 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: Infinity
-      outSlope: 20
+      outSlope: 10
       tangentMode: 71
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 10
-      value: 200
+      value: 100
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -190,7 +190,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 25
-      value: 100
+      value: 50
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -200,8 +200,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  groundDrag: 0.42
-  airDrag: 0.55
+  steerVelocityFriction: 2
+  groundDrag: 0
+  airDrag: 0
   airSteerStr: 0.5
   jumpStr: 300
   drifting: 0
