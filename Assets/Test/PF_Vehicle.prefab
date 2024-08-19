@@ -201,9 +201,6 @@ MonoBehaviour:
     m_RotationOrder: 4
   steerVelocityFriction: 2
   jumpStr: 300
-  drifting: 0
-  boosting: 0
-  boostAmount: 0
   forwardSpeed: 0
   coyoteTime: 0.1
   jumpDelayTime: 0.1
@@ -219,6 +216,33 @@ MonoBehaviour:
     type: 2}
   vInput: 0
   hInput: 0
+  driftCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -1
+      value: 15
+      inSlope: 0
+      outSlope: 22.5
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 60
+      inSlope: 22.5
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  driftLerpRate: 0.02
+  drifting: 0
+  driftYaw: 0
 --- !u!1 &4464370783046510623
 GameObject:
   m_ObjectHideFlags: 0
@@ -971,6 +995,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1769a89a97f3ea5409dcc82bdb814349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Vehicle: {fileID: 3947225319184177958}
   VehicleBox: {fileID: 188936559622972655}
   cameraTarget: {fileID: 4464370783046510623}
   meshOffset: {x: 0, y: -0.65, z: 0}

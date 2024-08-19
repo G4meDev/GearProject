@@ -52,15 +52,6 @@ public class SC_TestVehicle : MonoBehaviour
     public float jumpStr = 300.0f;
 
     [HideInInspector]
-    public bool drifting = false;
-
-    [HideInInspector]
-    public bool boosting = false;
-
-    [HideInInspector]
-    public float boostAmount = 0.0f;
-
-    [HideInInspector]
     public float forwardSpeed = 0.0f;
 
     float maxSpeedModifier = 20.0f;
@@ -92,6 +83,10 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     public float hInput;
 
+    [HideInInspector]
+    private bool pressedJump;
+    [HideInInspector]
+    private bool holdingJump;
 
     [HideInInspector]
     private RaycastHit hit;
@@ -111,14 +106,78 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     private float airborneTime = 0.0f;
 
-    bool isBoosting()
-    {
-        return boostAmount > 0 || boosting;
-    }
+
+    public AnimationCurve driftCurve;
+
+    public float driftLerpRate = 0.1f;
+
+    [HideInInspector]
+    public bool drifting = false;
+
+    [HideInInspector]
+    private float driftStartTime = 0.0f;
+
+    [HideInInspector]
+    private int driftCounter = 0;
+
+    [HideInInspector]
+    public float driftYaw = 0.0f;
+
+    [HideInInspector]
+    private bool rightDrift = false;
+
+    [HideInInspector]
+    private float minDriftTime = 0.3f;
+
+    [HideInInspector]
+    private float goodDriftTime = 0.5f;
+
+    [HideInInspector]
+    private float perfectDriftTime = 0.6f;
+
 
     private bool CanJump()
     {
         return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote) && Time.time > lastjumpTime + jumpResetTime;
+    }
+
+    private bool CanDrift()
+    {
+        return holdingJump && Mathf.Abs(hInput) > 0.5f;
+    }
+
+    private void StartDrift()
+    {
+        drifting = true;
+        driftStartTime = Time.time;
+        driftCounter = 0;
+        driftYaw = 0.0f;
+
+        rightDrift = hInput > 0.0f;
+    }
+
+    private void StepDrift()
+    {
+        if(!holdingJump)
+        {
+            EndDrift();
+        }
+
+        else
+        {
+            driftYaw = rightDrift ? driftCurve.Evaluate(hInput) : -driftCurve.Evaluate(-hInput);
+
+            vehicleBox.transform.rotation = Quaternion.Lerp(vehicleBox.transform.rotation
+                , vehicleBox.transform.rotation * Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up)
+                , driftLerpRate );
+
+
+        }
+    }
+
+    private void EndDrift()
+    {
+        drifting = false;
     }
 
     private void OnStartJump()
@@ -149,6 +208,12 @@ public class SC_TestVehicle : MonoBehaviour
         {
             ApplySpeedModifier(ref lowJumpSpeedModifier);
         }
+
+        if (CanDrift())
+        {
+            StartDrift();
+        }
+
     }
 
     private float GetContactSurfaceFriction()
@@ -203,7 +268,7 @@ public class SC_TestVehicle : MonoBehaviour
 
     public float GetMaxSpeedWithModifiers()
     {
-        float modifier = Mathf.Max(speedModifierIntensity, isBoosting() ? boostIntensity : 0);
+        float modifier = speedModifierIntensity;
 
         return maxSpeed + modifier - GetContactSurfaceFriction() - (Mathf.Abs(steerValue) * steerVelocityFriction);
     }
@@ -259,8 +324,16 @@ public class SC_TestVehicle : MonoBehaviour
     private void ApplySteer()
     {
         // applying vehicle yaw to the box
-        steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
-        steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
+
+        if (!drifting)
+        {
+            steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
+            steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
+        }
+        else
+        {
+            steerValue = 0;
+        }
 
         vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
     }
@@ -290,10 +363,10 @@ public class SC_TestVehicle : MonoBehaviour
         vInput = UnityEngine.Input.GetAxis("Vertical");
         hInput = UnityEngine.Input.GetAxis("Horizontal");
 
-        bool jumping = UnityEngine.Input.GetButton("Jump");
+        pressedJump = UnityEngine.Input.GetButtonDown("Jump");
+        holdingJump = UnityEngine.Input.GetButton("Jump");
 
-
-        boosting = UnityEngine.Input.GetButton("Boost");
+        bool boosting = UnityEngine.Input.GetButton("Boost");
 
         UpdateSpeedModifiers();
 
@@ -304,16 +377,6 @@ public class SC_TestVehicle : MonoBehaviour
         reserveText.text = string.Format("Reserve : {0:F2}", speedModifierReserveTime);
 
         forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
-
-        if (true)
-        {
-            boostAmount = Mathf.Max(boostAmount - Time.fixedDeltaTime, 0.0f);
-        }
-
-        if (drifting && !jumping) 
-        {
-            drifting = false;
-        }
 
         vehicleBox.transform.position = vehicleProxy.transform.position;
 
@@ -334,6 +397,11 @@ public class SC_TestVehicle : MonoBehaviour
         UpdateAeroState();
 
 
+        if (drifting)
+        {
+            StepDrift();
+        }
+
 
         if (!bHit)
         {
@@ -352,7 +420,15 @@ public class SC_TestVehicle : MonoBehaviour
             float enginePower = Mathf.Abs(forwardSpeed) < maxSpeedWithModifier ? accel : 0;
             enginePower *= vInput;
 
-            vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
+            Vector3 throttleDir = drifting
+                ? Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up) * vehicleBox.transform.forward
+                : vehicleBox.transform.forward;
+
+            vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
+
+
+
+            vehicleProxy.AddForce(throttleDir * enginePower, ForceMode.Acceleration);
 
             float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
             float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : slipingSpeed / vehicleProxy.velocity.magnitude;
@@ -360,11 +436,11 @@ public class SC_TestVehicle : MonoBehaviour
 
             if (Mathf.Abs(slipingSpeedRatio) > 0)
             {
-                float t = drifting ? driftTraction : traction;
+                float t = drifting ? 0 : 1;
 
                 vehicleProxy.AddForce(-slipingSpeed * t * vehicleBox.transform.right, ForceMode.VelocityChange);
 
-                tractionText.text = string.Format("Traction = {0:F2}", t);
+                tractionText.text = string.Format("Traction = {0:F2}", traction);
             }
 
         }
@@ -372,7 +448,7 @@ public class SC_TestVehicle : MonoBehaviour
 
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
 
-        if (jumping)
+        if (pressedJump)
         {
             OnStartJump();
         }
