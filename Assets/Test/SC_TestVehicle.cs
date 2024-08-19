@@ -96,6 +96,9 @@ public class SC_TestVehicle : MonoBehaviour
     private bool bHit;
 
     [HideInInspector]
+    private Vector3 contactSmoothNormal;
+
+    [HideInInspector]
     private float steerValue;
 
     [HideInInspector]
@@ -210,7 +213,7 @@ public class SC_TestVehicle : MonoBehaviour
     {
         if (CanJump())
         {
-            vehicleProxy.AddForce(jumpStr * hit.normal, ForceMode.Acceleration);
+            vehicleProxy.AddForce(jumpStr * contactSmoothNormal, ForceMode.Acceleration);
 
             aeroState = VehicleAeroState.Jumping;
 
@@ -335,13 +338,49 @@ public class SC_TestVehicle : MonoBehaviour
         LayerMask layerMask = LayerMask.GetMask("Default");
         bHit = Physics.Raycast(ray, out hit, rayDist, layerMask);
 
+        if (bHit)
+        {
+            MeshCollider meshCollider = hit.collider as MeshCollider;
+
+            if (meshCollider == null)
+            {
+                contactSmoothNormal = Vector3.up;
+            }
+            else
+            {
+                Mesh mesh = meshCollider.sharedMesh;
+                Vector3[] normals = mesh.normals;
+                int[] triangles = mesh.triangles;
+
+                Vector3 n0 = normals[triangles[hit.triangleIndex * 3 + 0]];
+                Vector3 n1 = normals[triangles[hit.triangleIndex * 3 + 1]];
+                Vector3 n2 = normals[triangles[hit.triangleIndex * 3 + 2]];
+
+                Vector3 baryCenter = hit.barycentricCoordinate;
+
+                contactSmoothNormal = n0 * baryCenter.x + n1 * baryCenter.y + n2 * baryCenter.z;
+                contactSmoothNormal = contactSmoothNormal.normalized;
+
+                Transform hitTransform = hit.collider.transform;
+                contactSmoothNormal = hitTransform.TransformDirection(contactSmoothNormal);
+
+                Debug.DrawRay(hit.point, contactSmoothNormal);
+            }
+
+        }
+
+        else
+        {
+            contactSmoothNormal = Vector3.up;
+        }
+
         Debug.DrawLine(vehicleProxy.transform.position, vehicleProxy.transform.position - Vector3.up * rayDist);
     }
 
     private void Gravity()
     {
         // if in touch with ground or not attempting to move is world down vector otherwise is ground normal
-        Vector3 gravityDir = vInput != 0 && bHit ? -hit.normal : -Vector3.up;
+        Vector3 gravityDir = vInput != 0 && bHit ? -contactSmoothNormal : -Vector3.up;
 
         // gravity force
         vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
@@ -367,7 +406,7 @@ public class SC_TestVehicle : MonoBehaviour
     private void AlignWithContactSurface()
     {
         // if in touch with ground align with surface normal otherwise align with world up 
-        Vector3 boxUp = bHit ? hit.normal : Vector3.up;
+        Vector3 boxUp = bHit ? contactSmoothNormal : Vector3.up;
         Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, boxUp));
         Quaternion q = Quaternion.LookRotation(nForward, boxUp);
 
