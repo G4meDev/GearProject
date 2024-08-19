@@ -112,6 +112,8 @@ public class SC_TestVehicle : MonoBehaviour
 
     public float driftTimer = 2.0f;
 
+    public float driftTractionRestTime = 2.0f;
+
     public SpeedModifierData firstDirftSpeedModifier;
 
     public SpeedModifierData secondDirftSpeedModifier;
@@ -133,6 +135,8 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     private bool rightDrift = false;
 
+    [HideInInspector]
+    private float lastDriftEndTime = 0.0f;
     private bool CanJump()
     {
         return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote) && Time.time > lastjumpTime + jumpResetTime;
@@ -162,27 +166,30 @@ public class SC_TestVehicle : MonoBehaviour
 
         else
         {
-            //             if(Time.time > driftStartTime + driftTimer)
-            //             {
-            //                 driftCounter++;
-            // 
-            //                 if (driftCounter == 1)
-            //                 {
-            //                     ApplySpeedModifier(ref firstDirftSpeedModifier);
-            //                 }
-            // 
-            //                 else if(driftCounter == 2)
-            //                 {
-            //                     ApplySpeedModifier(ref secondDirftSpeedModifier);
-            //                 }
-            // 
-            //                 else
-            //                 {
-            //                     ApplySpeedModifier(ref thirdDirftSpeedModifier);
-            // 
-            //                     EndDrift();
-            //                 }
-            //             }
+            if(Time.time > driftStartTime + driftTimer)
+            {
+                driftCounter++;
+                driftStartTime = Time.time;
+
+                Debug.Log(driftCounter.ToString());
+            
+                if (driftCounter == 1)
+                {
+                    ApplySpeedModifier(ref firstDirftSpeedModifier);
+                }
+            
+                else if(driftCounter == 2)
+                {
+                    ApplySpeedModifier(ref secondDirftSpeedModifier);
+                }
+            
+                else
+                {
+                    ApplySpeedModifier(ref thirdDirftSpeedModifier);
+            
+                    EndDrift();
+                }
+            }
 
             float a = (hInput + 1) / 2;
 
@@ -190,16 +197,14 @@ public class SC_TestVehicle : MonoBehaviour
             driftYaw *= Time.fixedDeltaTime;
 
             vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up);
-
-//             vehicleBox.transform.rotation = Quaternion.Lerp(vehicleBox.transform.rotation
-//                 , vehicleBox.transform.rotation * Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up)
-//                 , driftLerpRate );
         }
     }
 
     private void EndDrift()
     {
         drifting = false;
+
+        lastDriftEndTime = Time.time;
     }
 
     private void OnStartJump()
@@ -446,18 +451,8 @@ public class SC_TestVehicle : MonoBehaviour
             float enginePower = Mathf.Abs(forwardSpeed) < maxSpeedWithModifier ? accel : 0;
             enginePower *= vInput;
 
-            //             Vector3 throttleDir = drifting
-            //                 ? Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up) * vehicleBox.transform.forward
-            //                 : vehicleBox.transform.forward;
 
-
-            Vector3 throttleDir = vehicleBox.transform.forward;
-
-            vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
-
-
-
-            vehicleProxy.AddForce(throttleDir * enginePower, ForceMode.Acceleration);
+            vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
 
             float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
             float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : slipingSpeed / vehicleProxy.velocity.magnitude;
@@ -465,7 +460,8 @@ public class SC_TestVehicle : MonoBehaviour
 
             if (Mathf.Abs(slipingSpeedRatio) > 0)
             {
-                float t = drifting ? 0 : 1;
+                //float t = drifting ? 0 : 1;
+                float t = drifting ? 0 : Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime);
 
                 vehicleProxy.AddForce(-slipingSpeed * t * vehicleBox.transform.right, ForceMode.VelocityChange);
 
