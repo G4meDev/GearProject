@@ -216,31 +216,15 @@ MonoBehaviour:
     type: 2}
   vInput: 0
   hInput: 0
-  driftCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: -1
-      value: 15
-      inSlope: 0
-      outSlope: 22.5
-      tangentMode: 69
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 60
-      inSlope: 22.5
-      outSlope: 0
-      tangentMode: 69
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  driftLerpRate: 0.02
+  driftMinAngle: 15
+  driftMaxAngle: 60
+  driftTimer: 2
+  firstDirftSpeedModifier: {fileID: 11400000, guid: 2ad15429cb59a8a42871ee3d8746cd77,
+    type: 2}
+  secondDirftSpeedModifier: {fileID: 11400000, guid: f490f54fd3867a145a1638eb8b97dc70,
+    type: 2}
+  thirdDirftSpeedModifier: {fileID: 11400000, guid: 8c0ee0fbe56ab43429dcbb951c4433ca,
+    type: 2}
   drifting: 0
   driftYaw: 0
 --- !u!1 &4464370783046510623

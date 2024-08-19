@@ -107,9 +107,16 @@ public class SC_TestVehicle : MonoBehaviour
     private float airborneTime = 0.0f;
 
 
-    public AnimationCurve driftCurve;
+    public float driftMinAngle = 15.0f;
+    public float driftMaxAngle = 60.0f;
 
-    public float driftLerpRate = 0.1f;
+    public float driftTimer = 2.0f;
+
+    public SpeedModifierData firstDirftSpeedModifier;
+
+    public SpeedModifierData secondDirftSpeedModifier;
+
+    public SpeedModifierData thirdDirftSpeedModifier;
 
     [HideInInspector]
     public bool drifting = false;
@@ -125,16 +132,6 @@ public class SC_TestVehicle : MonoBehaviour
 
     [HideInInspector]
     private bool rightDrift = false;
-
-    [HideInInspector]
-    private float minDriftTime = 0.3f;
-
-    [HideInInspector]
-    private float goodDriftTime = 0.5f;
-
-    [HideInInspector]
-    private float perfectDriftTime = 0.6f;
-
 
     private bool CanJump()
     {
@@ -165,13 +162,38 @@ public class SC_TestVehicle : MonoBehaviour
 
         else
         {
-            driftYaw = rightDrift ? driftCurve.Evaluate(hInput) : -driftCurve.Evaluate(-hInput);
+            //             if(Time.time > driftStartTime + driftTimer)
+            //             {
+            //                 driftCounter++;
+            // 
+            //                 if (driftCounter == 1)
+            //                 {
+            //                     ApplySpeedModifier(ref firstDirftSpeedModifier);
+            //                 }
+            // 
+            //                 else if(driftCounter == 2)
+            //                 {
+            //                     ApplySpeedModifier(ref secondDirftSpeedModifier);
+            //                 }
+            // 
+            //                 else
+            //                 {
+            //                     ApplySpeedModifier(ref thirdDirftSpeedModifier);
+            // 
+            //                     EndDrift();
+            //                 }
+            //             }
 
-            vehicleBox.transform.rotation = Quaternion.Lerp(vehicleBox.transform.rotation
-                , vehicleBox.transform.rotation * Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up)
-                , driftLerpRate );
+            float a = (hInput + 1) / 2;
 
+            driftYaw = rightDrift ? Mathf.Lerp(driftMinAngle , driftMaxAngle, a) : -Mathf.Lerp(driftMinAngle, driftMaxAngle, 1 - a);
+            driftYaw *= Time.fixedDeltaTime;
 
+            vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up);
+
+//             vehicleBox.transform.rotation = Quaternion.Lerp(vehicleBox.transform.rotation
+//                 , vehicleBox.transform.rotation * Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up)
+//                 , driftLerpRate );
         }
     }
 
@@ -376,7 +398,7 @@ public class SC_TestVehicle : MonoBehaviour
         boostText.text = string.Format("Boost : {0:F2}", speedModifierIntensity);
         reserveText.text = string.Format("Reserve : {0:F2}", speedModifierReserveTime);
 
-        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
+        
 
         vehicleBox.transform.position = vehicleProxy.transform.position;
 
@@ -384,6 +406,13 @@ public class SC_TestVehicle : MonoBehaviour
         RaycastForContactSurface();
 
         Gravity();
+
+        if (drifting)
+        {
+            StepDrift();
+        }
+
+        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
 
         ApplySteer();
 
@@ -396,11 +425,8 @@ public class SC_TestVehicle : MonoBehaviour
 
         UpdateAeroState();
 
+        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
 
-        if (drifting)
-        {
-            StepDrift();
-        }
 
 
         if (!bHit)
@@ -420,9 +446,12 @@ public class SC_TestVehicle : MonoBehaviour
             float enginePower = Mathf.Abs(forwardSpeed) < maxSpeedWithModifier ? accel : 0;
             enginePower *= vInput;
 
-            Vector3 throttleDir = drifting
-                ? Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up) * vehicleBox.transform.forward
-                : vehicleBox.transform.forward;
+            //             Vector3 throttleDir = drifting
+            //                 ? Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up) * vehicleBox.transform.forward
+            //                 : vehicleBox.transform.forward;
+
+
+            Vector3 throttleDir = vehicleBox.transform.forward;
 
             vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
 

@@ -22,12 +22,12 @@ public class SC_TestVehicleMesh : MonoBehaviour
         transform.position = VehicleBox.transform.TransformPoint(meshOffset);
 
         Quaternion targetRotaton = Vehicle.drifting
-            ? Quaternion.AngleAxis(Vehicle.driftYaw * 1.3f, VehicleBox.transform.up) * VehicleBox.transform.rotation
+            ? Quaternion.AngleAxis(Vehicle.driftYaw * 50.0f, VehicleBox.transform.up) * VehicleBox.transform.rotation
             : VehicleBox.transform.rotation;
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotaton, Time.fixedDeltaTime * lerpRate);
-
-        Vector3 newForward = Vector3.Normalize(Vector3.Cross(transform.right, Vector3.up));
-        cameraTarget.transform.position = transform.position + newForward * 10;
+// 
+//         Vector3 newForward = Vector3.Normalize(Vector3.Cross(transform.right, Vector3.up));
+//         cameraTarget.transform.position = transform.position + newForward * 10;
     }
 
 }

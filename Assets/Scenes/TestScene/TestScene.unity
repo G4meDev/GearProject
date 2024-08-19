@@ -305,11 +305,6 @@ PrefabInstance:
       objectReference: {fileID: 1108834434}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
-      propertyPath: driftLerpRate
-      value: 0.02
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
       propertyPath: boostCurve.m_Curve.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -350,16 +345,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
-      propertyPath: driftCurve.m_Curve.Array.data[0].value
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
-      propertyPath: driftCurve.m_Curve.Array.data[1].value
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
       propertyPath: boostCurve.m_Curve.Array.data[1].inSlope
       value: 12
       objectReference: {fileID: 0}
@@ -372,11 +357,6 @@ PrefabInstance:
         type: 3}
       propertyPath: boostCurve.m_Curve.Array.data[3].inSlope
       value: -2.6666667
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
-      propertyPath: driftCurve.m_Curve.Array.data[1].inSlope
-      value: 22.5
       objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
@@ -407,11 +387,6 @@ PrefabInstance:
         type: 3}
       propertyPath: boostCurve.m_Curve.Array.data[3].inWeight
       value: 0.33333334
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
-      propertyPath: driftCurve.m_Curve.Array.data[0].outSlope
-      value: 22.5
       objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
@@ -451,16 +426,6 @@ PrefabInstance:
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: boostCurve.m_Curve.Array.data[3].tangentMode
-      value: 69
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
-      propertyPath: driftCurve.m_Curve.Array.data[0].tangentMode
-      value: 69
-      objectReference: {fileID: 0}
-    - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
-        type: 3}
-      propertyPath: driftCurve.m_Curve.Array.data[1].tangentMode
       value: 69
       objectReference: {fileID: 0}
     - target: {fileID: 3985926892625339986, guid: 4ff120f3a037bf24e9110970a476079b,
