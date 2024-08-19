@@ -29,6 +29,7 @@ public class SC_TestVehicle : MonoBehaviour
     public Text reserveText;
 
     public Image aeroMeter;
+    public Image driftMeter;
 
     public float gravityStr = 25.0f;
 
@@ -170,8 +171,6 @@ public class SC_TestVehicle : MonoBehaviour
             {
                 driftCounter++;
                 driftStartTime = Time.time;
-
-                Debug.Log(driftCounter.ToString());
             
                 if (driftCounter == 1)
                 {
@@ -383,6 +382,8 @@ public class SC_TestVehicle : MonoBehaviour
         aeroMeter.material.SetFloat("_low", lowJumpTime);
         aeroMeter.material.SetFloat("_mid", midJumpTime);
         aeroMeter.material.SetFloat("_high", highJumpTime);
+
+
     }
 
     private void FixedUpdate()
@@ -432,6 +433,11 @@ public class SC_TestVehicle : MonoBehaviour
 
         forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
 
+
+        driftMeter.material.SetFloat("_Drifting", drifting ? 1 : 0);
+        driftMeter.material.SetFloat("_StartTime", driftStartTime);
+        driftMeter.material.SetFloat("_Duration", driftTimer);
+        driftMeter.material.SetFloat("_Counter", driftCounter);
 
 
         if (!bHit)

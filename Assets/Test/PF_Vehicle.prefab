@@ -156,6 +156,7 @@ MonoBehaviour:
   boostText: {fileID: 0}
   reserveText: {fileID: 0}
   aeroMeter: {fileID: 0}
+  driftMeter: {fileID: 0}
   gravityStr: 40
   counterForceStr: 0.03
   maxSpeed: 30
@@ -218,7 +219,8 @@ MonoBehaviour:
   hInput: 0
   driftMinAngle: 15
   driftMaxAngle: 60
-  driftTimer: 2
+  driftTimer: 1.5
+  driftTractionRestTime: 2
   firstDirftSpeedModifier: {fileID: 11400000, guid: 2ad15429cb59a8a42871ee3d8746cd77,
     type: 2}
   secondDirftSpeedModifier: {fileID: 11400000, guid: f490f54fd3867a145a1638eb8b97dc70,
