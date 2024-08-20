@@ -4,7 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/SewerScene/SewerScene.unity
+    guid: 40291403092c0c74e95d47d08901e5ee
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 236aa23efafdb9745a0813f854f0bf18,
       type: 2}

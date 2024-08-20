@@ -21,6 +21,10 @@ public class SC_TestVehicle : MonoBehaviour
     public GameObject vehicleBox;
     public GameObject vehicleMesh;
 
+    public UI_SteerButton steerButton;
+    public UI_GearButton throttleButton;
+    public UI_GearButton reverseButton;
+
     public MeshRenderer boostIndicator;
 
     public Text speedText;
@@ -429,6 +433,13 @@ public class SC_TestVehicle : MonoBehaviour
     {
         vInput = UnityEngine.Input.GetAxis("Vertical");
         hInput = UnityEngine.Input.GetAxis("Horizontal");
+
+        hInput += steerButton.steerValue;
+        hInput = Mathf.Clamp(hInput, -1, 1);
+
+        vInput += throttleButton.pressed ? 1 : 0;
+        vInput += reverseButton.pressed ? -1 : 0;
+        vInput = Mathf.Clamp(vInput, -1, 1);
 
         pressedJump = UnityEngine.Input.GetButtonDown("Jump");
         holdingJump = UnityEngine.Input.GetButton("Jump");

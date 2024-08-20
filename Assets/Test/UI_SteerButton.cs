@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
-//using UnityEngine.UIElements;
 using UnityEngine.UI;
 
 public class UI_SteerButton : Button, IDragHandler
@@ -18,10 +13,6 @@ public class UI_SteerButton : Button, IDragHandler
     public override void OnPointerDown(PointerEventData eventData)
     {
         base.OnPointerDown(eventData);
-
-        //steerIndicatorImage.rectTransform.localPosition = Vector3.right * 50;
-
-        Debug.Log("Down");
 
     }
 
@@ -41,10 +32,8 @@ public class UI_SteerButton : Button, IDragHandler
     {
         base.OnPointerUp(eventData);
 
-        steerIndicatorImage.rectTransform.localPosition = Vector3.right * 0;
-
-        Debug.Log("Up");
-
+        steerIndicatorImage.rectTransform.localPosition = Vector3.zero;
+        steerValue = 0.0f;
     }
 
     

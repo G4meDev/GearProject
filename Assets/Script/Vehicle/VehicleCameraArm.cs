@@ -1,6 +1,3 @@
-using TreeEditor;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [ExecuteInEditMode]
