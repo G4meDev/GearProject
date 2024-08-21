@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 586496713}
   - component: {fileID: 586496712}
   m_Layer: 5
-  m_Name: ThrottleButton
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -164,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 96382a31811cdf744ac22213e8269423, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -227,6 +227,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pressed: 0
+  entered: 0
 --- !u!1 &1142131703
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +350,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pressed: 0
+  entered: 0
 --- !u!1 &1280683409
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,7 +486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 26903946dbe1e0346b62e62227e4527b, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -547,6 +549,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pressed: 0
+  entered: 0
 --- !u!1 &1429353021
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: d7972888e02f9024794e66708fd60819, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -669,6 +672,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pressed: 0
+  entered: 0
 --- !u!1 &1293861636234510574
 GameObject:
   m_ObjectHideFlags: 0
