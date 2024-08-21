@@ -141,7 +141,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -100, y: 350}
+  m_AnchoredPosition: {x: -100, y: 325}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &702380037
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0196a038e6c76ea46a1f050dc6eff12c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 571366dc6585f964a8ececb02d1d9ec5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -263,7 +263,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -299.99994, y: 250}
+  m_AnchoredPosition: {x: -275, y: 250}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &1142131707
@@ -294,7 +294,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0196a038e6c76ea46a1f050dc6eff12c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c8e70036bf5bdc641bc5fa16b12bafc1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -982,6 +982,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1642041447624853213}
+  - component: {fileID: 7815829418525979693}
   m_Layer: 0
   m_Name: UI_ScreenInput
   m_TagString: Untagged
@@ -1006,3 +1007,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7815829418525979693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9222298944393228262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb4d5ea0fa69fe4681f5a8d33e64b19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  steerButton: {fileID: 1157220606270689167}
+  throttleButton: {fileID: 1429353023}
+  reverseButton: {fileID: 1365963987}
+  jumpButton: {fileID: 702380035}
+  itemButton: {fileID: 1142131705}

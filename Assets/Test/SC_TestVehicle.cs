@@ -21,9 +21,7 @@ public class SC_TestVehicle : MonoBehaviour
     public GameObject vehicleBox;
     public GameObject vehicleMesh;
 
-    public UI_SteerButton steerButton;
-    public UI_GearButton throttleButton;
-    public UI_GearButton reverseButton;
+    public UI_ScreenInput screenInput;
 
     public MeshRenderer boostIndicator;
 
@@ -145,6 +143,18 @@ public class SC_TestVehicle : MonoBehaviour
 
     [HideInInspector]
     private float lastDriftEndTime = 0.0f;
+
+    private void UpdateScreenInput()
+    {
+        if (screenInput)
+        {
+            hInput = Mathf.Clamp(hInput + screenInput.data.hInput, -1, 1);
+            vInput = Mathf.Clamp(vInput + screenInput.data.vInput, -1, 1);
+
+            pressedJump |= screenInput.data.pressedJump;
+            holdingJump |= screenInput.data.holdingJump;
+        }
+    }
     private bool CanJump()
     {
         return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote) && Time.time > lastjumpTime + jumpResetTime;
@@ -434,15 +444,10 @@ public class SC_TestVehicle : MonoBehaviour
         vInput = UnityEngine.Input.GetAxis("Vertical");
         hInput = UnityEngine.Input.GetAxis("Horizontal");
 
-        hInput += steerButton.steerValue;
-        hInput = Mathf.Clamp(hInput, -1, 1);
-
-        vInput += throttleButton.pressed ? 1 : 0;
-        vInput += reverseButton.pressed ? -1 : 0;
-        vInput = Mathf.Clamp(vInput, -1, 1);
-
         pressedJump = UnityEngine.Input.GetButtonDown("Jump");
         holdingJump = UnityEngine.Input.GetButton("Jump");
+
+        UpdateScreenInput();
 
         bool boosting = UnityEngine.Input.GetButton("Boost");
 

@@ -14,6 +14,12 @@ public class UI_SteerButton : Button, IDragHandler
     {
         base.OnPointerDown(eventData);
 
+        steerValue = steerRangeImage.rectTransform.InverseTransformPoint(eventData.position).x;
+        float halfWidth = steerRangeImage.rectTransform.sizeDelta.x / 2;
+        steerValue = steerValue / halfWidth;
+        steerValue = Mathf.Clamp(steerValue, -1, 1);
+
+        steerIndicatorImage.rectTransform.localPosition = new Vector3(steerValue * halfWidth, 0, 1);
     }
 
     public void OnDrag(PointerEventData eventData)
