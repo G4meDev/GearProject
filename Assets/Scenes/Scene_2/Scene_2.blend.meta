@@ -12,6 +12,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Brown
+    second: {fileID: 2100000, guid: 6cc1821bde95d5d45a229bce14ad37e0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Brown_Trans
     second: {fileID: 2100000, guid: 85c3becbb12106e45af6bc8fefa13192, type: 2}
   - first:
