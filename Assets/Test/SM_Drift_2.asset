@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47604983b8acd974fafa2fe08729256e, type: 3}
   m_Name: SM_Drift_2
   m_EditorClassIdentifier: 
-  intensity: 8
+  intensity: 6
   reserverTime: 1.5

@@ -269,6 +269,11 @@ public class SC_TestVehicle : MonoBehaviour
         return 0;
     }
 
+    public void StartFalling()
+    {
+
+    }
+
     void UpdateAeroState()
     {
         if (!bHit)
@@ -278,6 +283,11 @@ public class SC_TestVehicle : MonoBehaviour
                 if (Time.time < lastTimeOnGround + coyoteTime)
                 {
                     aeroState = VehicleAeroState.Coyote;
+                }
+                else if(aeroState == VehicleAeroState.Coyote)
+                {
+                    aeroState = VehicleAeroState.Falling;
+                    StartFalling();
                 }
                 else
                 {
