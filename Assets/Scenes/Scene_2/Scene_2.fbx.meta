@@ -1,34 +1,9 @@
 fileFormatVersion: 2
-guid: 2b5dec0bced66a94a95d2e70c5c44ac2
+guid: 589eb102e8bc4394f8323c070c6fa7b5
 ModelImporter:
   serializedVersion: 22103
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Blue_Trans
-    second: {fileID: 2100000, guid: a9c954700a24cb249aaf5b397b90ec1f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Brown
-    second: {fileID: 2100000, guid: 6cc1821bde95d5d45a229bce14ad37e0, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Brown_Trans
-    second: {fileID: 2100000, guid: 85c3becbb12106e45af6bc8fefa13192, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Green
-    second: {fileID: 2100000, guid: 03dc4eb2698005945825b4cf10da4eea, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Yellow
-    second: {fileID: 2100000, guid: e0dd8e40631b91541b4f7f271bcc85f1, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -57,12 +32,12 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 1
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importVisibility: 1
