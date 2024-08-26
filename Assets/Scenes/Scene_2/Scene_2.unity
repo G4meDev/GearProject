@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0
+  m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
@@ -266,7 +266,7 @@ PrefabInstance:
     - target: {fileID: 5592306509037148780, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.83
+      value: 1.87
       objectReference: {fileID: 0}
     - target: {fileID: 5592306509037148780, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
@@ -316,7 +316,7 @@ PrefabInstance:
     - target: {fileID: 7090000030990806901, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 1.4999999
       objectReference: {fileID: 0}
     - target: {fileID: 7090000030990806901, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
@@ -336,7 +336,7 @@ PrefabInstance:
     - target: {fileID: 7243294516821275885, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 1.4999999
       objectReference: {fileID: 0}
     - target: {fileID: 7243294516821275885, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
@@ -2221,7 +2221,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: e0dd8e40631b91541b4f7f271bcc85f1, type: 2}
+      objectReference: {fileID: 2100000, guid: b14c70eecf81b534480ec9ca01c9030c, type: 2}
     - target: {fileID: -7029948723529949830, guid: 2b5dec0bced66a94a95d2e70c5c44ac2,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -2230,6 +2230,11 @@ PrefabInstance:
     - target: {fileID: -2013975479136960863, guid: 2b5dec0bced66a94a95d2e70c5c44ac2,
         type: 3}
       propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2013975479136960863, guid: 2b5dec0bced66a94a95d2e70c5c44ac2,
+        type: 3}
+      propertyPath: m_ReceiveShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -1789934483008057359, guid: 2b5dec0bced66a94a95d2e70c5c44ac2,
@@ -2272,6 +2277,16 @@ PrefabInstance:
       propertyPath: m_ReceiveShadows
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8147454100526816883, guid: 2b5dec0bced66a94a95d2e70c5c44ac2,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8147454100526816883, guid: 2b5dec0bced66a94a95d2e70c5c44ac2,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8821623529969584324, guid: 2b5dec0bced66a94a95d2e70c5c44ac2,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -2281,6 +2296,7 @@ PrefabInstance:
     - {fileID: -3840361553397645466, guid: 2b5dec0bced66a94a95d2e70c5c44ac2, type: 3}
     - {fileID: -2359026804784998899, guid: 2b5dec0bced66a94a95d2e70c5c44ac2, type: 3}
     - {fileID: -1789934483008057359, guid: 2b5dec0bced66a94a95d2e70c5c44ac2, type: 3}
+    - {fileID: -914245543162922408, guid: 2b5dec0bced66a94a95d2e70c5c44ac2, type: 3}
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b5dec0bced66a94a95d2e70c5c44ac2, type: 3}
 --- !u!1 &1036548427
