@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_DriftMeter
-  m_Shader: {fileID: -6465566751694194690, guid: af3a96c34e390a14498afe9113a14d49,
+  m_Name: M_Cliff_2
+  m_Shader: {fileID: -6465566751694194690, guid: b410e8347d9568940a69ba18f8931ac2,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -60,17 +60,38 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_2840d21cb94d4dc5abf21cd596403d44_Texture_1:
+        m_Texture: {fileID: 2800000, guid: d4118137523a35e4aa8ce0a812793a04, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_3441cbf9d8334161acb566cbc82a82fd_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 07644106b404cc74f802c4aad584032e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_58ad46db4f954d92ac0e3b4036b6011a_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 4f9557c2962e4c84395819d6d3176cee, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_bdabfabf6713458fbdc52208247c7aa3_Texture_1:
+        m_Texture: {fileID: 2800000, guid: b413a7bd6d076f141bbc02b440830729, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_d3e96a6de98c4197ac8f4d19dfbcba28_Texture_1:
+        m_Texture: {fileID: 2800000, guid: e2c0608d99f2a9f46abb1e59e4e10751, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_f6eac67e25474a2da0f0c1e4aca032c5_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 268473a4b337c7949b8532afb0d53869, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
     - _BumpScale: 1
-    - _Counter: 0
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Drifting: 0
     - _DstBlend: 0
-    - _Duration: 1.5
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -81,18 +102,13 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StartTime: 141.9
     - _UVSec: 0
     - _ZWrite: 1
-    - _airborneTime: 0
-    - _high: 0
-    - _low: 0
-    - _mid: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &7200517320964273576
+--- !u!114 &2568063439404675709
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
