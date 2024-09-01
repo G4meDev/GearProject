@@ -43,7 +43,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Sand
-    second: {fileID: 2100000, guid: b14c70eecf81b534480ec9ca01c9030c, type: 2}
+    second: {fileID: 2100000, guid: 3f884bfb26721644f8ded93371279292, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
