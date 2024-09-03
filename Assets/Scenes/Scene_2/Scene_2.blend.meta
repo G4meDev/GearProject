@@ -47,6 +47,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Water
+    second: {fileID: 2100000, guid: a9c954700a24cb249aaf5b397b90ec1f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Water_Foam
     second: {fileID: 2100000, guid: 341329763d7ae47439103e8090866ace, type: 2}
   - first:
