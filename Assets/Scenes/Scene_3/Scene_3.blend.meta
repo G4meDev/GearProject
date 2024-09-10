@@ -7,6 +7,36 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Choclate
+    second: {fileID: 2100000, guid: 6cc1821bde95d5d45a229bce14ad37e0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Curb
+    second: {fileID: 2100000, guid: e0dd8e40631b91541b4f7f271bcc85f1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gravel
+    second: {fileID: 2100000, guid: 3508ba24a1569b8418eaae1898eded5c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gray
+    second: {fileID: 2100000, guid: 3f884bfb26721644f8ded93371279292, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Road
+    second: {fileID: 2100000, guid: 3f884bfb26721644f8ded93371279292, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Water
+    second: {fileID: 2100000, guid: 85c3becbb12106e45af6bc8fefa13192, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: principledshader
     second: {fileID: 2100000, guid: 6cc1821bde95d5d45a229bce14ad37e0, type: 2}
   - first:

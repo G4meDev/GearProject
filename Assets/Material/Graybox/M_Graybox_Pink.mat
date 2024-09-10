@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Graybox_Brown_Trans
-  m_Shader: {fileID: -6465566751694194690, guid: c9307431e7682fa4fb47c1e755f8c90e,
+  m_Name: M_Graybox_Pink
+  m_Shader: {fileID: -6465566751694194690, guid: ca8a891286da70b44b10ddf7b926adb7,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -84,9 +84,8 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
-    - _alpha: 0.93
     m_Colors:
-    - _Color: {r: 0.8301887, g: 0.4792636, b: 0.28586686, a: 1}
+    - _Color: {r: 0.6698113, g: 0.37597898, b: 0.429403, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &2256138706937445213
