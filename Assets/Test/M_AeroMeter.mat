@@ -90,7 +90,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     - _aeroTime: 0
-    - _airborneTime: 0
+    - _airborneTime: 2.1599998
     - _high: 1.4
     - _low: 0.6
     - _mid: 1
