@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_AeroMeter
-  m_Shader: {fileID: -6465566751694194690, guid: df4c696fb85c8694a894d00aae1fdc6b,
+  m_Name: M_CakeSurface_2
+  m_Shader: {fileID: -6465566751694194690, guid: 7a9f09d73f4cdd648b745ca1ab94721d,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -60,13 +60,28 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_1a1eb90b90b443d582f6b8f6fdb684ba_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 5bda70f7daa430949b09c5ab830f6da9, type: 3}
+    - _SampleTexture2D_0ad48af5d7a14b15843d53d7bb7c8370_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 1a6fdf297340ac6478617b036bdf8c9d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_1a978f3dda5f46cd971757e2083ea075_Texture_1:
-        m_Texture: {fileID: -1087164816274819069, guid: 04a9051257b102e4783dea04a89d2c05,
-          type: 3}
+    - _SampleTexture2D_1fdab794d0e341f18b8fe4c7dc267766_Texture_1:
+        m_Texture: {fileID: 2800000, guid: b4575f39bf0a9bd4b980488e44f3ecc1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_2f4bd4d812454b3d91507a113d93107b_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 8c688af34c436704b80c9c7962d318af, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_bc651d74a74f4f319834533b5eb89983_Texture_1:
+        m_Texture: {fileID: 2800000, guid: fb27ba5e2dfbfec4285cd21e930447e6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_c0ba3b0a5f6f488896fb5b709a7ded98_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 6f3d6fb41db9a3c499a321699ed018fa, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_d291ae9295bf43459e202d5c59fac291_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 2d5dc5b14afcec64fb76dc30737bd07f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -89,16 +104,11 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
-    - _aeroTime: 0
-    - _airborneTime: 0
-    - _high: 1.4
-    - _low: 0.6
-    - _mid: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &734611251503678742
+--- !u!114 &3054415803464925059
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
