@@ -18,7 +18,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Cream
-    second: {fileID: 2100000, guid: 5561725ca98b0ef4eaf80cea4f75652a, type: 2}
+    second: {fileID: 2100000, guid: 921a7509e499ad445a147327c30933c1, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -28,7 +28,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Gravel
-    second: {fileID: 2100000, guid: ed91839bc6801e44d9ea3957ae1789b5, type: 2}
+    second: {fileID: 2100000, guid: 6663198108ca5344b924c7a66eecb2d6, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
