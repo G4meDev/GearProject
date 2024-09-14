@@ -199,11 +199,11 @@ public class SC_TestVehicle : MonoBehaviour
                     ApplySpeedModifier(ref secondDirftSpeedModifier);
                 }
             
-                else
+                else if(driftCounter == 3)
                 {
                     ApplySpeedModifier(ref thirdDirftSpeedModifier);
             
-                    EndDrift();
+                    //EndDrift();
                 }
             }
 
