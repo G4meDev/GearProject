@@ -166,8 +166,8 @@ MonoBehaviour:
   speedModifierIntensity: 0
   speedModifierReserveTime: 0
   boostIntensity: 10
-  traction: 1
-  driftTraction: 0
+  traction: 0.6
+  driftTraction: 0.03
   steerCurve:
     serializedVersion: 2
     m_Curve:
@@ -230,6 +230,7 @@ MonoBehaviour:
     type: 2}
   drifting: 0
   driftYaw: 0
+  pullPath: {fileID: 0}
 --- !u!1 &4464370783046510623
 GameObject:
   m_ObjectHideFlags: 0

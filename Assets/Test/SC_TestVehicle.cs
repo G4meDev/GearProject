@@ -144,6 +144,9 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     private float lastDriftEndTime = 0.0f;
 
+    //TODO: Delete
+    public PullPath pullPath;
+
     private void UpdateScreenInput()
     {
         if (screenInput)
@@ -263,7 +266,17 @@ public class SC_TestVehicle : MonoBehaviour
     {
         if (bHit)
         {
-            return hit.collider.material.dynamicFriction;
+            return hit.collider.material.dynamicFriction - 100;
+        }
+
+        return 0;
+    }
+
+    private float GetContactSurfaceLateralFriction()
+    {
+        if (bHit)
+        {
+            return hit.collider.material.staticFriction - 100;
         }
 
         return 0;
@@ -483,7 +496,8 @@ public class SC_TestVehicle : MonoBehaviour
             StepDrift();
         }
 
-        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
+        //forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
+        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? vehicleProxy.velocity.magnitude : -vehicleProxy.velocity.magnitude;
 
         ApplySteer();
 
@@ -496,7 +510,7 @@ public class SC_TestVehicle : MonoBehaviour
 
         UpdateAeroState();
 
-        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
+        //forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
 
 
         driftMeter.material.SetFloat("_Drifting", drifting ? 1 : 0);
@@ -514,7 +528,8 @@ public class SC_TestVehicle : MonoBehaviour
         {
 
             // if boosting set speed to max
-            if (maxSpeed < maxSpeedWithModifier)
+            //if (maxSpeed < maxSpeedWithModifier)
+            if (speedModifierReserveTime > 0)
             {
                 IncreaseSpeedTo(maxSpeedWithModifier);
             }
@@ -531,8 +546,10 @@ public class SC_TestVehicle : MonoBehaviour
 
             if (Mathf.Abs(slipingSpeedRatio) > 0)
             {
-                //float t = drifting ? 0 : 1;
-                float t = drifting ? 0 : Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime);
+                //float t = drifting ? 0 : Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime);
+                //float t = drifting ? driftTraction : traction;
+
+                float t = drifting ? driftTraction : Mathf.Lerp(driftTraction, GetContactSurfaceLateralFriction(), Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime));
 
                 vehicleProxy.AddForce(-slipingSpeed * t * vehicleBox.transform.right, ForceMode.VelocityChange);
 
@@ -550,6 +567,16 @@ public class SC_TestVehicle : MonoBehaviour
         }
 
         speedText.text = string.Format("Speed : {0:F2}", forwardSpeed);
+
+
+        if (bHit && forwardSpeed < maxSpeedWithModifier)
+        {
+            Vector3 tan = pullPath.GetForceAtPosition(vehicleProxy.transform.position);
+
+            Debug.DrawLine(vehicleProxy.transform.position + Vector3.up * 2, vehicleProxy.transform.position + (Vector3.up * 2) + Vector3.Normalize(tan), Color.black);
+
+            vehicleProxy.AddForce(tan, ForceMode.Acceleration);
+        }
     }
 
     void Update()
