@@ -160,14 +160,14 @@ MonoBehaviour:
   driftMeter: {fileID: 0}
   gravityStr: 40
   counterForceStr: 0.03
-  maxSpeed: 30
+  maxSpeed: 45
   accel: 35
   rayDist: 1.2
   speedModifierIntensity: 0
   speedModifierReserveTime: 0
   boostIntensity: 10
   traction: 0.6
-  driftTraction: 0.03
+  driftTraction: 0.02
   steerCurve:
     serializedVersion: 2
     m_Curve:
@@ -218,7 +218,7 @@ MonoBehaviour:
     type: 2}
   vInput: 0
   hInput: 0
-  driftMinAngle: 15
+  driftMinAngle: 10
   driftMaxAngle: 60
   driftTimer: 1.5
   driftTractionRestTime: 2
@@ -355,8 +355,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5177595242150146046}
-  m_LocalRotation: {x: -0, y: 1e-45, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.4999999, z: -5}
+  m_LocalRotation: {x: 0.03564617, y: -0.000000022351742, z: 8.1490725e-10, w: 0.9993645}
+  m_LocalPosition: {x: 0, y: 2, z: -7.0000005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -388,7 +388,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 60
+  field of view: 42
   orthographic: 0
   orthographic size: 10
   m_Depth: 0
@@ -662,7 +662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 2.5, z: -5}
+  m_FollowOffset: {x: 0, y: 3, z: -7}
   m_XDamping: 0
   m_YDamping: 0.05
   m_ZDamping: 0.15
@@ -778,8 +778,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7566143381370780299}
-  m_LocalRotation: {x: -0, y: 1e-45, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.4999999, z: -5}
+  m_LocalRotation: {x: 0.03564617, y: -0.000000022351742, z: 8.1490725e-10, w: 0.9993645}
+  m_LocalPosition: {x: 0, y: 2, z: -7.0000005}
   m_LocalScale: {x: 0.99999976, y: 1, z: 0.99999976}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -808,7 +808,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 811554611464924071}
   m_Follow: {fileID: 811554611464924071}
   m_Lens:
-    FieldOfView: 60
+    FieldOfView: 42
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
