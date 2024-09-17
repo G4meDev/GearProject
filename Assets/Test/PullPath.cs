@@ -31,7 +31,7 @@ public class PullPath : MonoBehaviour
             float alpha = Mathf.Clamp01((dist - innerRadius) / (outerRadius - innerRadius));
             alpha = Mathf.Pow(1 - alpha, falloff);
 
-            Debug.Log(alpha);
+            //Debug.Log(alpha);
             
             return Vector3.Normalize(new Vector3(tangent.x, tangent.y, tangent.z))* alpha * strength;
         }
