@@ -569,7 +569,7 @@ public class SC_TestVehicle : MonoBehaviour
         speedText.text = string.Format("Speed : {0:F2}", forwardSpeed);
 
 
-        if (bHit && forwardSpeed < maxSpeedWithModifier)
+        if (bHit && pullPath && forwardSpeed < maxSpeedWithModifier)
         {
             Vector3 tan = pullPath.GetForceAtPosition(vehicleProxy.transform.position);
 
