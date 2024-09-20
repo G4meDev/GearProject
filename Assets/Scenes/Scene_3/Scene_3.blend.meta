@@ -28,6 +28,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: CakePattern_1
+    second: {fileID: 2100000, guid: 500b2166a18308e45888c6abb3fa9a97, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Choclate
     second: {fileID: 2100000, guid: 6cc1821bde95d5d45a229bce14ad37e0, type: 2}
   - first:
@@ -76,6 +81,11 @@ ModelImporter:
       name: Leaf
     second: {fileID: -876546973899608171, guid: afe8d92a2f6ee15478fe60b30e36008f,
       type: 3}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Ribbon_1
+    second: {fileID: 2100000, guid: f82ebecc1967108418ef61530c317060, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

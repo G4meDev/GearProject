@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_DriftMeter
-  m_Shader: {fileID: -6465566751694194690, guid: af3a96c34e390a14498afe9113a14d49,
+  m_Name: M_CakePattern_1
+  m_Shader: {fileID: -6465566751694194690, guid: 8e3d99e32a203ef44a813b5da7874434,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -60,17 +60,22 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_4a6f0f8f346c415fa9f91f9d5b68f236_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 23d5dfb7b35c3c54ba77b0c81a2fdbd7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_fc8210143310429499332e053669ad5b_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 059979d802c693b4fa96f5f5decd00f6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
     - _BumpScale: 1
-    - _Counter: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Drifting: 0
     - _DstBlend: 0
-    - _Duration: 1.5
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -81,18 +86,13 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StartTime: 89.06
     - _UVSec: 0
     - _ZWrite: 1
-    - _airborneTime: 0
-    - _high: 0
-    - _low: 0
-    - _mid: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &7200517320964273576
+--- !u!114 &5087974569045366892
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
