@@ -53,6 +53,16 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Flower_Core
+    second: {fileID: 2100000, guid: 12ac05019b1bac0479ac07c2fb7d6cfb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Flower_Leaf
+    second: {fileID: 2100000, guid: 98930f1f9259ca849aaef32e674b05b0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Gravel
     second: {fileID: 2100000, guid: 6663198108ca5344b924c7a66eecb2d6, type: 2}
   - first:
