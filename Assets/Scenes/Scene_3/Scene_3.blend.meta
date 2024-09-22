@@ -84,6 +84,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Pillar_1
+    second: {fileID: 2100000, guid: 0b47631a184b46340bcc00698865897f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Ribbon_1
     second: {fileID: 2100000, guid: f82ebecc1967108418ef61530c317060, type: 2}
   - first:
