@@ -23,7 +23,7 @@ public class SC_TestVehicleMesh : MonoBehaviour
         transform.position = VehicleBox.transform.TransformPoint(meshOffset);
 
         Quaternion targetRotaton = Vehicle.drifting
-            ? Quaternion.AngleAxis(Vehicle.driftYaw * 20.0f, VehicleBox.transform.up) * VehicleBox.transform.rotation
+            ? Quaternion.AngleAxis(Vehicle.driftYaw * 30.0f, VehicleBox.transform.up) * VehicleBox.transform.rotation
             : VehicleBox.transform.rotation;
 
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotaton, Time.fixedDeltaTime * lerpRate);
