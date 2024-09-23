@@ -30,7 +30,15 @@ public class SC_TestVehicleMesh : MonoBehaviour
 
 
         cameraTarget.transform.position = VehicleBox.transform.TransformPoint(meshOffset);
-        cameraTarget.transform.rotation = Quaternion.Lerp(cameraTarget.transform.rotation, VehicleBox.transform.rotation, Time.fixedDeltaTime * lerpRate);
+        //cameraTarget.transform.rotation = Quaternion.Lerp(cameraTarget.transform.rotation, VehicleBox.transform.rotation, Time.fixedDeltaTime * lerpRate);
+
+        //cameraTarget.transform.rotation = VehicleBox.transform.rotation;
+
+        Vector3 cameraUp = Vehicle.orientNode.GetCameraUpVector(VehicleBox.transform.position);
+
+        Vector3 forward = Vector3.Cross(VehicleBox.transform.right, cameraUp);
+
+        cameraTarget.transform.rotation = Quaternion.LookRotation(forward, cameraUp);
     }
 
 }

@@ -147,6 +147,8 @@ public class SC_TestVehicle : MonoBehaviour
     //TODO: Delete
     public PullPath pullPath;
 
+    public Camera_Orient_Node orientNode;
+
     private void UpdateScreenInput()
     {
         if (screenInput)
