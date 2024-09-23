@@ -30,8 +30,6 @@ public class PullPath : MonoBehaviour
 
             float alpha = Mathf.Clamp01((dist - innerRadius) / (outerRadius - innerRadius));
             alpha = Mathf.Pow(1 - alpha, falloff);
-
-            //Debug.Log(alpha);
             
             return Vector3.Normalize(new Vector3(tangent.x, tangent.y, tangent.z))* alpha * strength;
         }
@@ -49,8 +47,6 @@ public class PullPath : MonoBehaviour
 #if UNITY_EDITOR
         if (!Application.isPlaying && bDrawDebug && spline)
         {
-            //float len = spline.Spline.leng();
-
             float step = 1.0f / debugSteps;
 
             for (float i = 0; i < 1; i+=step)
