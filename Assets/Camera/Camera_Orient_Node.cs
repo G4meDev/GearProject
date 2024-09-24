@@ -2,9 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Unity.VisualScripting;
-using System.Linq;
-using UnityEngine.UIElements;
-using UnityEditor.Experimental.GraphView;
 
 public class Camera_Orient_Node : MonoBehaviour
 {
@@ -125,6 +122,8 @@ public class Camera_Orient_Node_Editor : Editor
     private void Align()
     {
         Camera_Orient_Node node = target as Camera_Orient_Node;
+
+        
 
         Ray ray = new Ray(node.transform.position, Vector3.down);
         RaycastHit hit;
