@@ -4,6 +4,7 @@ using UnityEditor;
 using Unity.VisualScripting;
 using System.Linq;
 using UnityEngine.UIElements;
+using UnityEditor.Experimental.GraphView;
 
 public class Camera_Orient_Node : MonoBehaviour
 {
@@ -20,24 +21,36 @@ public class Camera_Orient_Node : MonoBehaviour
         float min_dist = float.MaxValue;
         Camera_Orient_Node nearest = null;
 
+        Vector2 nearest_pos;
+        Vector2 target_pos = new Vector2(worldPos.x, worldPos.z);
+        Vector2 node_pos = new Vector2(transform.position.x, transform.position.z);
+
+        float dot;
+        Vector2 nodeToNearest;
+        Vector2 nodeToTarget = target_pos - node_pos;
+
+        float a = 2;
+
         foreach (Camera_Orient_Node node in Neighbours)
         {
-            float dist = Vector3.Distance(node.transform.position, worldPos);
-            if (dist < min_dist)
+            nearest_pos = new Vector2(node.transform.position.x, node.transform.position.z);
+            nodeToNearest = nearest_pos - node_pos;
+            dot = Vector2.Dot(nodeToNearest.normalized, nodeToTarget) / nodeToNearest.magnitude;
+
+            if(dot >= 0 && dot <= 1 && nodeToTarget.magnitude < min_dist)
             {
-                min_dist = dist;
+                a = dot;
+                min_dist = nodeToTarget.magnitude;
                 nearest = node;
             }
         }
 
-        Vector3 d = nearest.transform.position - transform.position;
+        if (nearest)
+        {
+            return Vector3.Lerp(transform.up, nearest.transform.up, a);
+        }
 
-        Vector3 vec1 = d.normalized;
-        Vector3 vec2 = worldPos - transform.position;
-
-        float a = Mathf.Clamp01(Vector3.Dot(vec1, vec2) / d.magnitude);
-
-        return Vector3.Lerp(transform.up, nearest.transform.up, a);
+        return transform.up;
     }
 
     public void OnNeighboursChanged()
