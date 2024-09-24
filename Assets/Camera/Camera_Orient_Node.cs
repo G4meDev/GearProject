@@ -21,21 +21,19 @@ public class Camera_Orient_Node : MonoBehaviour
         float min_dist = float.MaxValue;
         Camera_Orient_Node nearest = null;
 
-        Vector2 nearest_pos;
-        Vector2 target_pos = new Vector2(worldPos.x, worldPos.z);
-        Vector2 node_pos = new Vector2(transform.position.x, transform.position.z);
+        Vector3 nearest_pos;
 
         float dot;
-        Vector2 nodeToNearest;
-        Vector2 nodeToTarget = target_pos - node_pos;
+        Vector3 nodeToNearest;
+        Vector3 nodeToTarget = worldPos - transform.position;
 
         float a = 2;
 
         foreach (Camera_Orient_Node node in Neighbours)
         {
-            nearest_pos = new Vector2(node.transform.position.x, node.transform.position.z);
-            nodeToNearest = nearest_pos - node_pos;
-            dot = Vector2.Dot(nodeToNearest.normalized, nodeToTarget) / nodeToNearest.magnitude;
+            nearest_pos = node.transform.position;
+            nodeToNearest = nearest_pos - transform.position;
+            dot = Vector3.Dot(nodeToNearest.normalized, nodeToTarget) / nodeToNearest.magnitude;
 
             if(dot >= 0 && dot <= 1 && nodeToTarget.magnitude < min_dist)
             {
