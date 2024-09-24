@@ -1,14 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Windows;
 
 public enum VehicleAeroState
 {
-    
     OnGround,
     Coyote,
     Jumping,
@@ -34,6 +28,7 @@ public class SC_TestVehicle : MonoBehaviour
     public Image driftMeter;
 
     public float gravityStr = 25.0f;
+    private Vector3 gravityDir = Vector3.down;
 
     public float counterForceStr = 0.03f;
 
@@ -148,6 +143,8 @@ public class SC_TestVehicle : MonoBehaviour
     public PullPath pullPath;
 
     public Camera_Orient_Node orientNode;
+
+    public AntiGravity_Node antiGravityNode;
 
     private void UpdateScreenInput()
     {
@@ -371,7 +368,7 @@ public class SC_TestVehicle : MonoBehaviour
 
     private void RaycastForContactSurface()
     {
-        Ray ray = new Ray(vehicleProxy.transform.position, -Vector3.up);
+        Ray ray = new Ray(vehicleProxy.transform.position, gravityDir);
 
         // TODO: make track surface and track wall layer
         LayerMask layerMask = LayerMask.GetMask("Default");
@@ -383,7 +380,7 @@ public class SC_TestVehicle : MonoBehaviour
 
             if (meshCollider == null)
             {
-                contactSmoothNormal = Vector3.up;
+                contactSmoothNormal = -gravityDir;
             }
             else
             {
@@ -410,16 +407,23 @@ public class SC_TestVehicle : MonoBehaviour
 
         else
         {
-            contactSmoothNormal = Vector3.up;
+            contactSmoothNormal = -gravityDir;
         }
 
-        Debug.DrawLine(vehicleProxy.transform.position, vehicleProxy.transform.position - Vector3.up * rayDist);
+        Debug.DrawLine(vehicleProxy.transform.position, vehicleProxy.transform.position + gravityDir * rayDist);
     }
 
     private void Gravity()
     {
-        // if in touch with ground or not attempting to move is world down vector otherwise is ground normal
-        Vector3 gravityDir = vInput != 0 && bHit ? -contactSmoothNormal : -Vector3.up;
+        if(antiGravityNode)
+        {
+            gravityDir = -antiGravityNode.GetUpVector(vehicleProxy.transform.position);
+        }
+
+        else
+        {
+            gravityDir = Vector3.down;
+        }
 
         // gravity force
         vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
@@ -445,7 +449,7 @@ public class SC_TestVehicle : MonoBehaviour
     private void AlignWithContactSurface()
     {
         // if in touch with ground align with surface normal otherwise align with world up 
-        Vector3 boxUp = bHit ? contactSmoothNormal : Vector3.up;
+        Vector3 boxUp = bHit ? contactSmoothNormal : -gravityDir;
         Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, boxUp));
         Quaternion q = Quaternion.LookRotation(nForward, boxUp);
 
@@ -472,6 +476,8 @@ public class SC_TestVehicle : MonoBehaviour
         pressedJump = UnityEngine.Input.GetButtonDown("Jump");
         holdingJump = UnityEngine.Input.GetButton("Jump");
 
+        Gravity();
+
         UpdateScreenInput();
 
         bool boosting = UnityEngine.Input.GetButton("Boost");
@@ -491,7 +497,7 @@ public class SC_TestVehicle : MonoBehaviour
 
         RaycastForContactSurface();
 
-        Gravity();
+        //Gravity();
 
         if (drifting)
         {
