@@ -133,7 +133,7 @@ Transform:
   - {fileID: 7090000030990806901}
   - {fileID: 811554611464924071}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3947225319184177958
 MonoBehaviour:
@@ -356,8 +356,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5177595242150146046}
-  m_LocalRotation: {x: 0.03564617, y: 0.00000038556755, z: 0.000000013795216, w: -0.99936455}
-  m_LocalPosition: {x: 0.00000564754, y: 2, z: -7.000005}
+  m_LocalRotation: {x: -0.03564617, y: 0.0000014603136, z: 0.000000052154057, w: 0.9993645}
+  m_LocalPosition: {x: -0.000020086765, y: 2, z: -7.000003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -636,8 +636,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TrackedObjectOffset: {x: 0, y: 3.5, z: 0}
-  m_LookaheadTime: 0.03
-  m_LookaheadSmoothing: 0.01
+  m_LookaheadTime: 0
+  m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 1
   m_HorizontalDamping: 0
   m_VerticalDamping: 0
@@ -668,9 +668,9 @@ MonoBehaviour:
   m_YDamping: 0.05
   m_ZDamping: 0.2
   m_AngularDampingMode: 0
-  m_PitchDamping: 0
+  m_PitchDamping: 1
   m_YawDamping: 1
-  m_RollDamping: 0
+  m_RollDamping: 1
   m_AngularDamping: 0
 --- !u!1 &7417783819118272802
 GameObject:
@@ -779,8 +779,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7566143381370780299}
-  m_LocalRotation: {x: 0.03564617, y: 0.00000038556755, z: 0.000000013795216, w: -0.99936455}
-  m_LocalPosition: {x: 0.00000564754, y: 2, z: -7.000005}
+  m_LocalRotation: {x: -0.03564617, y: 0.0000014603136, z: 0.000000052154057, w: 0.9993645}
+  m_LocalPosition: {x: -0.000020086765, y: 2, z: -7.000003}
   m_LocalScale: {x: 0.99999976, y: 1, z: 0.99999976}
   m_ConstrainProportionsScale: 0
   m_Children:
