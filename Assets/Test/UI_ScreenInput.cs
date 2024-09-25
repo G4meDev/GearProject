@@ -20,7 +20,7 @@ public class UI_ScreenInput : MonoBehaviour
     public UI_GearButton jumpButton;
     public UI_GearButton itemButton;
 
-    public ScreenInputData data = new ScreenInputData();
+    public ScreenInputData data = new();
 
     public void DeactivateAll()
     {
@@ -47,7 +47,7 @@ public class UI_ScreenInput : MonoBehaviour
 
         if (throttleActive)
         {
-            throttleButton.onActive();
+            throttleButton.OnActive();
         }
         else
         {
@@ -56,7 +56,7 @@ public class UI_ScreenInput : MonoBehaviour
 
         if (reverseActive)
         {
-            reverseButton.onActive();
+            reverseButton.OnActive();
         }
         else
         {
@@ -72,16 +72,11 @@ public class UI_ScreenInput : MonoBehaviour
 
         if (data.holdingJump)
         {
-            jumpButton.onActive();
+            jumpButton.OnActive();
         }
         else
         {
             jumpButton.OnDeactive();
         }
-    }
-
-    void Update()
-    {
-        
     }
 }

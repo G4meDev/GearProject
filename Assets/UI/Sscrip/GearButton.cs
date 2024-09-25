@@ -12,11 +12,6 @@ public class GearButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public float raiseRate = 3;
     public float fallRate = 3;
 
-    void Start()
-    {
-        
-    }
-
     void FixedUpdate()
     {
         value = Mathf.Clamp01(value + (bDown ? raiseRate : -fallRate) * Time.fixedDeltaTime);

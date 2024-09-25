@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -53,7 +55,7 @@ public class SC_TestVehicle : MonoBehaviour
     [HideInInspector]
     public float forwardSpeed = 0.0f;
 
-    float maxSpeedModifier = 20.0f;
+    readonly float maxSpeedModifier = 20.0f;
 
 
     float lastTimeOnGround = 0.0f;
@@ -471,7 +473,7 @@ public class SC_TestVehicle : MonoBehaviour
     {
         if(gliderNode)
         {
-            vehicleProxy.AddForce(hInput * vehicleBox.transform.right * 100, ForceMode.Acceleration);
+            vehicleProxy.AddForce(100 * hInput * vehicleBox.transform.right, ForceMode.Acceleration);
 
             return;
         }
@@ -524,7 +526,7 @@ public class SC_TestVehicle : MonoBehaviour
 
         UpdateScreenInput();
 
-        bool boosting = UnityEngine.Input.GetButton("Boost");
+        //bool boosting = UnityEngine.Input.GetButton("Boost");
 
         UpdateSpeedModifiers();
 
@@ -633,15 +635,5 @@ public class SC_TestVehicle : MonoBehaviour
 // 
 //             vehicleProxy.AddForce(tan, ForceMode.Acceleration);
 //         }
-    }
-
-    void Update()
-    {
-
-    }
-
-    private void LateUpdate()
-    {
-        
     }
 }

@@ -70,17 +70,6 @@ public class Camera_Orient_Node : MonoBehaviour
         EditorUtility.SetDirty(this);
 #endif
     }
-
-    void Start()
-    {
-
-    }
-
-
-    void Update()
-    {
-
-    }
 }
 
 #if UNITY_EDITOR
@@ -93,7 +82,7 @@ public class Camera_Orient_Node_Editor : Editor
 
     void OnSceneGUI()
     {
-        GameObject obj = target as GameObject;
+        //GameObject obj = target as GameObject;
 
         Event e = Event.current;
         if (e.type == EventType.KeyDown && e.keyCode == KeyCode.V && !vDown)
@@ -128,11 +117,10 @@ public class Camera_Orient_Node_Editor : Editor
 
         
 
-        Ray ray = new Ray(node.transform.position, Vector3.down);
-        RaycastHit hit;
-        bool bHit = Physics.Raycast(ray, out hit);
+        Ray ray = new(node.transform.position, Vector3.down);
+        bool bHit = Physics.Raycast(ray, out RaycastHit hit);
 
-        if(bHit)
+        if (bHit)
         {
             Vector3 forward = Vector3.Cross(node.transform.right, hit.normal);
             node.transform.rotation = Quaternion.LookRotation(forward, hit.normal);
@@ -149,8 +137,7 @@ public class Camera_Orient_Node_Editor : Editor
         Camera_Orient_Node newNode = obj.GetComponent<Camera_Orient_Node>();
         newNode.transform.parent = node.transform.root;
 
-        newNode.transform.position = node.transform.position + node.transform.forward * 50;
-        newNode.transform.rotation = node.transform.rotation;
+        newNode.transform.SetPositionAndRotation(node.transform.position + node.transform.forward * 50, node.transform.rotation);
         newNode.transform.localScale = node.transform.localScale;
 
         int ix = node.name.LastIndexOf('_');
@@ -158,7 +145,7 @@ public class Camera_Orient_Node_Editor : Editor
         string s = node.name.Substring(ix + 1, node.name.Length - ix - 1);
         int i = int.Parse(s) + 1;
 
-        s = node.name.Substring(0, ix + 1) + i;
+        s = node.name[..(ix + 1)] + i;
         newNode.name = s;
         
         newNode.Neighbours.Clear();

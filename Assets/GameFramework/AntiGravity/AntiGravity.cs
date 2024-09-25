@@ -3,15 +3,7 @@ using UnityEditor;
 
 public class AntiGravity : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
+    
 }
 
 #if UNITY_EDITOR

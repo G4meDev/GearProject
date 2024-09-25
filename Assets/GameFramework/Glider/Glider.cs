@@ -3,15 +3,7 @@ using UnityEditor;
 
 public class Glider : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
+    
 }
 
 #if UNITY_EDITOR

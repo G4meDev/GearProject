@@ -43,7 +43,7 @@ public class UI_GearButton : Button
         entered = false;
     }
 
-    public void onActive()
+    public void OnActive()
     {
         material.SetFloat("_pressed", 1);
 
@@ -61,10 +61,5 @@ public class UI_GearButton : Button
     void Start()
     {
         material = GetComponent<Image>().material;
-    }
-
-    void FixedUpdate()
-    {
-
     }
 }
