@@ -6,7 +6,8 @@ public enum VehicleAeroState
     OnGround,
     Coyote,
     Jumping,
-    Falling
+    Falling,
+    Gliding
 }
 
 public class SC_TestVehicle : MonoBehaviour
