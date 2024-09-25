@@ -170,11 +170,23 @@ public class SC_TestVehicle : MonoBehaviour
         }
         
         gliderNode = node;
+        aeroState = VehicleAeroState.Gliding;
     }
 
     public void EndGliding()
     {
         gliderNode = null;
+        aeroState = VehicleAeroState.Falling;
+    }
+
+    private void DoGliding()
+    {
+        Vector3 d = gliderNode.GetDesigeredVelocity(vehicleProxy.transform.position);
+        vehicleProxy.velocity = Vector3.Lerp(vehicleProxy.velocity, d, 0.04f);
+
+        Quaternion targetRotation = Quaternion.LookRotation(Vector3.Normalize(gliderNode.next.transform.position - gliderNode.transform.position), vehicleBox.transform.up);
+
+        vehicleBox.transform.rotation = Quaternion.Slerp(vehicleBox.transform.rotation, targetRotation, 0.04f);
     }
 
     private bool CanJump()
@@ -308,6 +320,9 @@ public class SC_TestVehicle : MonoBehaviour
 
     void UpdateAeroState()
     {
+        if (aeroState == VehicleAeroState.Gliding)
+            return;
+
         if (!bHit)
         {
             if (aeroState != VehicleAeroState.Jumping)
@@ -555,16 +570,9 @@ public class SC_TestVehicle : MonoBehaviour
         driftMeter.material.SetFloat("_Duration", driftTimer);
         driftMeter.material.SetFloat("_Counter", driftCounter);
 
-        if(gliderNode)
+        if(aeroState == VehicleAeroState.Gliding)
         {
-            //vehicleProxy.AddForce(gliderNode.GetForce(vehicleProxy.transform.position), ForceMode.Acceleration);
-
-            Vector3 d = gliderNode.GetDesigeredVelocity(vehicleProxy.transform.position);
-            vehicleProxy.velocity = Vector3.Lerp(vehicleProxy.velocity, d, 0.04f);
-
-            Quaternion targetRotation = Quaternion.LookRotation(Vector3.Normalize(gliderNode.next.transform.position - gliderNode.transform.position), vehicleBox.transform.up);
-
-            vehicleBox.transform.rotation = Quaternion.Slerp(vehicleBox.transform.rotation, targetRotation, 0.04f);
+            DoGliding();
         }
 
         if (!bHit)
@@ -572,7 +580,7 @@ public class SC_TestVehicle : MonoBehaviour
 
 
         }
-        if (bHit && !gliderNode)
+        if (bHit && aeroState != VehicleAeroState.Gliding)
         {
 
             // if boosting set speed to max
