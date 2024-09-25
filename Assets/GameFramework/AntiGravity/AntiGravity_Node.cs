@@ -66,7 +66,9 @@ public class AntiGravity_Node : MonoBehaviour
             }
         }
 
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
     }
 
     void Start()
@@ -81,6 +83,7 @@ public class AntiGravity_Node : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
 
 [CustomEditor(typeof(AntiGravity_Node))]
 public class AntiGravity_Node_Editor : Editor
@@ -160,6 +163,8 @@ public class AntiGravity_Node_Editor : Editor
 
         node.Neighbours.Add(newNode);
 
+        Selection.activeObject = newNode;
+
         AntiGravity_Node[] nodes = node.transform.root.GetComponentsInChildren<AntiGravity_Node>();
         foreach(AntiGravity_Node n in nodes)
         {
@@ -167,3 +172,5 @@ public class AntiGravity_Node_Editor : Editor
         }
     }
 }
+
+#endif

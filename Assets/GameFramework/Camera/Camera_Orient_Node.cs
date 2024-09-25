@@ -66,7 +66,9 @@ public class Camera_Orient_Node : MonoBehaviour
             }
         }
 
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
     }
 
     void Start()
@@ -81,6 +83,7 @@ public class Camera_Orient_Node : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
 
 [CustomEditor(typeof(Camera_Orient_Node))]
 public class Camera_Orient_Node_Editor : Editor
@@ -163,6 +166,8 @@ public class Camera_Orient_Node_Editor : Editor
 
         node.Neighbours.Add(newNode);
 
+        Selection.activeObject = newNode;
+
         Camera_Orient_Node[] nodes = node.transform.root.GetComponentsInChildren<Camera_Orient_Node>();
         foreach(Camera_Orient_Node n in nodes)
         {
@@ -170,3 +175,5 @@ public class Camera_Orient_Node_Editor : Editor
         }
     }
 }
+
+#endif

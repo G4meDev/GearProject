@@ -14,6 +14,8 @@ public class AntiGravity : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
+
 [CustomEditor(typeof(AntiGravity))]
 public class AntiGravity_Editor : Editor
 {
@@ -28,11 +30,6 @@ public class AntiGravity_Editor : Editor
 //     {
 //         SceneView.duringSceneGui -= CustomOnSceneGUI;
 //     }
-
-    public void OnSceneGUI()
-    {
-
-    }
 
     private void CustomOnSceneGUI(SceneView view)
     {
@@ -109,3 +106,5 @@ public class AntiGravity_Editor : Editor
 //         }
     }
 }
+
+#endif

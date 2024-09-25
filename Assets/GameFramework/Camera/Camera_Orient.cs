@@ -17,6 +17,8 @@ public class Camera_Orient : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
+
 [CustomEditor(typeof(Camera_Orient))]
 public class Camera_Orient_Editor : Editor
 {
@@ -112,3 +114,5 @@ public class Camera_Orient_Editor : Editor
 //         }
     }
 }
+
+#endif
