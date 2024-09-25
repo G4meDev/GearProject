@@ -68,8 +68,6 @@ public class Glider_Editor : Editor
 
     private void OnConnect()
     {
-
-        /*
         GameObject[] objs = Selection.gameObjects;
 
         if(objs.Length != 2)
@@ -85,16 +83,16 @@ public class Glider_Editor : Editor
             return;
         }
 
-        if(n1.Neighbours.Contains(n2))
+        if(n1.next == n2)
         {
-            n1.Neighbours.Remove(n2);
-            n2.Neighbours.Remove(n1);
+            n1.next = null;
+            n2.next = n1;
         }
 
         else
         {
-            n1.Neighbours.Add(n2);
-            n2.Neighbours.Add(n1);
+            n2.next = null;
+            n1.next = n2;
         }
 
         n1.OnNeighboursChanged();
@@ -102,8 +100,6 @@ public class Glider_Editor : Editor
 
         EditorUtility.SetDirty(n1);
         EditorUtility.SetDirty(n2);
-
-        */
 
 //         foreach (GameObject obj in objs)
 //         {

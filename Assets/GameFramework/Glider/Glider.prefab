@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6846433576069199951}
-  - component: {fileID: 7172972109796703187}
+  - component: {fileID: 4178857682065349114}
   m_Layer: 0
   m_Name: Glider
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7172972109796703187
+--- !u!114 &4178857682065349114
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,7 +42,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 525927448542314167}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6e49c9a11e736443901af8309953faa, type: 3}
+  m_Script: {fileID: 11500000, guid: da9962b40a897dd48b47db9d0721fa1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &7221881016371238779
@@ -122,21 +122,3 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7221881016371238779}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3010446372626467532 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5619937648273677751, guid: 6bb3dcca8969cda4397d7904ef63144e,
-    type: 3}
-  m_PrefabInstance: {fileID: 7221881016371238779}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7814963197833500839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3010446372626467532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da9962b40a897dd48b47db9d0721fa1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

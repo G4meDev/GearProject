@@ -79,27 +79,10 @@ public class Glider_Node : MonoBehaviour
 
     public void OnNeighboursChanged()
     {
-        /*
-         List<Glider_Node> seenNodes = new();
-
-        for (int i = Neighbours.Count - 1; i >= 0; i--)
-        {
-            if (!Neighbours[i] || Neighbours[i] == this || seenNodes.Contains(Neighbours[i]))
-            {
-                Neighbours.RemoveAt(i);
-                continue;
-            }
-
-            else
-            {
-                seenNodes.Add(Neighbours[i]);
-            }
-        }
 
 #if UNITY_EDITOR
         EditorUtility.SetDirty(this);
 #endif
-        */
     }
 
     void Start()
@@ -119,30 +102,15 @@ public class Glider_Node : MonoBehaviour
 [CustomEditor(typeof(Glider_Node))]
 public class Glider_Node_Editor : Editor
 {
-    public bool vDown = false;
     public bool bDown = false;
 
     void OnSceneGUI()
     {
         //GameObject obj = target as GameObject;
 
-        /*
         Event e = Event.current;
-        if (e.type == EventType.KeyDown && e.keyCode == KeyCode.V && !vDown)
-        {
-            vDown = true;
 
-            Align();
-        }
-        
-        else if (e.type == EventType.KeyUp && e.keyCode == KeyCode.V)
-        {
-            vDown = false;
-        }
-
-        // --------------------------
-
-        else if (e.type == EventType.KeyDown && e.keyCode == KeyCode.B && !bDown)
+        if (e.type == EventType.KeyDown && e.keyCode == KeyCode.B && !bDown)
         {
             bDown = true;
             Extrude();
@@ -152,27 +120,12 @@ public class Glider_Node_Editor : Editor
         {
             bDown = false;
         }
-        */
-    }
 
-    private void Align()
-    {
-        Glider_Node node = target as Glider_Node;
-
-        Ray ray = new(node.transform.position, -node.transform.up);
-        bool bHit = Physics.Raycast(ray, out RaycastHit hit);
-
-        if(bHit)
-        {
-            Vector3 forward = Vector3.Cross(node.transform.right, hit.normal);
-            node.transform.rotation = Quaternion.LookRotation(forward, hit.normal);
-            EditorUtility.SetDirty(node);
-        }
     }
 
     private void Extrude()
     {
-        /*
+        
         Glider_Node node = target as Glider_Node;
 
         Object obj = PrefabUtility.InstantiatePrefab(node.GetPrefabDefinition());
@@ -192,10 +145,8 @@ public class Glider_Node_Editor : Editor
         s = node.name.Substring(0, ix + 1) + i;
         newNode.name = s;
         
-        newNode.Neighbours.Clear();
-        newNode.Neighbours.Add(node);
-
-        node.Neighbours.Add(newNode);
+        newNode.next = null;
+        node.next = newNode;
 
         Selection.activeObject = newNode;
 
@@ -204,7 +155,7 @@ public class Glider_Node_Editor : Editor
         {
             n.OnNeighboursChanged();
         }
-        */
+        
     }
 }
 
