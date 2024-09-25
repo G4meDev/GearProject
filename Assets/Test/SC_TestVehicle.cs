@@ -425,6 +425,8 @@ public class SC_TestVehicle : MonoBehaviour
             gravityDir = Vector3.down;
         }
 
+        Debug.Log(antiGravityNode);
+
         // gravity force
         vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
     }

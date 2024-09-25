@@ -13,6 +13,28 @@ public class AntiGravity_Node : MonoBehaviour
         vehicle.antiGravityNode = this;
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        // is it start or end
+        if(Neighbours.Count == 1)
+        {
+            SC_TestVehicle vehicle = other.transform.root.GetComponentInChildren<SC_TestVehicle>();
+
+            if(vehicle)
+            {
+                Vector3 triggerExitDir = Vector3.Dot(transform.forward, Neighbours[0].transform.position - transform.position) > 0
+                    ? -transform.forward : transform.forward;
+                
+                // we exit from back
+                if(Vector3.Dot(triggerExitDir, vehicle.vehicleProxy.position - transform.position) > 0)
+                {
+                    vehicle.antiGravityNode = null;
+                }
+
+            }
+        }
+    }
+
     public Vector3 GetUpVector(Vector3 worldPos)
     {
         float min_dist = float.MaxValue;
