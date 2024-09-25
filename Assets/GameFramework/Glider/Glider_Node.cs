@@ -7,74 +7,36 @@ public class Glider_Node : MonoBehaviour
 {
     public Glider_Node next;
 
+    public float strength = 5.0f;
+
     private void OnTriggerEnter(Collider other)
     {
-        //SC_TestVehicle vehicle = other.transform.root.GetComponentInChildren<SC_TestVehicle>();
-        //vehicle.antiGravityNode = this;
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        // is it start or end
-
-        /*
-        
-        if(Neighbours.Count == 1)
+        if (next == null)
         {
             SC_TestVehicle vehicle = other.transform.root.GetComponentInChildren<SC_TestVehicle>();
 
-            if(vehicle)
+            if (vehicle)
             {
-                Vector3 triggerExitDir = Vector3.Dot(transform.forward, Neighbours[0].transform.position - transform.position) > 0
-                    ? -transform.forward : transform.forward;
-                
-                // we exit from back
-                if(Vector3.Dot(triggerExitDir, vehicle.vehicleProxy.position - transform.position) > 0)
-                {
-                    vehicle.antiGravityNode = null;
-                }
-
+                vehicle.EndGliding();
             }
         }
-        */
+
+        else
+        {
+            SC_TestVehicle vehicle = other.transform.root.GetComponentInChildren<SC_TestVehicle>();
+            vehicle.StartGliding(this);
+        }
     }
 
-    public Vector3 GetUpVector(Vector3 worldPos)
+    private void OnTriggerExit(Collider other)
+    {        
+
+    }
+
+    public Vector3 GetDesigeredVelocity(Vector3 worldPos)
     {
-        /*
-        float min_dist = float.MaxValue;
-        Glider_Node nearest = null;
-
-        Vector3 nearest_pos;
-
-        float dot;
-        Vector3 nodeToNearest;
-        Vector3 nodeToTarget = worldPos - transform.position;
-
-        float a = 2;
-
-        foreach (Glider_Node node in Neighbours)
-        {
-            nearest_pos = node.transform.position;
-            nodeToNearest = nearest_pos - transform.position;
-            dot = Vector3.Dot(nodeToNearest.normalized, nodeToTarget) / nodeToNearest.magnitude;
-
-            if(dot >= 0 && dot <= 1 && nodeToTarget.magnitude < min_dist)
-            {
-                a = dot;
-                min_dist = nodeToTarget.magnitude;
-                nearest = node;
-            }
-        }
-
-        if (nearest)
-        {
-            return Vector3.Lerp(transform.up, nearest.transform.up, a);
-        }
-
-        */
-
-        return transform.up;
+        //return Vector3.Normalize(next.transform.position - transform.position) * strength;
+        return Vector3.Normalize(next.transform.position - worldPos) * strength;
     }
 
     public void OnNeighboursChanged()

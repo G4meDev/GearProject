@@ -147,6 +147,8 @@ public class SC_TestVehicle : MonoBehaviour
 
     public AntiGravity_Node antiGravityNode;
 
+    public Glider_Node gliderNode;
+
     private void UpdateScreenInput()
     {
         if (screenInput)
@@ -158,6 +160,23 @@ public class SC_TestVehicle : MonoBehaviour
             holdingJump |= screenInput.data.holdingJump;
         }
     }
+
+    public void StartGliding(Glider_Node node)
+    {
+        if (gliderNode == null)
+        {
+            //vehicleProxy.velocity = Vector3.zero;
+
+        }
+        
+        gliderNode = node;
+    }
+
+    public void EndGliding()
+    {
+        gliderNode = null;
+    }
+
     private bool CanJump()
     {
         return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote) && Time.time > lastjumpTime + jumpResetTime;
@@ -426,7 +445,8 @@ public class SC_TestVehicle : MonoBehaviour
             gravityDir = Vector3.down;
         }
 
-        Debug.Log(antiGravityNode);
+        if (gliderNode)
+            return;
 
         // gravity force
         vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
@@ -434,8 +454,14 @@ public class SC_TestVehicle : MonoBehaviour
 
     private void ApplySteer()
     {
-        // applying vehicle yaw to the box
+        if(gliderNode)
+        {
+            vehicleProxy.AddForce(hInput * vehicleBox.transform.right * 100, ForceMode.Acceleration);
 
+            return;
+        }
+
+        // applying vehicle yaw to the box
         if (!drifting)
         {
             steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
@@ -529,13 +555,24 @@ public class SC_TestVehicle : MonoBehaviour
         driftMeter.material.SetFloat("_Duration", driftTimer);
         driftMeter.material.SetFloat("_Counter", driftCounter);
 
+        if(gliderNode)
+        {
+            //vehicleProxy.AddForce(gliderNode.GetForce(vehicleProxy.transform.position), ForceMode.Acceleration);
+
+            Vector3 d = gliderNode.GetDesigeredVelocity(vehicleProxy.transform.position);
+            vehicleProxy.velocity = Vector3.Lerp(vehicleProxy.velocity, d, 0.04f);
+
+            Quaternion targetRotation = Quaternion.LookRotation(Vector3.Normalize(gliderNode.next.transform.position - gliderNode.transform.position), vehicleBox.transform.up);
+
+            vehicleBox.transform.rotation = Quaternion.Slerp(vehicleBox.transform.rotation, targetRotation, 0.04f);
+        }
 
         if (!bHit)
         {
 
 
         }
-        if (bHit)
+        if (bHit && !gliderNode)
         {
 
             // if boosting set speed to max
