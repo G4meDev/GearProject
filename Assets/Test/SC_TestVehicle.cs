@@ -214,7 +214,7 @@ public class SC_TestVehicle : MonoBehaviour
             driftYaw = rightDrift ? Mathf.Lerp(driftMinAngle , driftMaxAngle, a) : -Mathf.Lerp(driftMinAngle, driftMaxAngle, 1 - a);
             driftYaw *= Time.fixedDeltaTime;
 
-            vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(driftYaw, vehicleBox.transform.up);
+            vehicleBox.transform.Rotate(Vector3.up, driftYaw, Space.Self);
         }
     }
 
@@ -443,7 +443,7 @@ public class SC_TestVehicle : MonoBehaviour
             steerValue = 0;
         }
 
-        vehicleBox.transform.rotation = vehicleBox.transform.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.transform.up);
+        vehicleBox.transform.Rotate(Vector3.up, steerValue, Space.Self);
     }
 
     private void AlignWithContactSurface()
@@ -577,14 +577,14 @@ public class SC_TestVehicle : MonoBehaviour
         speedText.text = string.Format("Speed : {0:F2}", forwardSpeed);
 
 
-        if (bHit && pullPath && forwardSpeed < maxSpeedWithModifier)
-        {
-            Vector3 tan = pullPath.GetForceAtPosition(vehicleProxy.transform.position);
-
-            Debug.DrawLine(vehicleProxy.transform.position + Vector3.up * 2, vehicleProxy.transform.position + (Vector3.up * 2) + Vector3.Normalize(tan), Color.black);
-
-            vehicleProxy.AddForce(tan, ForceMode.Acceleration);
-        }
+//         if (bHit && pullPath && forwardSpeed < maxSpeedWithModifier)
+//         {
+//             Vector3 tan = pullPath.GetForceAtPosition(vehicleProxy.transform.position);
+// 
+//             Debug.DrawLine(vehicleProxy.transform.position + Vector3.up * 2, vehicleProxy.transform.position + (Vector3.up * 2) + Vector3.Normalize(tan), Color.black);
+// 
+//             vehicleProxy.AddForce(tan, ForceMode.Acceleration);
+//         }
     }
 
     void Update()
