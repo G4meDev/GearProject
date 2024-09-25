@@ -123,9 +123,7 @@ public class AntiGravity_Node_Editor : Editor
     {
         AntiGravity_Node node = target as AntiGravity_Node;
 
-        
-
-        Ray ray = new Ray(node.transform.position, Vector3.down);
+        Ray ray = new Ray(node.transform.position, -node.transform.up);
         RaycastHit hit;
         bool bHit = Physics.Raycast(ray, out hit);
 
