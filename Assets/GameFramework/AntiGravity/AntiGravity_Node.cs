@@ -90,7 +90,7 @@ public class AntiGravity_Node_Editor : Editor
 
     void OnSceneGUI()
     {
-        GameObject obj = target as GameObject;
+        //GameObject obj = target as GameObject;
 
         Event e = Event.current;
         if (e.type == EventType.KeyDown && e.keyCode == KeyCode.V && !vDown)
@@ -123,9 +123,8 @@ public class AntiGravity_Node_Editor : Editor
     {
         AntiGravity_Node node = target as AntiGravity_Node;
 
-        Ray ray = new Ray(node.transform.position, -node.transform.up);
-        RaycastHit hit;
-        bool bHit = Physics.Raycast(ray, out hit);
+        Ray ray = new(node.transform.position, -node.transform.up);
+        bool bHit = Physics.Raycast(ray, out RaycastHit hit);
 
         if(bHit)
         {

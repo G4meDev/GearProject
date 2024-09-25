@@ -368,7 +368,7 @@ public class SC_TestVehicle : MonoBehaviour
 
     private void RaycastForContactSurface()
     {
-        Ray ray = new Ray(vehicleProxy.transform.position, gravityDir);
+        Ray ray = new(vehicleProxy.transform.position, gravityDir);
 
         // TODO: make track surface and track wall layer
         LayerMask layerMask = LayerMask.GetMask("Default");
