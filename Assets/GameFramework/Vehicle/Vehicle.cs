@@ -29,8 +29,6 @@ public class Vehicle : MonoBehaviour
     public Text boostText;
     public Text reserveText;
 
-    public Image driftMeter;
-
     public float gravityStr = 25.0f;
     private Vector3 gravityDir = Vector3.down;
 
@@ -129,10 +127,10 @@ public class Vehicle : MonoBehaviour
     public bool drifting = false;
 
     [HideInInspector]
-    private float driftStartTime = 0.0f;
+    public float driftStartTime = 0.0f;
 
     [HideInInspector]
-    private int driftCounter = 0;
+    public int driftCounter = 0;
 
     [HideInInspector]
     public float driftYaw = 0.0f;
@@ -545,14 +543,6 @@ public class Vehicle : MonoBehaviour
         airborneTime = aeroState == VehicleAeroState.Jumping ? Time.time - lastjumpTime : 0.0f;
 
         UpdateAeroState();
-
-        //forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
-
-
-        driftMeter.material.SetFloat("_Drifting", drifting ? 1 : 0);
-        driftMeter.material.SetFloat("_StartTime", driftStartTime);
-        driftMeter.material.SetFloat("_Duration", driftTimer);
-        driftMeter.material.SetFloat("_Counter", driftCounter);
 
         if(aeroState == VehicleAeroState.Gliding)
         {
