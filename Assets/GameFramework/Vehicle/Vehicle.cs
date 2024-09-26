@@ -20,6 +20,7 @@ public class Vehicle : MonoBehaviour
     public GameObject vehicleBox;
     public GameObject vehicleMesh;
 
+    //TODO: Remove
     public MeshRenderer boostIndicator;
 
     public float gravityStr = 25.0f;
@@ -391,43 +392,7 @@ public class Vehicle : MonoBehaviour
         LayerMask layerMask = LayerMask.GetMask("Default");
         bHit = Physics.Raycast(ray, out hit, rayDist, layerMask);
 
-        if (bHit)
-        {
-            MeshCollider meshCollider = hit.collider as MeshCollider;
-
-            if (meshCollider == null)
-            {
-                contactSmoothNormal = -gravityDir;
-            }
-            else
-            {
-                Mesh mesh = meshCollider.sharedMesh;
-                Vector3[] normals = mesh.normals;
-                int[] triangles = mesh.triangles;
-
-                Vector3 n0 = normals[triangles[hit.triangleIndex * 3 + 0]];
-                Vector3 n1 = normals[triangles[hit.triangleIndex * 3 + 1]];
-                Vector3 n2 = normals[triangles[hit.triangleIndex * 3 + 2]];
-
-                Vector3 baryCenter = hit.barycentricCoordinate;
-
-                contactSmoothNormal = n0 * baryCenter.x + n1 * baryCenter.y + n2 * baryCenter.z;
-                contactSmoothNormal = contactSmoothNormal.normalized;
-
-                Transform hitTransform = hit.collider.transform;
-                contactSmoothNormal = hitTransform.TransformDirection(contactSmoothNormal);
-
-                Debug.DrawRay(hit.point, contactSmoothNormal);
-            }
-
-        }
-
-        else
-        {
-            contactSmoothNormal = -gravityDir;
-        }
-
-        Debug.DrawLine(vehicleProxy.transform.position, vehicleProxy.transform.position + gravityDir * rayDist);
+        contactSmoothNormal = bHit ? MeshHelpers.GetSmoothNormalFromHit(ref hit) : -gravityDir;
     }
 
     private void Gravity()
