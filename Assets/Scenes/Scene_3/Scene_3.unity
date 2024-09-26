@@ -1056,7 +1056,7 @@ PrefabInstance:
     - target: {fileID: 7090000030990806901, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.035646163
+      value: -0.035646178
       objectReference: {fileID: 0}
     - target: {fileID: 7090000030990806901, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
@@ -1066,7 +1066,7 @@ PrefabInstance:
     - target: {fileID: 7090000030990806901, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.000000014901161
+      value: -0.000000016763806
       objectReference: {fileID: 0}
     - target: {fileID: 7243294516821275885, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
@@ -1091,7 +1091,7 @@ PrefabInstance:
     - target: {fileID: 7243294516821275885, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.035646163
+      value: -0.035646178
       objectReference: {fileID: 0}
     - target: {fileID: 7243294516821275885, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
@@ -1101,7 +1101,7 @@ PrefabInstance:
     - target: {fileID: 7243294516821275885, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.000000014901161
+      value: -0.000000016763806
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -1252,6 +1252,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Camera_Orient_Node_36
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: a0d6699c5e5462d46849febe080c5986,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5723308659842261943, guid: a0d6699c5e5462d46849febe080c5986,
         type: 3}
@@ -1608,8 +1613,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7243294516821275885, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.70865154
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243294516821275885, guid: 4ff120f3a037bf24e9110970a476079b,
+        type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.03564617
+      value: -0.03563492
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243294516821275885, guid: 4ff120f3a037bf24e9110970a476079b,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7042104
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243294516821275885, guid: 4ff120f3a037bf24e9110970a476079b,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.02511837
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
@@ -2372,6 +2392,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Camera_Orient_Node_31
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: a0d6699c5e5462d46849febe080c5986,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5723308659842261943, guid: a0d6699c5e5462d46849febe080c5986,
         type: 3}
@@ -4410,12 +4435,12 @@ PrefabInstance:
     - target: {fileID: 586496714, guid: 2ac4cd5c3094ed14ab57ba0430012a99, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 1268709267}
+      objectReference: {fileID: 0}
     - target: {fileID: 270477197638067808, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
         type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 1268709267}
+      objectReference: {fileID: 0}
     - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
         type: 3}
       propertyPath: m_RootOrder
@@ -5406,6 +5431,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AntiGravity_Node_14
       objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: 6cdad5f8d21335341869af67db151cd8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8819998232037320945, guid: 6cdad5f8d21335341869af67db151cd8,
         type: 3}
       propertyPath: m_RootOrder
@@ -5943,6 +5973,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AntiGravity_Node_13
       objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: 6cdad5f8d21335341869af67db151cd8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8819998232037320945, guid: 6cdad5f8d21335341869af67db151cd8,
         type: 3}
       propertyPath: m_RootOrder
@@ -6046,6 +6081,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Camera_Orient_Node_33
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: a0d6699c5e5462d46849febe080c5986,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5723308659842261943, guid: a0d6699c5e5462d46849febe080c5986,
         type: 3}
@@ -6927,7 +6967,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 1268709267}
+  m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -7692,6 +7732,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Camera_Orient_Node_32
       objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: a0d6699c5e5462d46849febe080c5986,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5723308659842261943, guid: a0d6699c5e5462d46849febe080c5986,
         type: 3}
       propertyPath: Neighbours.Array.size
@@ -7810,6 +7855,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Camera_Orient_Node_37
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: a0d6699c5e5462d46849febe080c5986,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5723308659842261943, guid: a0d6699c5e5462d46849febe080c5986,
         type: 3}
@@ -8111,12 +8161,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8819998232037320945, guid: a0d6699c5e5462d46849febe080c5986,
     type: 3}
   m_PrefabInstance: {fileID: 1226807481}
-  m_PrefabAsset: {fileID: 0}
---- !u!20 &1268709267 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 1583127742397896789, guid: 4ff120f3a037bf24e9110970a476079b,
-    type: 3}
-  m_PrefabInstance: {fileID: 148863897}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1272542113
 PrefabInstance:
@@ -9021,6 +9065,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AntiGravity_Node_12
       objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: 6cdad5f8d21335341869af67db151cd8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8819998232037320945, guid: 6cdad5f8d21335341869af67db151cd8,
         type: 3}
       propertyPath: m_RootOrder
@@ -9124,6 +9173,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Camera_Orient_Node_34
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: a0d6699c5e5462d46849febe080c5986,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5723308659842261943, guid: a0d6699c5e5462d46849febe080c5986,
         type: 3}
@@ -10053,6 +10107,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Camera_Orient_Node_30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: a0d6699c5e5462d46849febe080c5986,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5723308659842261943, guid: a0d6699c5e5462d46849febe080c5986,
         type: 3}
@@ -12512,7 +12571,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 1268709267}
+  m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -12805,6 +12864,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Camera_Orient_Node_35
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: a0d6699c5e5462d46849febe080c5986,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5723308659842261943, guid: a0d6699c5e5462d46849febe080c5986,
         type: 3}
