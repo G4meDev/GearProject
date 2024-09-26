@@ -9,7 +9,7 @@ public class AntiGravity_Node : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        SC_TestVehicle vehicle = other.transform.root.GetComponentInChildren<SC_TestVehicle>();
+        Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
         vehicle.antiGravityNode = this;
     }
 
@@ -18,7 +18,7 @@ public class AntiGravity_Node : MonoBehaviour
         // is it start or end
         if(Neighbours.Count == 1)
         {
-            SC_TestVehicle vehicle = other.transform.root.GetComponentInChildren<SC_TestVehicle>();
+            Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
 
             if(vehicle)
             {

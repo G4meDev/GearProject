@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SC_TestVehicleMesh : MonoBehaviour
+public class TestVehicleMesh : MonoBehaviour
 {
-    public SC_TestVehicle Vehicle;
+    public Vehicle Vehicle;
     public GameObject VehicleBox;
     public GameObject cameraTarget;
 

@@ -10,7 +10,7 @@ public class Boostpad : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        SC_TestVehicle vehicle = other.transform.root.GetComponent<SC_TestVehicle>();
+        Vehicle vehicle = other.transform.root.GetComponent<Vehicle>();
 
         if (vehicle)
         {

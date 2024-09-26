@@ -13,7 +13,7 @@ public class Glider_Node : MonoBehaviour
     {
         if (next == null)
         {
-            SC_TestVehicle vehicle = other.transform.root.GetComponentInChildren<SC_TestVehicle>();
+            Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
 
             if (vehicle)
             {
@@ -23,7 +23,7 @@ public class Glider_Node : MonoBehaviour
 
         else
         {
-            SC_TestVehicle vehicle = other.transform.root.GetComponentInChildren<SC_TestVehicle>();
+            Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
             vehicle.StartGliding(this);
         }
     }

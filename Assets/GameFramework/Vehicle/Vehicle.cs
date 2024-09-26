@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +10,7 @@ public enum VehicleAeroState
     Gliding
 }
 
-public class SC_TestVehicle : MonoBehaviour
+public class Vehicle : MonoBehaviour
 {
     public Rigidbody vehicleProxy;
     public GameObject vehicleBox;

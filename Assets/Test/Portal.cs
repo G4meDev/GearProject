@@ -10,7 +10,7 @@ public class Portal : MonoBehaviour
     {
         Debug.Log("trigger");
 
-        SC_TestVehicle vehicle = other.gameObject.transform.root.GetComponent<SC_TestVehicle>();
+        Vehicle vehicle = other.gameObject.transform.root.GetComponent<Vehicle>();
         
         vehicle.vehicleProxy.MovePosition(target.transform.position);
         vehicle.vehicleProxy.MoveRotation(target.transform.rotation);
