@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SceneManager : MonoBehaviour
@@ -19,6 +17,9 @@ public class SceneManager : MonoBehaviour
     public GameObject driftMeterPrefab;
     private static UI_DriftMeter driftMeter;
 
+    public GameObject debugDataPrefab;
+    private static UI_DebugData debugData;
+
     // -------------------------------------------------
 
     public static UI_ScreenInput GetScreenInput() { return screenInput; }
@@ -26,6 +27,8 @@ public class SceneManager : MonoBehaviour
     public static UI_AeroMeter GetAeroMeter() { return aeroMeter; }
 
     public static UI_DriftMeter GetDriftMeter() { return driftMeter; }
+
+    public static UI_DebugData GetDebugData() { return debugData; }
 
     // ----------------------------------------
 
@@ -47,6 +50,11 @@ public class SceneManager : MonoBehaviour
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         aeroMeter = Instantiate(aeroMeterPrefab).GetComponent<UI_AeroMeter>();
         driftMeter = Instantiate(driftMeterPrefab).GetComponent<UI_DriftMeter>();
+
+
+#if UNITY_EDITOR
+        debugData = Instantiate(debugDataPrefab).GetComponent<UI_DebugData>();
+#endif
     }
 
     void Update()

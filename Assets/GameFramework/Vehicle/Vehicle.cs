@@ -20,14 +20,7 @@ public class Vehicle : MonoBehaviour
     public GameObject vehicleBox;
     public GameObject vehicleMesh;
 
-    public UI_ScreenInput screenInput;
-
     public MeshRenderer boostIndicator;
-
-    public Text speedText;
-    public Text tractionText;
-    public Text boostText;
-    public Text reserveText;
 
     public float gravityStr = 25.0f;
     private Vector3 gravityDir = Vector3.down;
@@ -515,10 +508,6 @@ public class Vehicle : MonoBehaviour
         float speedModifierAlpha = speedModifierIntensity / maxSpeedModifier;
         boostIndicator.GetComponent<MeshRenderer>().material.SetFloat("_a", speedModifierAlpha);
 
-        boostText.text = string.Format("Boost : {0:F2}", speedModifierIntensity);
-        reserveText.text = string.Format("Reserve : {0:F2}", speedModifierReserveTime);
-
-
         vehicleBox.transform.position = vehicleProxy.transform.position;
 
 
@@ -582,8 +571,6 @@ public class Vehicle : MonoBehaviour
                 float t = drifting ? driftTraction : Mathf.Lerp(driftTraction, GetContactSurfaceLateralFriction(), Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime));
 
                 vehicleProxy.AddForce(-slipingSpeed * t * vehicleBox.transform.right, ForceMode.VelocityChange);
-
-                tractionText.text = string.Format("Traction = {0:F2}", traction);
             }
 
         }
@@ -595,8 +582,6 @@ public class Vehicle : MonoBehaviour
         {
             OnStartJump();
         }
-
-        speedText.text = string.Format("Speed : {0:F2}", forwardSpeed);
 
 
 //         if (bHit && pullPath && forwardSpeed < maxSpeedWithModifier)
