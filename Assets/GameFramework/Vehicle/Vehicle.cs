@@ -12,6 +12,10 @@ public enum VehicleAeroState
 
 public class Vehicle : MonoBehaviour
 {
+    public bool isPlayer = true;
+
+    public GameObject cameraPrefab;
+
     public Rigidbody vehicleProxy;
     public GameObject vehicleBox;
     public GameObject vehicleMesh;
@@ -509,7 +513,15 @@ public class Vehicle : MonoBehaviour
         aeroMeter.material.SetFloat("_mid", midJumpTime);
         aeroMeter.material.SetFloat("_high", highJumpTime);
 
-
+        if(isPlayer)
+        {
+            if(cameraPrefab)
+            {
+                GameObject obj = Instantiate(cameraPrefab);
+                obj.transform.parent = this.transform;
+                obj.transform.position = transform.position;
+            }
+        }
     }
 
     private void FixedUpdate()
