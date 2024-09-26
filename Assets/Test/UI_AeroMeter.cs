@@ -5,20 +5,16 @@ using UnityEngine.UI;
 
 public class UI_AeroMeter : MonoBehaviour
 {
-    Vehicle vehicle;
-
     public Image image;
     public Canvas canvas;
     
-    public void InitVehicle(Vehicle inVehicle)
+    public void OnPlayerChanged()
     {
-        vehicle = inVehicle;
+        image.material.SetFloat("_low", SceneManager.playerVehicle.lowJumpTime);
+        image.material.SetFloat("_mid", SceneManager.playerVehicle.midJumpTime);
+        image.material.SetFloat("_high", SceneManager.playerVehicle.highJumpTime);
 
-        image.material.SetFloat("_low", vehicle.lowJumpTime);
-        image.material.SetFloat("_mid", vehicle.midJumpTime);
-        image.material.SetFloat("_high", vehicle.highJumpTime);
-
-        canvas.worldCamera = vehicle.GetComponentInChildren<VehicleCamera>().camera;
+        canvas.worldCamera = SceneManager.playerVehicle.GetComponentInChildren<VehicleCamera>().camera;
     }
 
     void Start()
@@ -28,9 +24,9 @@ public class UI_AeroMeter : MonoBehaviour
 
     void Update()
     {
-        if (vehicle)
+        if (SceneManager.playerVehicle)
         {
-            image.material.SetFloat("_airborneTime", vehicle.airborneTime);
+            image.material.SetFloat("_airborneTime", SceneManager.playerVehicle.airborneTime);
         }
     }
 }

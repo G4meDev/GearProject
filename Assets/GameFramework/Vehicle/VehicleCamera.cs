@@ -10,8 +10,6 @@ public class VehicleCamera : MonoBehaviour
     void Start()
     {
         vehicle = transform.root.GetComponentInChildren<Vehicle>();
-
-        SceneManager.GetScreenInput().UpdateCanvasCamera(GetComponentInChildren<Camera>());
     }
 
     void FixedUpdate()

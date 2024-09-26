@@ -13,9 +13,23 @@ public class SceneManager : MonoBehaviour
     public GameObject aeroMeterPrefab;
     private static UI_AeroMeter aeroMeter;
 
+    // -------------------------------------------------
+
     public static UI_ScreenInput GetScreenInput() { return screenInput; }
 
     public static UI_AeroMeter GetAeroMeter() { return aeroMeter; }
+
+    // ----------------------------------------
+
+
+    public static void OnPlayerChanged(Vehicle vehicle)
+    {
+        playerVehicle = vehicle;
+
+        aeroMeter.OnPlayerChanged();
+        screenInput.OnPlayerChanged();
+    }
+
 
     void Start()
     {

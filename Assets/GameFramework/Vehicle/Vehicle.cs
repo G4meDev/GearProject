@@ -502,12 +502,9 @@ public class Vehicle : MonoBehaviour
                 obj.transform.position = transform.position;
             }
 
-            // TODO: in spawner
-            SceneManager.playerVehicle = this;
-
             gameObject.AddComponent<PlayerInput>();
 
-            SceneManager.GetAeroMeter().InitVehicle(this);
+            SceneManager.OnPlayerChanged(this);
         }
     }
 
