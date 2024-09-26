@@ -29,7 +29,6 @@ public class Vehicle : MonoBehaviour
     public Text boostText;
     public Text reserveText;
 
-    public Image aeroMeter;
     public Image driftMeter;
 
     public float gravityStr = 25.0f;
@@ -110,7 +109,7 @@ public class Vehicle : MonoBehaviour
     VehicleAeroState aeroState = VehicleAeroState.OnGround;
 
     [HideInInspector]
-    private float airborneTime = 0.0f;
+    public float airborneTime = 0.0f;
 
 
     public float driftMinAngle = 15.0f;
@@ -494,10 +493,6 @@ public class Vehicle : MonoBehaviour
 
     void Start()
     {
-        aeroMeter.material.SetFloat("_low", lowJumpTime);
-        aeroMeter.material.SetFloat("_mid", midJumpTime);
-        aeroMeter.material.SetFloat("_high", highJumpTime);
-
         if(isPlayer)
         {
             if(cameraPrefab)
@@ -511,6 +506,8 @@ public class Vehicle : MonoBehaviour
             SceneManager.playerVehicle = this;
 
             gameObject.AddComponent<PlayerInput>();
+
+            SceneManager.GetAeroMeter().InitVehicle(this);
         }
     }
 
@@ -549,7 +546,6 @@ public class Vehicle : MonoBehaviour
         maxSpeedWithModifier = GetMaxSpeedWithModifiers();
 
         airborneTime = aeroState == VehicleAeroState.Jumping ? Time.time - lastjumpTime : 0.0f;
-        aeroMeter.material.SetFloat("_airborneTime", airborneTime);
 
         UpdateAeroState();
 

@@ -10,13 +10,19 @@ public class SceneManager : MonoBehaviour
     // TODO: player spawning
     public static Vehicle playerVehicle;
 
+    public GameObject aeroMeterPrefab;
+    private static UI_AeroMeter aeroMeter;
+
     public static UI_ScreenInput GetScreenInput() { return screenInput; }
+
+    public static UI_AeroMeter GetAeroMeter() { return aeroMeter; }
 
     void Start()
     {
         Application.targetFrameRate = 60;
 
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
+        aeroMeter = Instantiate(aeroMeterPrefab).GetComponent<UI_AeroMeter>();
     }
 
     void Update()
