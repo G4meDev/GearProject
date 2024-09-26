@@ -20,7 +20,14 @@ public class UI_ScreenInput : MonoBehaviour
     public UI_GearButton jumpButton;
     public UI_GearButton itemButton;
 
+    public Canvas canvas;
+
     public ScreenInputData data = new();
+
+    public void UpdateCanvasCamera(Camera camera)
+    {
+        canvas.worldCamera = camera;
+    }
 
     public void DeactivateAll()
     {

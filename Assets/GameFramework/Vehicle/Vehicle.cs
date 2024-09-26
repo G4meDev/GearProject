@@ -506,9 +506,6 @@ public class Vehicle : MonoBehaviour
 
     void Start()
     {
-        Application.targetFrameRate = 60;
-        //Time.fixedDeltaTime = 0.01f;
-
         aeroMeter.material.SetFloat("_low", lowJumpTime);
         aeroMeter.material.SetFloat("_mid", midJumpTime);
         aeroMeter.material.SetFloat("_high", highJumpTime);
@@ -521,6 +518,8 @@ public class Vehicle : MonoBehaviour
                 obj.transform.parent = this.transform;
                 obj.transform.position = transform.position;
             }
+
+            SceneManager.playerVehicle = this;
         }
     }
 

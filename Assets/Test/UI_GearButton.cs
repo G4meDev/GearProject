@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -6,8 +5,6 @@ public class UI_GearButton : Button
 {
     public bool pressed = false;
     public bool entered = false;
-
-    private Material material;
 
     public delegate void OnReleasedButton();
     public OnReleasedButton OnRelease;
@@ -45,21 +42,16 @@ public class UI_GearButton : Button
 
     public void OnActive()
     {
-        material.SetFloat("_pressed", 1);
+        image.material.SetFloat("_pressed", 1);
 
         pressed = true;
     }
 
     public void OnDeactive()
     {
-        material.SetFloat("_pressed", 0);
+        image.material.SetFloat("_pressed", 0);
 
         pressed = false;
         entered = false;
-    }
-
-    void Start()
-    {
-        material = GetComponent<Image>().material;
     }
 }
