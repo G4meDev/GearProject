@@ -424,7 +424,7 @@ PrefabInstance:
         type: 3}
       propertyPath: screenInput
       value: 
-      objectReference: {fileID: 594337195}
+      objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: tractionText
@@ -609,7 +609,7 @@ PrefabInstance:
     - target: {fileID: 1020806506215343764, guid: 5864ec190551adb4bb2ae2af27bdd95a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 19
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 1020806506215343764, guid: 5864ec190551adb4bb2ae2af27bdd95a,
         type: 3}
@@ -962,7 +962,7 @@ PrefabInstance:
         type: 3}
       propertyPath: screenInput
       value: 
-      objectReference: {fileID: 594337195}
+      objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: tractionText
@@ -1535,7 +1535,7 @@ PrefabInstance:
         type: 3}
       propertyPath: screenInput
       value: 
-      objectReference: {fileID: 594337195}
+      objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: tractionText
@@ -4424,108 +4424,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 586324252}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &594337194
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 2
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 586496714, guid: 2ac4cd5c3094ed14ab57ba0430012a99, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 270477197638067808, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 270477197638067808, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1642041447624853213, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9222298944393228262, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_Name
-      value: UI_ScreenInput
-      objectReference: {fileID: 0}
-    - target: {fileID: 9222298944393228262, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_AddedGameObjects: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2ac4cd5c3094ed14ab57ba0430012a99, type: 3}
---- !u!114 &594337195 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7815829418525979693, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
-    type: 3}
-  m_PrefabInstance: {fileID: 594337194}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fb4d5ea0fa69fe4681f5a8d33e64b19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &620573154
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11707,7 +11605,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2011224618
 PrefabInstance:
@@ -11756,7 +11654,7 @@ PrefabInstance:
         type: 3}
       propertyPath: screenInput
       value: 
-      objectReference: {fileID: 594337195}
+      objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: tractionText
@@ -12245,7 +12143,7 @@ PrefabInstance:
         type: 3}
       propertyPath: screenInput
       value: 
-      objectReference: {fileID: 594337195}
+      objectReference: {fileID: 0}
     - target: {fileID: 3947225319184177958, guid: 4ff120f3a037bf24e9110970a476079b,
         type: 3}
       propertyPath: tractionText

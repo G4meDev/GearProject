@@ -87,9 +87,9 @@ public class Vehicle : MonoBehaviour
     public float hInput;
 
     [HideInInspector]
-    private bool pressedJump;
+    public bool pressedJump;
     [HideInInspector]
-    private bool holdingJump;
+    public bool holdingJump;
 
     [HideInInspector]
     private RaycastHit hit;
@@ -152,18 +152,6 @@ public class Vehicle : MonoBehaviour
     public AntiGravity_Node antiGravityNode;
 
     public Glider_Node gliderNode;
-
-    private void UpdateScreenInput()
-    {
-        if (screenInput)
-        {
-            hInput = Mathf.Clamp(hInput + screenInput.data.hInput, -1, 1);
-            vInput = Mathf.Clamp(vInput + screenInput.data.vInput, -1, 1);
-
-            pressedJump |= screenInput.data.pressedJump;
-            holdingJump |= screenInput.data.holdingJump;
-        }
-    }
 
     public void StartGliding(Glider_Node node)
     {
@@ -519,23 +507,16 @@ public class Vehicle : MonoBehaviour
                 obj.transform.position = transform.position;
             }
 
+            // TODO: in spawner
             SceneManager.playerVehicle = this;
+
+            gameObject.AddComponent<PlayerInput>();
         }
     }
 
     private void FixedUpdate()
     {
-        vInput = UnityEngine.Input.GetAxis("Vertical");
-        hInput = UnityEngine.Input.GetAxis("Horizontal");
-
-        pressedJump = UnityEngine.Input.GetButtonDown("Jump");
-        holdingJump = UnityEngine.Input.GetButton("Jump");
-
         Gravity();
-
-        UpdateScreenInput();
-
-        //bool boosting = UnityEngine.Input.GetButton("Boost");
 
         UpdateSpeedModifiers();
 
@@ -545,7 +526,6 @@ public class Vehicle : MonoBehaviour
         boostText.text = string.Format("Boost : {0:F2}", speedModifierIntensity);
         reserveText.text = string.Format("Reserve : {0:F2}", speedModifierReserveTime);
 
-        
 
         vehicleBox.transform.position = vehicleProxy.transform.position;
 
