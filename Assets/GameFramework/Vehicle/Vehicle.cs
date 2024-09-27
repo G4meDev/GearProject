@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.UI;
 
 public enum VehicleAeroState
@@ -461,6 +462,11 @@ public class Vehicle : MonoBehaviour
             gameObject.AddComponent<PlayerInput>();
 
             SceneManager.OnPlayerChanged(this);
+        }
+
+        else
+        {
+            gameObject.AddComponent<AIController>();
         }
     }
 
