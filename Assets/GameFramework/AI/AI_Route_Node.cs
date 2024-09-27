@@ -7,25 +7,15 @@ public class AI_Route_Node : MonoBehaviour
 {
     public List<AI_Route_Node> children;
 
-    public float strength = 5.0f;
-
     private void OnTriggerEnter(Collider other)
     {
-//         if (next == null)
-//         {
-//             Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
-// 
-//             if (vehicle)
-//             {
-//                 vehicle.EndGliding();
-//             }
-//         }
-// 
-//         else
-//         {
-//             Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
-//             vehicle.StartGliding(this);
-//         }
+        Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
+
+        AIController controller = vehicle.GetComponent<AIController>();
+        if (controller)
+        {
+            controller.OnEnterNewRouteNode(this);
+        }
     }
 
 //     public Vector3 GetDesigeredVelocity(Vector3 worldPos)
@@ -33,6 +23,8 @@ public class AI_Route_Node : MonoBehaviour
 //         //return Vector3.Normalize(next.transform.position - transform.position) * strength;
 //         return Vector3.Normalize(next.transform.position - worldPos) * strength;
 //     }
+
+    //public Vector3 Get
 
     public void OnNeighboursChanged()
     {
@@ -50,6 +42,7 @@ public class AI_Route_Node : MonoBehaviour
 public class AI_Route_Node_Editor : Editor
 {
     public bool bDown = false;
+    public bool vDown = false;
 
     void OnSceneGUI()
     {
@@ -63,16 +56,27 @@ public class AI_Route_Node_Editor : Editor
             Extrude();
         }
 
-        else if (e.type == EventType.KeyUp && e.keyCode == KeyCode.Z)
+        else if (e.type == EventType.KeyUp && e.keyCode == KeyCode.B)
         {
             bDown = false;
         }
 
+        // -----------------------------------------------------------
+
+        else if (e.type == EventType.KeyDown && e.keyCode == KeyCode.V && !bDown)
+        {
+            vDown = true;
+            Align();
+        }
+
+        else if (e.type == EventType.KeyUp && e.keyCode == KeyCode.V)
+        {
+            vDown = false;
+        }
     }
 
     private void Extrude()
     {
-
         AI_Route_Node node = target as AI_Route_Node;
 
         Object obj = PrefabUtility.InstantiatePrefab(node.GetPrefabDefinition());
@@ -102,6 +106,22 @@ public class AI_Route_Node_Editor : Editor
             n.OnNeighboursChanged();
         }
         
+    }
+
+    private void Align()
+    {
+        AI_Route_Node node = target as AI_Route_Node;
+
+        Ray ray = new(node.transform.position, -node.transform.up);
+        bool bHit = Physics.Raycast(ray, out RaycastHit hit);
+
+        if (bHit)
+        {
+            Vector3 forward = Vector3.Cross(node.transform.right, hit.normal);
+            node.transform.rotation = Quaternion.LookRotation(forward, hit.normal);
+            node.transform.position = hit.point;
+            EditorUtility.SetDirty(node);
+        }
     }
 }
 

@@ -138,7 +138,7 @@ public class AntiGravity_Node_Editor : Editor
             Extrude();
         }
 
-        else if (e.type == EventType.KeyUp && e.keyCode == KeyCode.Z)
+        else if (e.type == EventType.KeyUp && e.keyCode == KeyCode.B)
         {
             bDown = false;
         }
