@@ -7,6 +7,8 @@ public class AIController : MonoBehaviour
     public AI_Route_Node aiRouteNode_Current;
     public AI_Route_Node aiRouteNode_Target;
 
+    public Controller_PID steerPID;
+
     public void OnEnterNewRouteNode(AI_Route_Node node)
     {
         aiRouteNode_Current = node;
@@ -84,16 +86,33 @@ public class AIController : MonoBehaviour
     void Start()
     {
         vehicle = GetComponent<Vehicle>();
+        steerPID = gameObject.AddComponent<Controller_PID>();
+        steerPID.Init(1, 0, 0);
     }
 
     void Update()
     {
+        Vector3 nearestpos = GetNearestWorldPosition();
+
+        float dist = Vector3.Distance(nearestpos, vehicle.vehicleProxy.transform.position);
+
+        Vector3 right = Vector3.Cross(Vector3.up, aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position);
+
+        dist = Vector3.Dot(right, vehicle.vehicleProxy.transform.position - nearestpos) > 0 ? dist : -dist;
+
+        DrawHelpers.DrawSphere(nearestpos, 5, Color.blue);
+
+        float steer = steerPID.Step(0, dist, Time.deltaTime);
+        Debug.Log(steer);
+
         if (vehicle)
         {
-            //vehicle.vInput = 1;
+            vehicle.vInput = 1;
+            //vehicle.hInput = dist > 0 ? -1 : 1;
+
+            vehicle.hInput = steer;
         }
 
-        DrawHelpers.DrawSphere(GetNearestWorldPosition(), 5, Color.blue);
     }
 
 }
