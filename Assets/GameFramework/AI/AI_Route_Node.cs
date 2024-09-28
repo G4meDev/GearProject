@@ -8,6 +8,30 @@ public class AI_Route_Node : MonoBehaviour
     public List<AI_Route_Node> children;
     public List<AI_Route_Node> parents;
 
+    private void OnDrawGizmos()
+    { 
+        foreach (AI_Route_Node child in children)
+        {
+            if (child)
+            {
+                Vector3 dir = child.transform.position - transform.position;
+                DrawArrow.ForGizmo(transform.position, (dir.magnitude - 5) * dir.normalized, Color.red, 5);
+            }
+        }
+
+        foreach (AI_Route_Node parent in parents)
+        {
+            if (parent)
+            {
+                Vector3 offset = Vector3.up * 5;
+
+                Vector3 dir = parent.transform.position - transform.position;
+                DrawArrow.ForGizmo(transform.position + offset, (dir.magnitude - 5) * dir.normalized, Color.blue, 5);
+            }
+        }
+
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
