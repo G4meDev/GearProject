@@ -88,7 +88,7 @@ public class AIController : MonoBehaviour
     {
         if (vehicle)
         {
-            vehicle.vInput = 1;
+            //vehicle.vInput = 1;
         }
 
         DrawHelpers.DrawSphere(GetNearestWorldPosition(), 5, Color.blue);

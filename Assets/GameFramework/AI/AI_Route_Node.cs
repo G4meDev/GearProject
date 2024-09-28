@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 public class AI_Route_Node : MonoBehaviour
 {
     public List<AI_Route_Node> children;
+    public List<AI_Route_Node> parents;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -96,6 +97,9 @@ public class AI_Route_Node_Editor : Editor
         newNode.name = s;
         
         newNode.children.Clear();
+        newNode.parents.Clear();
+        newNode.parents.Add(node);
+
         node.children.Add(newNode);
 
         Selection.activeObject = newNode;

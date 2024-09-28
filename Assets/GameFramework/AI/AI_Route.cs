@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using Unity.VisualScripting;
 
 public class AI_Route : MonoBehaviour
 {
@@ -42,6 +43,18 @@ public class AI_Route_Editor : Editor
                     Handles.DrawLine(halfPos, child.transform.position, 10);
                 }
             }
+
+            foreach(AI_Route_Node parent in node.parents)
+            {
+                if(parent)
+                {
+                    Vector3 offset = Vector3.up * 5;
+
+                    Vector3 halfPos = (node.transform.position + parent.transform.position) / 2;
+                    Handles.DrawDottedLine(node.transform.position + offset, halfPos + offset, 5);
+                    Handles.DrawLine(halfPos + offset, parent.transform.position + offset, 10);
+                }
+            }
         }
 
         //---------------------------------------------------------------------
@@ -78,25 +91,17 @@ public class AI_Route_Editor : Editor
             return;
         }
 
-        if(n1.children.Contains(n2))
-        {
-            n1.children.Remove(n2);
-            
-            if(!n2.children.Contains(n1))
-            {
-                n2.children.Add(n1);
-            }
-        }
+        if (!n1.children.Contains(n2))
+            (n1, n2) = (n2, n1);
 
-        else
-        {
-            n1.children.Add(n2);
+        n1.children.Remove(n2);
+        n2.parents.Remove(n1);
 
-            if(n2.children.Contains(n1))
-            {
-                n2.children.Remove(n1);
-            }
-        }
+        if (!n1.parents.Contains(n2))
+            n1.parents.Add(n2);
+
+        if (!n2.children.Contains(n1))
+            n2.children.Add(n1);
 
         n1.OnNeighboursChanged();
         n1.OnNeighboursChanged();
