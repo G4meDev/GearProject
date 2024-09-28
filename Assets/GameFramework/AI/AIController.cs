@@ -7,8 +7,6 @@ public class AIController : MonoBehaviour
     public AI_Route_Node aiRouteNode_Current;
     public AI_Route_Node aiRouteNode_Target;
 
-    public float projectionDistance = 3.0f;
-
     public void OnEnterNewRouteNode(AI_Route_Node node)
     {
         aiRouteNode_Current = node;
@@ -31,48 +29,54 @@ public class AIController : MonoBehaviour
 
     public Vector3 GetNearestWorldPosition()
     {
-//         if (aiRouteNode_Current && aiRouteNode_Target)
-//         {
-//             Vector3 d_n = aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position;
-//             Vector3 toPos_n = vehicle.vehicleProxy.transform.position - aiRouteNode_Current.transform.position;
-// 
-//             float dot_n = Vector3.Dot(d_n.normalized, toPos_n);
-// 
-//             Debug.Log(dot_n);
-// 
-//             // we passed target without hitting collision
-//             if (dot_n > d_n.magnitude)
-//             {
-//                 OnEnterNewRouteNode(aiRouteNode_Target);
-// 
-//                 return GetNearestWorldPosition();
-//             }
-// 
-//             else if (dot_n < 0 && aiRouteNode_Previous)
-//             {
-//                 Vector3 d_p = aiRouteNode_Current.transform.position - aiRouteNode_Previous.transform.position;
-//                 Vector3 toPos_p = vehicle.vehicleProxy.transform.position - aiRouteNode_Previous.transform.position;
-// 
-//                 float dot_p = Vector3.Dot(d_p.normalized, toPos_p);
-//                 dot_p += projectionDistance;
-// 
-//                 float remaining = d_p.magnitude - dot_p;
-//                 if (remaining > 0)
-//                 {
-//                     return aiRouteNode_Previous.transform.position + dot_p * d_p.normalized;
-//                 }
-//                 else
-//                 {
-//                     d_p = aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position;
-//                     return aiRouteNode_Current.transform.position - remaining * d_p.normalized;
-//                 }
-//             }
-// 
-//             else
-//             {
-//                 return aiRouteNode_Current.transform.position + (dot_n + projectionDistance) * d_n.normalized;
-//             }
-//         }
+        if (aiRouteNode_Current && aiRouteNode_Target)
+        {
+            Vector3 d = aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position;
+            Vector3 toPos = vehicle.vehicleProxy.transform.position - aiRouteNode_Current.transform.position;
+
+            float dot = Vector3.Dot(d.normalized, toPos);
+
+            // passed target without hitting collision
+            if (dot > d.magnitude)
+            {
+                OnEnterNewRouteNode(aiRouteNode_Target);
+
+                return GetNearestWorldPosition();
+            }
+
+            // should check for parent nodes
+            else if (dot < 0)
+            {
+                AI_Route_Node bestParent = null;
+                float min_dist = float.MaxValue;
+
+                foreach(AI_Route_Node parent in aiRouteNode_Current.parents)
+                {
+                    float dist = Vector3.Distance(vehicle.vehicleProxy.transform.position, parent.transform.position);
+
+                    if (dist < min_dist)
+                    {
+                        min_dist = dist;
+                        bestParent = parent;
+                    }
+                }
+
+
+
+                d = aiRouteNode_Current.transform.position - bestParent.transform.position;
+                toPos = vehicle.vehicleProxy.transform.position - bestParent.transform.position;
+
+                dot = Vector3.Dot(d.normalized, toPos);
+                dot = Mathf.Clamp(dot, 0, d.magnitude);
+
+                return bestParent.transform.position + dot * d.normalized;
+            }
+
+            else
+            {
+                return aiRouteNode_Current.transform.position + dot * d.normalized;
+            }
+        }
 
         return Vector3.zero;
     }
