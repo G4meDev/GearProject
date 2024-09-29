@@ -111,7 +111,7 @@ public class AIController : MonoBehaviour
 
             vehicle.SetSteerInput(steer);
 
-            Debug.Log(vehicle.hInput);
+            //Debug.Log(vehicle.hInput);
         }
 
     }
