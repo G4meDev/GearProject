@@ -49,6 +49,8 @@ public static class DrawHelpers
 
     public static void DrawSphere(Vector4 pos, float radius, Color color)
     {
+#if UNITY_EDITOR
+
         Vector4[] v = s_UnitSphere;
         int len = s_UnitSphere.Length / 3;
         for (int i = 0; i < len; i++)
@@ -63,10 +65,14 @@ public static class DrawHelpers
             Debug.DrawLine(sY, eY, color);
             Debug.DrawLine(sZ, eZ, color);
         }
+
+#endif
     }
 
     public static void DrawBox(Vector3 Position, Quaternion Rotation, float Scale, Color color)
     {
+#if UNITY_EDITOR
+
         for (int i = 0; i < s_UnitSquare.Length; i++)
         {
             Vector3 p1 = s_UnitSquare[i];
@@ -83,10 +89,15 @@ public static class DrawHelpers
 
             Debug.DrawLine(p1, p2, color);
         }
+
+
+#endif
     }
 
     public static void DrawCircle(Vector3 Position, Quaternion Rotation, float Radius, Color color)
     {
+#if UNITY_EDITOR
+
         for (int i = 0; i < s_UnitCircle.Length; i++)
         {
             Vector3 p1 = s_UnitCircle[i];
@@ -103,27 +114,33 @@ public static class DrawHelpers
 
             Debug.DrawLine(p1, p2, color);
         }
+
+#endif
     }
 
     public static void DrawCylinder(Vector3 Position, Quaternion Rotation, float Radius, float Height, Color color)
     {
-        DrawCircle(Position, Rotation, Radius, color);
-        Vector3 dir = Vector3.up;
-        Vector3 EndPosition = Position + (Rotation * dir) * Height;
-        DrawCircle(EndPosition, Rotation, Radius, color);
+#if UNITY_EDITOR
 
-        for (int i = 0; i < s_UnitCircle.Length; i++)
-        {
-            Vector3 p1 = s_UnitCircle[i];
+            DrawCircle(Position, Rotation, Radius, color);
+            Vector3 dir = Vector3.up;
+            Vector3 EndPosition = Position + (Rotation * dir) * Height;
+            DrawCircle(EndPosition, Rotation, Radius, color);
 
-            p1 *= Radius;
-            p1 = Rotation * p1;
-            p1 += Position;
+            for (int i = 0; i < s_UnitCircle.Length; i++)
+            {
+                Vector3 p1 = s_UnitCircle[i];
 
-            Vector3 p2 = p1 + (Rotation * dir) * Height;
-            Debug.DrawLine(p1, p2, color);
-        }
+                p1 *= Radius;
+                p1 = Rotation * p1;
+                p1 += Position;
+
+                Vector3 p2 = p1 + (Rotation * dir) * Height;
+                Debug.DrawLine(p1, p2, color);
+            }
+#endif
     }
+
 }
 
 
@@ -153,20 +170,30 @@ public static class DrawArrow
 
     public static void ForDebug(Vector3 pos, Vector3 direction, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)
     {
+#if UNITY_EDITOR
+
         Debug.DrawRay(pos, direction);
 
         Vector3 right = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 + arrowHeadAngle, 0) * new Vector3(0, 0, 1);
         Vector3 left = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 - arrowHeadAngle, 0) * new Vector3(0, 0, 1);
         Debug.DrawRay(pos + direction, right * arrowHeadLength);
         Debug.DrawRay(pos + direction, left * arrowHeadLength);
+
+#endif
+
     }
     public static void ForDebug(Vector3 pos, Vector3 direction, Color color, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)
     {
+#if UNITY_EDITOR
+
         Debug.DrawRay(pos, direction, color);
 
         Vector3 right = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 + arrowHeadAngle, 0) * new Vector3(0, 0, 1);
         Vector3 left = Quaternion.LookRotation(direction) * Quaternion.Euler(0, 180 - arrowHeadAngle, 0) * new Vector3(0, 0, 1);
         Debug.DrawRay(pos + direction, right * arrowHeadLength, color);
         Debug.DrawRay(pos + direction, left * arrowHeadLength, color);
+
+#endif
     }
+
 }
