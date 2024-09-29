@@ -87,7 +87,7 @@ public class AIController : MonoBehaviour
     {
         vehicle = GetComponent<Vehicle>();
         steerPID = gameObject.AddComponent<Controller_PID>();
-        steerPID.Init(1, 0, 0);
+        steerPID.Init(.15f, .035f, 0.1f);
     }
 
     void Update()
@@ -103,14 +103,15 @@ public class AIController : MonoBehaviour
         DrawHelpers.DrawSphere(nearestpos, 5, Color.blue);
 
         float steer = steerPID.Step(0, dist, Time.deltaTime);
-        Debug.Log(steer);
+
 
         if (vehicle)
         {
             vehicle.vInput = 1;
-            //vehicle.hInput = dist > 0 ? -1 : 1;
 
-            vehicle.hInput = steer;
+            vehicle.SetSteerInput(steer);
+
+            Debug.Log(vehicle.hInput);
         }
 
     }

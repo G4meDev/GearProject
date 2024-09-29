@@ -145,6 +145,11 @@ public class Vehicle : MonoBehaviour
 
     public Glider_Node gliderNode;
 
+    public void SetSteerInput(float input)
+    {
+        hInput = Mathf.Clamp(input, -1, 1);
+    }
+
     public void StartGliding(Glider_Node node)
     {
         if (gliderNode == null)
