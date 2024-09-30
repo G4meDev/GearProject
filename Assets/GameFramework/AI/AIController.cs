@@ -15,6 +15,21 @@ public class AIController : MonoBehaviour
     public float targetTrackError = 0.0f;
     public float optimalPathChance = 1.0f;
 
+    //     public float steer_p = 0.15f;
+    //     public float steer_i = 0.01f;
+    //     public float steer_d = 0.1f;
+
+    public float steer_p = 0.15f;
+    public float steer_i = 0.01f;
+    public float steer_d = 0.1f;
+
+    private float steer_p_active;
+    private float steer_i_active;
+    private float steer_d_active;
+
+    private float steer_wind_start;
+    private float steer_wind_duration;
+
     public void OnEnterNewRouteNode(AI_Route_Node node)
     {
         aiRouteNode_Current = node;
@@ -104,17 +119,54 @@ public class AIController : MonoBehaviour
         return Vector3.zero;
     }
 
+    void Start_Steer_Wind(float duration)
+    {
+        steer_wind_start = Time.time;
+        steer_wind_duration = duration;
+    }
+
+    void Wind_Steer()
+    {
+        float alpha = (Time.time - steer_wind_start) / steer_wind_duration;
+        if (alpha > 1.0f)
+        {
+            steer_p_active = steer_p;
+            steer_i_active = steer_i;
+            steer_d_active = steer_d;
+        }
+        else
+        {
+            steer_p_active = Mathf.Lerp(0, steer_p, alpha);
+            steer_i_active = Mathf.Lerp(0, steer_i, alpha);
+            steer_d_active = Mathf.Lerp(0, steer_d, alpha);
+        }
+
+        steerPID.Init(steer_p_active, steer_i_active, steer_d_active);
+    }
+
+
     void Start()
     {
         vehicle = GetComponent<Vehicle>();
         steerPID = gameObject.AddComponent<Controller_PID>();
-        steerPID.Init(0.15f, 0.01f, 0.1f);
 
-        optimalPathChance = Random.Range(0.0f, 1.0f);
+        SceneManager.RegisterAI(this);
+
+        steer_p_active = steer_p;
+        steer_i_active = steer_i;
+        steer_d_active = steer_d;
+
+        steerPID.Init(steer_p_active, steer_i_active, steer_d_active);
+
+        //optimalPathChance = Random.Range(0.0f, 1.0f);
+
+        Start_Steer_Wind(20.0f);
     }
 
     void Update()
     {
+        Wind_Steer();
+
         Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange);
 
         float dist = Vector3.Distance(nearestpos, vehicle.vehicleProxy.transform.position);
@@ -125,8 +177,10 @@ public class AIController : MonoBehaviour
 
         //DrawHelpers.DrawSphere(nearestpos, 5, Color.blue);
 
-        float samplePos = Time.time / 10.0f;
+        float samplePos = Time.time / 5.0f;
         float noise = Mathf.PerlinNoise(name.GetHashCode(), samplePos);
+
+        Debug.Log(noise);
 
         trackErrorRange /= 2;
         targetTrackError = Mathf.Lerp(-trackErrorRange, trackErrorRange, noise);
