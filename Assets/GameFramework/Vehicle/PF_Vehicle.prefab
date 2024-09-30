@@ -232,6 +232,7 @@ MonoBehaviour:
   orientNode: {fileID: 0}
   antiGravityNode: {fileID: 0}
   gliderNode: {fileID: 0}
+  lapPathNode: {fileID: 0}
 --- !u!1 &5586777812053100585
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,7 +346,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
 --- !u!1 &7417783819118272802
 GameObject:
   m_ObjectHideFlags: 0

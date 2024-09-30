@@ -162,9 +162,9 @@ public class Vehicle : MonoBehaviour
 
     public void OnKilled()
     {
-        Debug.Log("killed");
-
-
+        vehicleProxy.MovePosition(lapPathNode.spawnPoint.transform.position);
+        vehicleBox.transform.SetPositionAndRotation(lapPathNode.spawnPoint.transform.position, lapPathNode.spawnPoint.transform.rotation);
+        vehicleMesh.transform.SetPositionAndRotation(lapPathNode.spawnPoint.transform.position, lapPathNode.spawnPoint.transform.rotation);
     }
 
     public void StartGliding(Glider_Node node)
