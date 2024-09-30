@@ -145,12 +145,26 @@ public class Vehicle : MonoBehaviour
 
     public Glider_Node gliderNode;
 
+    public LapPath_Node lapPathNode;
+
     private Vector3 lastRight;
     private Vector3 lastPos;
 
     public void SetSteerInput(float input)
     {
         hInput = Mathf.Clamp(input, -1, 1);
+    }
+
+    public void OnEnterLapPath(LapPath_Node node)
+    {
+        lapPathNode = node;
+    }
+
+    public void OnKilled()
+    {
+        Debug.Log("killed");
+
+
     }
 
     public void StartGliding(Glider_Node node)

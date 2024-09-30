@@ -191,7 +191,7 @@ public class AIController : MonoBehaviour
         float samplePos = Time.time / 5.0f;
         float noise = Mathf.PerlinNoise(name.GetHashCode(), samplePos);
 
-        Debug.Log(noise);
+        //Debug.Log(noise);
 
         trackErrorRange /= 2;
         targetTrackError = Mathf.Lerp(-trackErrorRange, trackErrorRange, noise);

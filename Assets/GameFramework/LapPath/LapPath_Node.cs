@@ -54,16 +54,15 @@ public class LapPath_Node : MonoBehaviour
 
     }
 
-//     private void OnTriggerEnter(Collider other)
-//     {
-//         Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
-// 
-//         AIController controller = vehicle.GetComponent<AIController>();
-//         if (controller)
-//         {
-//             controller.OnEnterNewRouteNode(this);
-//         }
-//     }
+    private void OnTriggerEnter(Collider other)
+    {
+        Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
+
+        if (vehicle)
+        {
+            vehicle.OnEnterLapPath(this);
+        }
+    }
 
     public void OnNeighboursChanged()
     {
