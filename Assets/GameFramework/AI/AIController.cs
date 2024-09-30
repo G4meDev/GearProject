@@ -7,13 +7,16 @@ public class AIController : MonoBehaviour
 {
     public Vehicle vehicle;
 
+    public int targetPos = -1;
+    public AI_Position_Params position_params;
+
     public AI_Route_Node aiRouteNode_Current;
     public AI_Route_Node aiRouteNode_Target;
 
     public Controller_PID steerPID;
 
     public float targetTrackError = 0.0f;
-    public float optimalPathChance = 1.0f;
+
 
     //     public float steer_p = 0.15f;
     //     public float steer_i = 0.01f;
@@ -29,6 +32,14 @@ public class AIController : MonoBehaviour
 
     private float steer_wind_start;
     private float steer_wind_duration;
+
+    public void UpdateTargetPosition(int newPos)
+    {
+        targetPos = newPos;
+
+        position_params = AI_Position_Params.GetPositionParams(targetPos);
+    }
+
 
     public void OnEnterNewRouteNode(AI_Route_Node node)
     {
@@ -185,9 +196,7 @@ public class AIController : MonoBehaviour
         trackErrorRange /= 2;
         targetTrackError = Mathf.Lerp(-trackErrorRange, trackErrorRange, noise);
 
-        targetTrackError = Mathf.Lerp(targetTrackError, optimalTrackError, optimalPathChance);
-
-        //Debug.Log(targetTrackError);
+        targetTrackError = Mathf.Lerp(targetTrackError, optimalTrackError, position_params.optimalPathChance);
         
         float error = targetTrackError - dist;
 
