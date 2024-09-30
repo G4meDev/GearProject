@@ -42,8 +42,7 @@ public class UI_SteerButton : Button, IDragHandler
         steerValue = 0.0f;
     }
 
-    
-    void Start()
+    protected override void Start()
     {
         steerRangeImage = transform.Find("SteerRangeImage").GetComponent<Image>();
         steerIndicatorImage = steerRangeImage.transform.Find("SteerIndicatorImage").GetComponent<Image>();

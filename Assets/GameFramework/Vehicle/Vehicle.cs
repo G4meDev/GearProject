@@ -566,7 +566,7 @@ public class Vehicle : MonoBehaviour
         VectorHelpers.LineLineIntersection(out origin, vehicleBox.transform.position, vehicleBox.transform.right,
             lastPos, lastRight);
 
-        DrawHelpers.DrawSphere(origin, 5, Color.black);
+        //DrawHelpers.DrawSphere(origin, 5, Color.black);
         //Debug.Log(Vector3.Distance(origin, lastPos));
 
         lastPos = vehicleBox.transform.position;

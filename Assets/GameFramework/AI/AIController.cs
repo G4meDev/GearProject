@@ -1,3 +1,6 @@
+using Cinemachine;
+using TreeEditor;
+using UnityEditor;
 using UnityEngine;
 
 public class AIController : MonoBehaviour
@@ -10,6 +13,7 @@ public class AIController : MonoBehaviour
     public Controller_PID steerPID;
 
     public float targetTrackError = 0.0f;
+    public float optimalPathChance = 1.0f;
 
     public void OnEnterNewRouteNode(AI_Route_Node node)
     {
@@ -24,8 +28,8 @@ public class AIController : MonoBehaviour
         {
             aiRouteNode_Target = aiRouteNode_Current.children[0];
 
-            float targetScale = aiRouteNode_Target.transform.lossyScale.x / 8;
-            targetTrackError = Random.Range(-targetScale, targetScale);
+//             float targetScale = aiRouteNode_Target.transform.lossyScale.x / 8;
+//             targetTrackError = Random.Range(-targetScale, targetScale);
         }
 
         else
@@ -34,8 +38,11 @@ public class AIController : MonoBehaviour
         }
     }
 
-    public Vector3 GetNearestWorldPosition()
+    public Vector3 GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange)
     {
+        optimalTrackError = 0.0f;
+        trackErrorRange = 0.0f;
+
         if (aiRouteNode_Current && aiRouteNode_Target)
         {
             Vector3 d = aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position;
@@ -48,7 +55,7 @@ public class AIController : MonoBehaviour
             {
                 OnEnterNewRouteNode(aiRouteNode_Target);
 
-                return GetNearestWorldPosition();
+                return GetNearestWorldPosition(out optimalTrackError, out trackErrorRange);
             }
 
             // should check for parent nodes
@@ -76,11 +83,20 @@ public class AIController : MonoBehaviour
                 dot = Vector3.Dot(d.normalized, toPos);
                 dot = Mathf.Clamp(dot, 0, d.magnitude);
 
+                float a = dot / d.magnitude;
+                optimalTrackError = Mathf.Lerp(bestParent.optimalCrossSecion, aiRouteNode_Current.optimalCrossSecion, a);
+                trackErrorRange = Mathf.Lerp(bestParent.transform.lossyScale.x, aiRouteNode_Current.transform.lossyScale.x, a);
+
                 return bestParent.transform.position + dot * d.normalized;
             }
 
             else
             {
+                float a = dot / d.magnitude;
+
+                optimalTrackError = Mathf.Lerp(aiRouteNode_Current.optimalCrossSecion, aiRouteNode_Target.optimalCrossSecion, a);
+                trackErrorRange = Mathf.Lerp(aiRouteNode_Current.transform.lossyScale.x, aiRouteNode_Target.transform.lossyScale.x, a);
+
                 return aiRouteNode_Current.transform.position + dot * d.normalized;
             }
         }
@@ -93,11 +109,13 @@ public class AIController : MonoBehaviour
         vehicle = GetComponent<Vehicle>();
         steerPID = gameObject.AddComponent<Controller_PID>();
         steerPID.Init(0.15f, 0.01f, 0.1f);
+
+        optimalPathChance = Random.Range(0.0f, 1.0f);
     }
 
     void Update()
     {
-        Vector3 nearestpos = GetNearestWorldPosition();
+        Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange);
 
         float dist = Vector3.Distance(nearestpos, vehicle.vehicleProxy.transform.position);
 
@@ -107,11 +125,18 @@ public class AIController : MonoBehaviour
 
         //DrawHelpers.DrawSphere(nearestpos, 5, Color.blue);
 
-        float error = targetTrackError - dist;
-//         error = error > 0 ? Mathf.Clamp(error - aiRouteNode_Target.transform.lossyScale.x/4, 0, float.MaxValue) :
-//             Mathf.Clamp(error + aiRouteNode_Target.transform.lossyScale.x/4, float.MinValue, 0);
+        float samplePos = Time.time / 10.0f;
+        float noise = Mathf.PerlinNoise(name.GetHashCode(), samplePos);
 
-        //Debug.Log(error);
+        trackErrorRange /= 2;
+        targetTrackError = Mathf.Lerp(-trackErrorRange, trackErrorRange, noise);
+
+        targetTrackError = Mathf.Lerp(targetTrackError, optimalTrackError, optimalPathChance);
+
+        //Debug.Log(targetTrackError);
+        
+        float error = targetTrackError - dist;
+
 
         float steer = steerPID.Step(error, Time.deltaTime);
         steerPID.LimitIntegral(5);
@@ -119,7 +144,6 @@ public class AIController : MonoBehaviour
         if (vehicle)
         {
             vehicle.vInput = 1;
-            //vehicle.vInput = Mathf.Lerp(1, .5f, Mathf.Abs(steer));
 
             vehicle.SetSteerInput(steer);
 

@@ -8,6 +8,8 @@ public class AI_Route_Node : MonoBehaviour
     public List<AI_Route_Node> children;
     public List<AI_Route_Node> parents;
 
+    public float optimalCrossSecion = 0.0f;
+
     private void OnDrawGizmos()
     { 
         foreach (AI_Route_Node child in children)
@@ -15,7 +17,14 @@ public class AI_Route_Node : MonoBehaviour
             if (child)
             {
                 Vector3 dir = child.transform.position - transform.position;
-                DrawArrow.ForGizmo(transform.position, (dir.magnitude - 5) * dir.normalized, Color.red, 5);
+                //DrawArrow.ForGizmo(transform.position, (dir.magnitude - 5) * dir.normalized, Color.red, 5);
+
+                Vector3 r = Vector3.Normalize(Vector3.Cross(Vector3.up, dir));
+
+                Vector3 optimalStart = transform.position + r * optimalCrossSecion;
+                Vector3 optimalEnd = child.transform.position + r * child.optimalCrossSecion;
+                Vector3 optimalDir = optimalEnd - optimalStart;
+                DrawArrow.ForGizmo(optimalStart + Vector3.up * 2, optimalDir, Color.green, 5);
             }
         }
 
@@ -64,6 +73,7 @@ public class AI_Route_Node : MonoBehaviour
 #if UNITY_EDITOR
 
 [CustomEditor(typeof(AI_Route_Node))]
+[CanEditMultipleObjects]
 public class AI_Route_Node_Editor : Editor
 {
     public bool bDown = false;

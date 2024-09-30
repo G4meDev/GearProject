@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class VehicleCamera : MonoBehaviour
 {
-    public Camera camera;
+    public new Camera camera;
     public GameObject target;
 
     private Vehicle vehicle;
