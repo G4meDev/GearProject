@@ -22,6 +22,14 @@ public class LapPath_Node : MonoBehaviour
         Vector3 topNorthEast = GetBoxCorner(new(1, 1, 1));
         Vector3 topSouthWest = GetBoxCorner(new(-1, 1, -1));
 
+        Vector3 topCenter = GetBoxCorner(new(0, 1, 0));
+
+        if (spawnPoint)
+        {
+            Vector3 dir = spawnPoint.transform.position - topCenter;
+            DrawArrow.ForGizmo(topCenter, dir, Color.yellow, 5);
+        }
+
         foreach (LapPath_Node child in children)
         {
             if (child)
@@ -145,8 +153,6 @@ public class LapPath_Node_Editor : Editor
 
     private void Align()
     {
-        Debug.Log("aa");
-
         LapPath_Node node = target as LapPath_Node;
 
         Ray ray = new(node.transform.position, -node.transform.up);
