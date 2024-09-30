@@ -2,13 +2,17 @@ using UnityEngine;
 
 public class AI_Position_Params
 {
-    AI_Position_Params(float inOptimalPathChance)
+    public float optimalPathChance;
+
+    public AI_Position_Params(float inOptimalPathChance)
     {
         optimalPathChance = inOptimalPathChance;
     }
+}
 
-
-    public float optimalPathChance;
+public class AI_Params
+{
+    // universal params
 
 
     // --------------------------------------------------------

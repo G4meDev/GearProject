@@ -37,7 +37,7 @@ public class AIController : MonoBehaviour
     {
         targetPos = newPos;
 
-        position_params = AI_Position_Params.GetPositionParams(targetPos);
+        position_params = AI_Params.GetPositionParams(targetPos);
     }
 
 
