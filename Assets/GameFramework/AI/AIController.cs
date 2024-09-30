@@ -1,6 +1,3 @@
-using Cinemachine;
-using TreeEditor;
-using UnityEditor;
 using UnityEngine;
 
 public class AIController : MonoBehaviour
