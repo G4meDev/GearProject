@@ -145,6 +145,9 @@ public class Vehicle : MonoBehaviour
 
     public Glider_Node gliderNode;
 
+    private Vector3 lastRight;
+    private Vector3 lastPos;
+
     public void SetSteerInput(float input)
     {
         hInput = Mathf.Clamp(input, -1, 1);
@@ -559,6 +562,15 @@ public class Vehicle : MonoBehaviour
             OnStartJump();
         }
 
+        Vector3 origin;
+        VectorHelpers.LineLineIntersection(out origin, vehicleBox.transform.position, vehicleBox.transform.right,
+            lastPos, lastRight);
+
+        DrawHelpers.DrawSphere(origin, 5, Color.black);
+        //Debug.Log(Vector3.Distance(origin, lastPos));
+
+        lastPos = vehicleBox.transform.position;
+        lastRight = vehicleBox.transform.right;
 
 //         if (bHit && pullPath && forwardSpeed < maxSpeedWithModifier)
 //         {

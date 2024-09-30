@@ -130,7 +130,7 @@ Transform:
   - {fileID: 9025799685701753928}
   - {fileID: 2082113745696784758}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3947225319184177958
 MonoBehaviour:
@@ -144,20 +144,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e6736742e446429043f76fc5d20e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayer: 1
+  isPlayer: 0
   cameraPrefab: {fileID: 7639040396316183353, guid: b4a35a187d8d354418655de184911f03,
     type: 3}
   vehicleProxy: {fileID: 3017573830326654721}
   vehicleBox: {fileID: 188936559622972655}
   vehicleMesh: {fileID: 1706573743033637836}
-  screenInput: {fileID: 0}
   boostIndicator: {fileID: 7829255249813983696}
-  speedText: {fileID: 0}
-  tractionText: {fileID: 0}
-  boostText: {fileID: 0}
-  reserveText: {fileID: 0}
-  aeroMeter: {fileID: 0}
-  driftMeter: {fileID: 0}
   gravityStr: 40
   counterForceStr: 0.03
   maxSpeed: 45
@@ -175,14 +168,14 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: Infinity
-      outSlope: 10
+      outSlope: 7
       tangentMode: 71
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 10
-      value: 100
+      value: 70
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -191,7 +184,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 25
-      value: 50
+      value: 70
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -218,6 +211,9 @@ MonoBehaviour:
     type: 2}
   vInput: 0
   hInput: 0
+  pressedJump: 0
+  holdingJump: 0
+  airborneTime: 0
   driftMinAngle: 10
   driftMaxAngle: 60
   driftTimer: 1.5
@@ -229,6 +225,8 @@ MonoBehaviour:
   thirdDirftSpeedModifier: {fileID: 11400000, guid: 8c0ee0fbe56ab43429dcbb951c4433ca,
     type: 2}
   drifting: 0
+  driftStartTime: 0
+  driftCounter: 0
   driftYaw: 0
   pullPath: {fileID: 0}
   orientNode: {fileID: 0}
@@ -558,6 +556,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7267583086349385398, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.76
+      objectReference: {fileID: 0}
+    - target: {fileID: 7267583086349385398, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 9.6
       objectReference: {fileID: 0}
     - target: {fileID: 7294657171894072549, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
         type: 3}

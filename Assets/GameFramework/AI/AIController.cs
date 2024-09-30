@@ -9,6 +9,8 @@ public class AIController : MonoBehaviour
 
     public Controller_PID steerPID;
 
+    public float targetTrackError = 0.0f;
+
     public void OnEnterNewRouteNode(AI_Route_Node node)
     {
         aiRouteNode_Current = node;
@@ -21,6 +23,9 @@ public class AIController : MonoBehaviour
         if (aiRouteNode_Current.children.Count > 0)
         {
             aiRouteNode_Target = aiRouteNode_Current.children[0];
+
+            float targetScale = aiRouteNode_Target.transform.lossyScale.x / 8;
+            targetTrackError = Random.Range(-targetScale, targetScale);
         }
 
         else
@@ -87,7 +92,7 @@ public class AIController : MonoBehaviour
     {
         vehicle = GetComponent<Vehicle>();
         steerPID = gameObject.AddComponent<Controller_PID>();
-        steerPID.Init(.15f, .035f, 0.1f);
+        steerPID.Init(0.15f, 0.01f, 0.1f);
     }
 
     void Update()
@@ -100,14 +105,21 @@ public class AIController : MonoBehaviour
 
         dist = Vector3.Dot(right, vehicle.vehicleProxy.transform.position - nearestpos) > 0 ? dist : -dist;
 
-        DrawHelpers.DrawSphere(nearestpos, 5, Color.blue);
+        //DrawHelpers.DrawSphere(nearestpos, 5, Color.blue);
 
-        float steer = steerPID.Step(0, dist, Time.deltaTime);
+        float error = targetTrackError - dist;
+//         error = error > 0 ? Mathf.Clamp(error - aiRouteNode_Target.transform.lossyScale.x/4, 0, float.MaxValue) :
+//             Mathf.Clamp(error + aiRouteNode_Target.transform.lossyScale.x/4, float.MinValue, 0);
 
+        //Debug.Log(error);
+
+        float steer = steerPID.Step(error, Time.deltaTime);
+        steerPID.LimitIntegral(5);
 
         if (vehicle)
         {
             vehicle.vInput = 1;
+            //vehicle.vInput = Mathf.Lerp(1, .5f, Mathf.Abs(steer));
 
             vehicle.SetSteerInput(steer);
 

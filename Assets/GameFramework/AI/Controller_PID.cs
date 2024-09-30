@@ -12,9 +12,8 @@ public class Controller_PID : MonoBehaviour
         this.iFactor = iFactor;
         this.dFactor = dFactor;
     }
-    public float Step(float target, float current, float deltatime)
+    public float Step(float error, float deltatime)
     {
-        float error = target - current;
         _integral += error * deltatime;
         float derivative = (error - _lastError) / deltatime;
         _lastError = error;
