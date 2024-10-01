@@ -24,11 +24,14 @@ public class LapPath_Node : MonoBehaviour
 
         Vector3 topCenter = GetBoxCorner(new(0, 1, 0));
 
+        DrawHelpers.drawString(nodeIndex.ToString(), topCenter, 0, 0, 24, Color.black);
+
         if (spawnPoint)
         {
             Vector3 dir = spawnPoint.transform.position - topCenter;
             DrawArrow.ForGizmo(topCenter, dir, Color.yellow, 5);
         }
+
 
         foreach (LapPath_Node child in children)
         {
