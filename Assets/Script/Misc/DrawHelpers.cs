@@ -171,6 +171,7 @@ public static class DrawHelpers
 #endif
     }
 
+#if UNITY_EDITOR
     static Vector3 TransformByPixel(Vector3 position, float x, float y)
     {
         return TransformByPixel(position, new Vector3(x, y));
@@ -184,7 +185,7 @@ public static class DrawHelpers
         else
             return position;
     }
-
+#endif
 }
 
 

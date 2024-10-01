@@ -4,7 +4,18 @@ using Unity.VisualScripting;
 
 public class LapPath : MonoBehaviour
 {
-    
+    [HideInInspector]
+    public float maxNodeIndex = -1;
+
+    private void Start()
+    {
+        LapPath_Node[] nodes = GetComponentsInChildren<LapPath_Node>();
+
+        foreach (var node in nodes)
+        {
+            maxNodeIndex = Mathf.Max(maxNodeIndex, node.nodeIndex);
+        }
+    }
 }
 
 #if UNITY_EDITOR

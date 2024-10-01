@@ -12,6 +12,8 @@ public enum LapPathCheckPoint
 
 public class LapPath_Node : MonoBehaviour
 {
+    private LapPath lapPath;
+
     public List<LapPath_Node> children;
     public List<LapPath_Node> parents;
 
@@ -21,6 +23,16 @@ public class LapPath_Node : MonoBehaviour
     public bool isStart = false;
 
     public float nodeIndex = 0;
+
+    private void Start()
+    {
+        lapPath = transform.root.GetComponent<LapPath>();
+    }
+
+    public float GetMaxNodeIndex()
+    {
+        return lapPath.maxNodeIndex;
+    }
 
     public float GetIndexAtWorldPosition(Vector3 worldPos)
     {

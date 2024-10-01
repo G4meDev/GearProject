@@ -32,31 +32,6 @@ public class AI_Route_Editor : Editor
 
         AI_Route_Node[] nodes = t.GetComponentsInChildren<AI_Route_Node>();
 
-//         foreach (AI_Route_Node node in nodes)
-//         {
-//             foreach (AI_Route_Node child in node.children)
-//             {
-//                 if (child)
-//                 {
-//                     Vector3 halfPos = (node.transform.position + child.transform.position) / 2;
-//                     Handles.DrawDottedLine(node.transform.position, halfPos, 5);
-//                     Handles.DrawLine(halfPos, child.transform.position, 10);
-//                 }
-//             }
-// 
-//             foreach(AI_Route_Node parent in node.parents)
-//             {
-//                 if(parent)
-//                 {
-//                     Vector3 offset = Vector3.up * 5;
-// 
-//                     Vector3 halfPos = (node.transform.position + parent.transform.position) / 2;
-//                     Handles.DrawDottedLine(node.transform.position + offset, halfPos + offset, 5);
-//                     Handles.DrawLine(halfPos + offset, parent.transform.position + offset, 10);
-//                 }
-//             }
-//         }
-
         //---------------------------------------------------------------------
 
         Event e = Event.current;
@@ -108,11 +83,6 @@ public class AI_Route_Editor : Editor
 
         EditorUtility.SetDirty(n1);
         EditorUtility.SetDirty(n2);
-
-//         foreach (GameObject obj in objs)
-//         {
-//             Debug.Log(obj.name);
-//         }
     }
 }
 

@@ -155,6 +155,8 @@ public class Vehicle : MonoBehaviour
     private Vector3 lastRight;
     private Vector3 lastPos;
 
+    public float distanceFromFirstPlace = -1;
+
     public void SetThrottleInput(float input)
     {
         vInput = Mathf.Clamp(input, -1, 1);
@@ -564,7 +566,7 @@ public class Vehicle : MonoBehaviour
 
     private void Update()
     {
-
+        distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
     }
 
     private void FixedUpdate()
