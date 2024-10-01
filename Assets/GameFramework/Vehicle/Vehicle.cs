@@ -21,6 +21,9 @@ public class Vehicle : MonoBehaviour
     public GameObject vehicleBox;
     public GameObject vehicleMesh;
 
+    [HideInInspector]
+    public int position = -1;
+
     //TODO: Remove
     public MeshRenderer boostIndicator;
 
