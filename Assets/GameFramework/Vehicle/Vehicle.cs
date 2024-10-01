@@ -519,6 +519,11 @@ public class Vehicle : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+
+    }
+
     private void FixedUpdate()
     {
         UpdateLapPathIndex();
@@ -603,11 +608,6 @@ public class Vehicle : MonoBehaviour
         if (pressedJump)
         {
             OnStartJump();
-        }
-
-        if(isPlayer)
-        {
-            Debug.Log(lapPathIndex);
         }
 
         Vector3 origin;

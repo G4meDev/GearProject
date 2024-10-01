@@ -26,6 +26,7 @@ public class LapPath_Node : MonoBehaviour
             d = node.transform.position - transform.position;
             toPos = worldPos - transform.position;
             dot = Vector3.Dot(d.normalized, toPos);
+            dot = Mathf.Clamp01(dot);
 
             float dist = Vector3.Distance(transform.position + d.normalized * dot, worldPos);
 
@@ -33,7 +34,7 @@ public class LapPath_Node : MonoBehaviour
             {
                 minDist = dist;
 
-                bestIndex = Mathf.Lerp(nodeIndex, node.nodeIndex, dot / d.magnitude);
+                bestIndex = Mathf.LerpUnclamped(nodeIndex, node.nodeIndex, dot / d.magnitude);
             }
         }
 
@@ -42,6 +43,7 @@ public class LapPath_Node : MonoBehaviour
             d = node.transform.position - transform.position;
             toPos = worldPos - transform.position;
             dot = Vector3.Dot(d.normalized, toPos);
+            dot = Mathf.Clamp01(dot);
 
             float dist = Vector3.Distance(transform.position + d.normalized * dot, worldPos);
 
@@ -49,7 +51,7 @@ public class LapPath_Node : MonoBehaviour
             {
                 minDist = dist;
 
-                bestIndex = Mathf.Lerp(nodeIndex, node.nodeIndex, dot / d.magnitude);
+                bestIndex = Mathf.LerpUnclamped(nodeIndex, node.nodeIndex, dot / d.magnitude);
             }
         }
 
