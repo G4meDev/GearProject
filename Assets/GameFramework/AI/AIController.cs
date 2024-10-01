@@ -11,14 +11,12 @@ public class AIController : MonoBehaviour
     public AI_Route_Node aiRouteNode_Current;
     public AI_Route_Node aiRouteNode_Target;
 
-    public Controller_PID steerPID;
 
     public float targetTrackError = 0.0f;
 
-
-    //     public float steer_p = 0.15f;
-    //     public float steer_i = 0.01f;
-    //     public float steer_d = 0.1f;
+    //------------------------------------------------------------
+    
+    public Controller_PID steerPID;
 
     public float steer_p = 0.15f;
     public float steer_i = 0.01f;
@@ -30,6 +28,15 @@ public class AIController : MonoBehaviour
 
     private float steer_wind_start;
     private float steer_wind_duration;
+
+    //------------------------------------------------------------
+
+    public Controller_PID throttlePID;
+
+    public float throttle_p = 20.0f;
+    public float throttle_i = 0.8f;
+    public float throttle_d = 0.35f;
+
 
     public void UpdateTargetPosition(int newPos)
     {
@@ -158,6 +165,7 @@ public class AIController : MonoBehaviour
     {
         vehicle = GetComponent<Vehicle>();
         steerPID = gameObject.AddComponent<Controller_PID>();
+        throttlePID = gameObject.AddComponent<Controller_PID>();
 
         SceneManager.RegisterAI(this);
 
@@ -168,6 +176,9 @@ public class AIController : MonoBehaviour
         steerPID.Init(steer_p_active, steer_i_active, steer_d_active);
 
         Start_Steer_Wind(20.0f);
+
+
+        throttlePID.Init(throttle_p, throttle_i, throttle_d);
     }
 
     void Update()
@@ -190,10 +201,10 @@ public class AIController : MonoBehaviour
 
         targetTrackError = Mathf.Lerp(targetTrackError, optimalTrackError, position_params.optimalPathChance);
         
-        float error = targetTrackError - dist;
+        float steerError = targetTrackError - dist;
 
 
-        float steer = steerPID.Step(error, Time.deltaTime);
+        float steer = steerPID.Step(steerError, Time.deltaTime);
         steerPID.LimitIntegral(5);
 
         // -------------------------------------------------------------------------------------
@@ -215,17 +226,15 @@ public class AIController : MonoBehaviour
 
         float targetSpeed = Mathf.Lerp(position_params.minSpeed, position_params.maxSpeed, a);
 
-        float throttleValue = targetSpeed > vehicle.forwardSpeed || vehicle.forwardSpeed < position_params.minSpeed ? 1 : 0;
+        float throttleError = targetSpeed - vehicle.forwardSpeed;
 
-        Debug.Log(name + vehicle.position + "_" + targetPos + "_" + throttleValue + "_" + vehicle.forwardSpeed + "/" + targetSpeed);
+        float throttleValue = Mathf.Clamp01(throttlePID.Step(throttleError, Time.deltaTime));
+        throttlePID.LimitIntegral(2);
 
         if (vehicle)
         {
-            vehicle.vInput = throttleValue;
-
+            vehicle.SetThrottleInput(throttleValue);
             vehicle.SetSteerInput(steer);
-
-            //Debug.Log(vehicle.hInput);
         }
 
     }

@@ -155,6 +155,11 @@ public class Vehicle : MonoBehaviour
     private Vector3 lastRight;
     private Vector3 lastPos;
 
+    public void SetThrottleInput(float input)
+    {
+        vInput = Mathf.Clamp(input, -1, 1);
+    }
+
     public void SetSteerInput(float input)
     {
         hInput = Mathf.Clamp(input, -1, 1);
