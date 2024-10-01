@@ -183,6 +183,8 @@ public class AIController : MonoBehaviour
 
     void Update()
     {
+        bool rubberBanding = position_params.rubberBadingDist < vehicle.distanceFromFirstPlace;
+
         Wind_Steer();
 
         Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange);
@@ -199,7 +201,8 @@ public class AIController : MonoBehaviour
         trackErrorRange /= 1;
         targetTrackError = Mathf.Lerp(-trackErrorRange, trackErrorRange, noise);
 
-        targetTrackError = Mathf.Lerp(targetTrackError, optimalTrackError, position_params.optimalPathChance);
+        float optChance = rubberBanding ? Mathf.Clamp01(position_params.optimalPathChance + AI_Params.rbOptimalPathChanceIncrease) : position_params.optimalPathChance;
+        targetTrackError = Mathf.Lerp(targetTrackError, optimalTrackError, optChance);
         
         float steerError = targetTrackError - dist;
 
@@ -223,8 +226,8 @@ public class AIController : MonoBehaviour
             a = 0.5f;
         }
 
-
         float targetSpeed = Mathf.Lerp(position_params.minSpeed, position_params.maxSpeed, a);
+        targetSpeed = rubberBanding ? targetSpeed + AI_Params.rbSpeedIncrease : targetSpeed;
 
         float throttleError = targetSpeed - vehicle.forwardSpeed;
 
