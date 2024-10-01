@@ -162,9 +162,24 @@ public class Vehicle : MonoBehaviour
 
     public void OnKilled()
     {
-        vehicleProxy.MovePosition(lapPathNode.spawnPoint.transform.position);
-        vehicleBox.transform.SetPositionAndRotation(lapPathNode.spawnPoint.transform.position, lapPathNode.spawnPoint.transform.rotation);
-        vehicleMesh.transform.SetPositionAndRotation(lapPathNode.spawnPoint.transform.position, lapPathNode.spawnPoint.transform.rotation);
+        vehicleProxy.velocity = Vector3.zero;
+        vehicleProxy.angularVelocity = Vector3.zero;
+
+        EndDrift();
+
+        speedModifierIntensity = 0.0f;
+        speedModifierReserveTime = 0.0f;
+
+        Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
+        LayerMask layerMask = LayerMask.GetMask("Default");
+        bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
+
+        Vector3 targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
+
+        vehicleProxy.MovePosition(targetPos);
+        vehicleBox.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
+        vehicleMesh.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
+
     }
 
     public void StartGliding(Glider_Node node)
