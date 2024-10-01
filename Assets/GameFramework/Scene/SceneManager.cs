@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SceneManager : MonoBehaviour
@@ -7,6 +9,8 @@ public class SceneManager : MonoBehaviour
     public static Vehicle playerVehicle;
 
     public static List<AIController> aiControllers = new List<AIController>();
+
+    public static List<Vehicle> allVehicles = new List<Vehicle>();
 
 
     public GameObject screenInputPrefab;
@@ -48,6 +52,7 @@ public class SceneManager : MonoBehaviour
     public static void OnPlayerChanged(Vehicle vehicle)
     {
         playerVehicle = vehicle;
+        allVehicles.Add(vehicle);
 
         aeroMeter.OnPlayerChanged();
         screenInput.OnPlayerChanged();
@@ -57,9 +62,21 @@ public class SceneManager : MonoBehaviour
     public static void RegisterAI(AIController controller)
     {
         aiControllers.Add(controller);
+        allVehicles.Add(controller.vehicle);
 
         controller.UpdateTargetPosition(aiControllers.Count);
     }
+
+    private void UpdateVehiclesPosition()
+    {
+        allVehicles.Sort((x, y) => y.lapPathIndex.CompareTo(x.lapPathIndex));
+
+        for (int i = 0; i < allVehicles.Count; i++)
+        {
+            allVehicles[i].position = i + 1;
+        }
+    }
+
 
     void Start()
     {
@@ -79,6 +96,6 @@ public class SceneManager : MonoBehaviour
 
     void Update()
     {
-        
+        UpdateVehiclesPosition();
     }
 }

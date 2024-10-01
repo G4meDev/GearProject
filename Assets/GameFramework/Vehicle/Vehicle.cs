@@ -21,7 +21,7 @@ public class Vehicle : MonoBehaviour
     public GameObject vehicleBox;
     public GameObject vehicleMesh;
 
-    [HideInInspector]
+    //[HideInInspector]
     public int position = -1;
 
     //TODO: Remove
@@ -149,6 +149,7 @@ public class Vehicle : MonoBehaviour
     public Glider_Node gliderNode;
 
     public LapPath_Node lapPathNode;
+    public float lapPathIndex = -1;
 
     private Vector3 lastRight;
     private Vector3 lastPos;
@@ -161,6 +162,14 @@ public class Vehicle : MonoBehaviour
     public void OnEnterLapPath(LapPath_Node node)
     {
         lapPathNode = node;
+    }
+
+    public void UpdateLapPathIndex()
+    {
+        if (lapPathNode)
+        {
+            lapPathIndex = lapPathNode.GetIndexAtWorldPosition(vehicleProxy.transform.position);
+        }
     }
 
     public void OnKilled()
@@ -512,6 +521,8 @@ public class Vehicle : MonoBehaviour
 
     private void FixedUpdate()
     {
+        UpdateLapPathIndex();
+
         Gravity();
 
         UpdateSpeedModifiers();
@@ -592,6 +603,11 @@ public class Vehicle : MonoBehaviour
         if (pressedJump)
         {
             OnStartJump();
+        }
+
+        if(isPlayer)
+        {
+            Debug.Log(lapPathIndex);
         }
 
         Vector3 origin;

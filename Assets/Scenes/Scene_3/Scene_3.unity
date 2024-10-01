@@ -22607,6 +22607,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: LapPath_Node_59
       objectReference: {fileID: 0}
+    - target: {fileID: 5619937648273677751, guid: 78e628246d850234db7377cb1defcfe1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6604725944096063979, guid: 78e628246d850234db7377cb1defcfe1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8819998232037320945, guid: 78e628246d850234db7377cb1defcfe1,
         type: 3}
       propertyPath: m_RootOrder

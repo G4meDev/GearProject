@@ -12,6 +12,50 @@ public class LapPath_Node : MonoBehaviour
 
     public float nodeIndex = 0;
 
+    public float GetIndexAtWorldPosition(Vector3 worldPos)
+    {
+        float bestIndex = 0;
+        float minDist = float.MaxValue;
+
+        Vector3 toPos;
+        Vector3 d;
+        float dot;
+
+        foreach(LapPath_Node node in children)
+        {
+            d = node.transform.position - transform.position;
+            toPos = worldPos - transform.position;
+            dot = Vector3.Dot(d.normalized, toPos);
+
+            float dist = Vector3.Distance(transform.position + d.normalized * dot, worldPos);
+
+            if (dist < minDist)
+            {
+                minDist = dist;
+
+                bestIndex = Mathf.Lerp(nodeIndex, node.nodeIndex, dot / d.magnitude);
+            }
+        }
+
+        foreach (LapPath_Node node in parents)
+        {
+            d = node.transform.position - transform.position;
+            toPos = worldPos - transform.position;
+            dot = Vector3.Dot(d.normalized, toPos);
+
+            float dist = Vector3.Distance(transform.position + d.normalized * dot, worldPos);
+
+            if (dist < minDist)
+            {
+                minDist = dist;
+
+                bestIndex = Mathf.Lerp(nodeIndex, node.nodeIndex, dot / d.magnitude);
+            }
+        }
+
+        return bestIndex;
+    }
+
     Vector3 GetBoxCorner(Vector3 localPos)
     {
         return transform.TransformPoint(localPos / 2);
