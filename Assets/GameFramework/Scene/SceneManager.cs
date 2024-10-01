@@ -12,6 +12,11 @@ public class SceneManager : MonoBehaviour
     public GameObject screenInputPrefab;
     private static UI_ScreenInput screenInput;
 
+    public GameObject lapCounterPrefab;
+    private static UI_LapCounter lapCounter;
+
+    public GameObject positionPrefab;
+    private static UI_Position position;
 
     public GameObject aeroMeterPrefab;
     private static UI_AeroMeter aeroMeter;
@@ -26,6 +31,10 @@ public class SceneManager : MonoBehaviour
     // -------------------------------------------------
 
     public static UI_ScreenInput GetScreenInput() { return screenInput; }
+
+    public static UI_LapCounter GetLapCounter() { return lapCounter; }
+
+    public static UI_Position GetPosition() { return position; }
 
     public static UI_AeroMeter GetAeroMeter() { return aeroMeter; }
 
@@ -57,6 +66,8 @@ public class SceneManager : MonoBehaviour
         Application.targetFrameRate = 60;
 
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
+        lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();
+        position = Instantiate(positionPrefab).GetComponent<UI_Position>();
         aeroMeter = Instantiate(aeroMeterPrefab).GetComponent<UI_AeroMeter>();
         driftMeter = Instantiate(driftMeterPrefab).GetComponent<UI_DriftMeter>();
 

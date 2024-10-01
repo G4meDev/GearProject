@@ -28857,6 +28857,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screenInputPrefab: {fileID: 9222298944393228262, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
     type: 3}
+  lapCounterPrefab: {fileID: 5694973237187414640, guid: eeaa05658bc682046842b6ceb72cb9d7,
+    type: 3}
+  positionPrefab: {fileID: 5694973237187414640, guid: d380aa366dffea241bb41d0ed0b52aa9,
+    type: 3}
   aeroMeterPrefab: {fileID: 885525375851771096, guid: 9e57b968b65ff1d499e6e9fa50dea7b0,
     type: 3}
   driftMeterPrefab: {fileID: 7099774587448894664, guid: a631cf0fe1378ed49b1d298bb6b097c2,
