@@ -71,9 +71,22 @@ public class SceneManager : MonoBehaviour
         controller.UpdateTargetPosition(aiControllers.Count);
     }
 
+    public class VehiclePositionComparer : IComparer<Vehicle>
+    {
+        public int Compare(Vehicle x, Vehicle y)
+        {
+            if(x.currentLap == y.currentLap)
+            {
+                return x.lapPathIndex > y.lapPathIndex ? -1 : 1;
+            }
+
+            return x.currentLap > y.currentLap ? -1 : 1;
+        }
+    }
+
     private void UpdateVehiclesPosition()
     {
-        allVehicles.Sort((x, y) => y.lapPathIndex.CompareTo(x.lapPathIndex));
+        allVehicles.Sort(new VehiclePositionComparer());
 
         for (int i = 0; i < allVehicles.Count; i++)
         {
