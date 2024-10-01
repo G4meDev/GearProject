@@ -44,7 +44,7 @@ public class LapPath_Node : MonoBehaviour
             {
                 minDist = dist;
 
-                bestIndex = Mathf.LerpUnclamped(nodeIndex, node.nodeIndex, dot / d.magnitude);
+                bestIndex = Mathf.LerpUnclamped(nodeIndex, node.isStart ? nodeIndex + 1 : node.nodeIndex, dot / d.magnitude);
             }
         }
 
@@ -61,7 +61,7 @@ public class LapPath_Node : MonoBehaviour
             {
                 minDist = dist;
 
-                bestIndex = Mathf.LerpUnclamped(nodeIndex, node.nodeIndex, dot / d.magnitude);
+                bestIndex = Mathf.LerpUnclamped(nodeIndex, isStart ? nodeIndex - 1 : node.nodeIndex, dot / d.magnitude);
             }
         }
 
