@@ -150,6 +150,7 @@ public class Vehicle : MonoBehaviour
 
     public LapPath_Node lapPathNode;
     public float lapPathIndex = -1;
+    public int currentLap = 1;
 
     private Vector3 lastRight;
     private Vector3 lastPos;
@@ -159,9 +160,46 @@ public class Vehicle : MonoBehaviour
         hInput = Mathf.Clamp(input, -1, 1);
     }
 
+    public void EndRace()
+    {
+        Debug.Log(name + "    End Race!");
+    }
+
+    public void IncreaseLap()
+    {
+        currentLap++;
+
+        if (currentLap > SceneManager.lapCount)
+        {
+            EndRace();
+        }
+
+        if (isPlayer)
+        {
+            SceneManager.GetLapCounter().UpdateLapCounter();
+        }
+    }
+
     public void OnEnterLapPath(LapPath_Node node)
     {
-        lapPathNode = node;
+        if (lapPathNode == null)
+        {
+            lapPathNode = node;
+        }
+
+        else if (node.isStart)
+        {
+            if(lapPathNode.checkpoint == LapPathCheckPoint.checkpoint_3)
+            {
+                lapPathNode = node;
+                IncreaseLap();
+            }
+        }
+
+        else if (lapPathNode.checkpoint == node.checkpoint || lapPathNode.checkpoint + 1 == node.checkpoint)
+        {
+            lapPathNode = node;
+        }
     }
 
     public void UpdateLapPathIndex()

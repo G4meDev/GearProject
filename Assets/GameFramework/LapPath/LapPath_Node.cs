@@ -3,12 +3,22 @@ using UnityEngine;
 using UnityEditor;
 using Unity.VisualScripting;
 
+public enum LapPathCheckPoint
+{
+    checkpoint_1 = 1,
+    checkpoint_2 = 2,
+    checkpoint_3 = 3,
+}
+
 public class LapPath_Node : MonoBehaviour
 {
     public List<LapPath_Node> children;
     public List<LapPath_Node> parents;
 
     public GameObject spawnPoint;
+
+    public LapPathCheckPoint checkpoint;
+    public bool isStart = false;
 
     public float nodeIndex = 0;
 
@@ -70,7 +80,25 @@ public class LapPath_Node : MonoBehaviour
 
         Vector3 topCenter = GetBoxCorner(new(0, 1, 0));
 
-        DrawHelpers.drawString(nodeIndex.ToString(), topCenter, 0, 0, 24, Color.black);
+        Color color;
+        if (isStart)
+        {
+            color = Color.green;
+        }
+        else if (checkpoint == LapPathCheckPoint.checkpoint_1)
+        {
+            color = Color.red;
+        }
+        else if (checkpoint == LapPathCheckPoint.checkpoint_2)
+        {
+            color = Color.yellow;
+        }
+        else
+        {
+            color = Color.blue;
+        }
+
+        DrawHelpers.drawString(nodeIndex.ToString(), topCenter, 0, 0, 24, color);
 
         if (spawnPoint)
         {

@@ -32,6 +32,9 @@ public class SceneManager : MonoBehaviour
     public GameObject debugDataPrefab;
     private static UI_DebugData debugData;
 
+    public int lap_Count = 3;
+    public static int lapCount;
+
     // -------------------------------------------------
 
     public static UI_ScreenInput GetScreenInput() { return screenInput; }
@@ -57,6 +60,7 @@ public class SceneManager : MonoBehaviour
         aeroMeter.OnPlayerChanged();
         screenInput.OnPlayerChanged();
         driftMeter.OnPlayerChanged();
+        lapCounter.UpdateLapCounter();
     }
 
     public static void RegisterAI(AIController controller)
@@ -81,6 +85,8 @@ public class SceneManager : MonoBehaviour
     void Start()
     {
         Application.targetFrameRate = 60;
+
+        lapCount = lap_Count;
 
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();
