@@ -11,7 +11,9 @@ public class AI_Route_Node : MonoBehaviour
     public float optimalCrossSecion = 0.0f;
 
     private void OnDrawGizmos()
-    { 
+    {
+        //DrawHelpers.DrawSphere(transform.position + transform.right * transform.lossyScale.x, 2, Color.green);
+
         foreach (AI_Route_Node child in children)
         {
             if (child)
@@ -51,14 +53,6 @@ public class AI_Route_Node : MonoBehaviour
             controller.OnEnterNewRouteNode(this);
         }
     }
-
-//     public Vector3 GetDesigeredVelocity(Vector3 worldPos)
-//     {
-//         //return Vector3.Normalize(next.transform.position - transform.position) * strength;
-//         return Vector3.Normalize(next.transform.position - worldPos) * strength;
-//     }
-
-    //public Vector3 Get
 
     public void OnNeighboursChanged()
     {

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class AIController : MonoBehaviour
@@ -166,8 +167,6 @@ public class AIController : MonoBehaviour
 
         steerPID.Init(steer_p_active, steer_i_active, steer_d_active);
 
-        //optimalPathChance = Random.Range(0.0f, 1.0f);
-
         Start_Steer_Wind(20.0f);
     }
 
@@ -183,14 +182,10 @@ public class AIController : MonoBehaviour
 
         dist = Vector3.Dot(right, vehicle.vehicleProxy.transform.position - nearestpos) > 0 ? dist : -dist;
 
-        //DrawHelpers.DrawSphere(nearestpos, 5, Color.blue);
-
         float samplePos = Time.time / 5.0f;
         float noise = Mathf.PerlinNoise(name.GetHashCode(), samplePos);
 
-        //Debug.Log(noise);
-
-        trackErrorRange /= 2;
+        trackErrorRange /= 1;
         targetTrackError = Mathf.Lerp(-trackErrorRange, trackErrorRange, noise);
 
         targetTrackError = Mathf.Lerp(targetTrackError, optimalTrackError, position_params.optimalPathChance);
@@ -201,9 +196,32 @@ public class AIController : MonoBehaviour
         float steer = steerPID.Step(error, Time.deltaTime);
         steerPID.LimitIntegral(5);
 
+        // -------------------------------------------------------------------------------------
+
+        float a;
+        if(vehicle.position > targetPos)
+        {
+            a = 1;
+        }
+        else if(vehicle.position < targetPos)
+        {
+            a = 0;
+        }
+        else
+        {
+            a = 0.5f;
+        }
+
+
+        float targetSpeed = Mathf.Lerp(position_params.minSpeed, position_params.maxSpeed, a);
+
+        float throttleValue = targetSpeed > vehicle.forwardSpeed || vehicle.forwardSpeed < position_params.minSpeed ? 1 : 0;
+
+        Debug.Log(name + vehicle.position + "_" + targetPos + "_" + throttleValue + "_" + vehicle.forwardSpeed + "/" + targetSpeed);
+
         if (vehicle)
         {
-            vehicle.vInput = 1;
+            vehicle.vInput = throttleValue;
 
             vehicle.SetSteerInput(steer);
 
