@@ -33,9 +33,9 @@ public class AIController : MonoBehaviour
 
     public Controller_PID driftPID;
 
-    public float drift_p = 5.0f;
-    public float drift_i = 0.0f;
-    public float drift_d = 0.0f;
+    public float drift_p = 0.15f;
+    public float drift_i = 0.01f;
+    public float drift_d = 0.1f;
 
     //------------------------------------------------------------
 
@@ -79,12 +79,24 @@ public class AIController : MonoBehaviour
 
         UpdateTargetNode();
 
-
         if(vehicle && !vehicle.drifting)
         {
             driftDir = aiRouteNode_Current.GetDriftDirectionToTarget(aiRouteNode_Target);
             if(driftDir != 0)
                 driftable = true;
+        }
+
+        // moving in drift node with diffrent dir
+        else if(vehicle && vehicle.drifting)
+        {
+            int dir = aiRouteNode_Current.GetDriftDirectionToTarget(aiRouteNode_Target);
+
+            if(dir != 0 && dir != driftDir)
+            {
+                driftDir = dir;
+                vehicle.drifting = false;
+                driftable = true;
+            }
         }
 
     }
@@ -259,7 +271,8 @@ public class AIController : MonoBehaviour
 
         if (vehicle.drifting)
         {
-            steer = driftPID.Step(-dist, Time.deltaTime);
+            //steer = driftPID.Step(driftDir * trackErrorRange * 0.5f - dist, Time.deltaTime);
+            steer = driftPID.Step(steerError, Time.deltaTime);
             steerPID.LimitIntegral(1);
         }
 
@@ -301,7 +314,7 @@ public class AIController : MonoBehaviour
 
         if(vehicle.drifting)
         {
-            Debug.Log(steerError);
+            Debug.Log(steer);
         }
 
         if (vehicle)

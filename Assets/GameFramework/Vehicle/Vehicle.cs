@@ -107,7 +107,7 @@ public class Vehicle : MonoBehaviour
     [HideInInspector]
     public float airborneTime = 0.0f;
 
-    public float minDriftSpeed = 20.0f;
+    public float minDriftSpeed = 30.0f;
     public float driftMinAngle = 15.0f;
     public float driftMaxAngle = 60.0f;
 
@@ -240,7 +240,7 @@ public class Vehicle : MonoBehaviour
         vehicleBox.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
         vehicleMesh.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
 
-        killDelegate.Invoke();
+        killDelegate?.Invoke();
     }
 
     public void StartGliding(Glider_Node node)
