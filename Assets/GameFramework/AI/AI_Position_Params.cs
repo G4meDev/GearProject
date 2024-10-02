@@ -22,8 +22,9 @@ public class AI_Params
     public static float rbOptimalPathChanceIncrease = 0.2f;
     public static float rbSpeedIncrease = 10.0f;
 
-    public static float maxDriftableTurnAlpha = 0.6f;
+    public static float maxDriftableTurnAlpha = 0.4f;
     public static float driftHaltDistanceToRoadEdge = 5.0f;
+    public static float maxDriftHaltAngleAlpha = 0.095f;
 
 
     // --------------------------------------------------------

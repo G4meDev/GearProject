@@ -16,7 +16,7 @@ public class AIController : MonoBehaviour
     public float targetTrackError = 0.0f;
 
     //------------------------------------------------------------
-    
+
     public Controller_PID steerPID;
 
     public float steer_p = 0.15f;
@@ -34,9 +34,9 @@ public class AIController : MonoBehaviour
 
     public Controller_PID driftPID;
 
-    public float drift_p = 10.0f;
+    public float drift_p = 1.0f;
     public float drift_i = 0.0f;
-    public float drift_d = 0.0f;
+    public float drift_d = 0.8f;
 
     //------------------------------------------------------------
 
@@ -80,19 +80,19 @@ public class AIController : MonoBehaviour
 
         UpdateTargetNode();
 
-        if(vehicle && !vehicle.drifting)
+        if (vehicle && !vehicle.drifting)
         {
             driftDir = aiRouteNode_Current.GetDriftDirectionToTarget(aiRouteNode_Target);
-            if(driftDir != 0)
+            if (driftDir != 0)
                 driftable = true;
         }
 
         // moving in drift node with diffrent dir
-        else if(vehicle && vehicle.drifting)
+        else if (vehicle && vehicle.drifting)
         {
             int dir = aiRouteNode_Current.GetDriftDirectionToTarget(aiRouteNode_Target);
 
-            if(dir != 0 && dir != driftDir)
+            if (dir != 0 && dir != driftDir)
             {
                 driftDir = dir;
                 vehicle.drifting = false;
@@ -105,12 +105,12 @@ public class AIController : MonoBehaviour
 
     public void TryDrifting()
     {
-//         if(vehicle.forwardSpeed > vehicle.minDriftSpeed)
-//         {
-//             Debug.Log(vehicle.name + "   try drifting!");
-// 
-//             bWantsToDrift = true;
-//         }
+        //         if(vehicle.forwardSpeed > vehicle.minDriftSpeed)
+        //         {
+        //             Debug.Log(vehicle.name + "   try drifting!");
+        // 
+        //             bWantsToDrift = true;
+        //         }
     }
 
     public void UpdateTargetNode()
@@ -119,8 +119,8 @@ public class AIController : MonoBehaviour
         {
             aiRouteNode_Target = aiRouteNode_Current.children[0];
 
-//             float targetScale = aiRouteNode_Target.transform.lossyScale.x / 8;
-//             targetTrackError = Random.Range(-targetScale, targetScale);
+            //             float targetScale = aiRouteNode_Target.transform.lossyScale.x / 8;
+            //             targetTrackError = Random.Range(-targetScale, targetScale);
         }
 
         else
@@ -156,7 +156,7 @@ public class AIController : MonoBehaviour
                 AI_Route_Node bestParent = null;
                 float min_dist = float.MaxValue;
 
-                foreach(AI_Route_Node parent in aiRouteNode_Current.parents)
+                foreach (AI_Route_Node parent in aiRouteNode_Current.parents)
                 {
                     float dist = Vector3.Distance(vehicle.vehicleProxy.transform.position, parent.transform.position);
 
@@ -273,7 +273,7 @@ public class AIController : MonoBehaviour
 
         float distanceFromRoadEdge = trackErrorRange / 2 - Mathf.Abs(dist);
 
-        if(distanceFromRoadEdge < AI_Params.driftHaltDistanceToRoadEdge && vehicle.drifting)
+        if (distanceFromRoadEdge < AI_Params.driftHaltDistanceToRoadEdge && vehicle.drifting)
         {
             // end drifting
 
@@ -286,7 +286,10 @@ public class AIController : MonoBehaviour
 
         // -------------------------------------------------------------------------------------
 
-        float steer;
+        float steer = 0;
+
+        Debug.DrawRay(vehicle.vehicleProxy.transform.position + Vector3.up * 5, tan * 5, Color.blue);
+        Debug.DrawRay(vehicle.vehicleProxy.transform.position + Vector3.up * 5, vehicle.vehicleProxy.velocity.normalized * 5, Color.red);
 
         if (vehicle.drifting)
         {
@@ -298,11 +301,21 @@ public class AIController : MonoBehaviour
             float sign = Mathf.Sign(Vector3.Dot(veloDir, nodeRight));
 
             dot = 1 - dot;
-            dot *= sign;
 
-            //Debug.Log(dot);
+            if (dot > AI_Params.maxDriftHaltAngleAlpha)
+            {
+                Debug.Log("end drift!");
 
-            steer = driftPID.Step(-dot, Time.deltaTime);
+                vehicle.EndDrift();
+                vehicle.holdingJump = false;
+            }
+            else
+            {
+                dot *= sign;
+                //Debug.Log(dot);
+
+                steer = driftPID.Step(-dot, Time.deltaTime);
+            }
         }
 
         else
@@ -316,11 +329,11 @@ public class AIController : MonoBehaviour
         // -------------------------------------------------------------------------------------
 
         float a;
-        if(vehicle.position > targetPos)
+        if (vehicle.position > targetPos)
         {
             a = 1;
         }
-        else if(vehicle.position < targetPos)
+        else if (vehicle.position < targetPos)
         {
             a = 0;
         }
@@ -341,9 +354,9 @@ public class AIController : MonoBehaviour
 
         //bool bShouldDrift = targetSpeed > vehicle.GetMaxSpeedWithModifiers();
 
-        if(vehicle.drifting)
+        if (vehicle.drifting)
         {
-            //Debug.Log(steer);
+            Debug.Log(steer);
         }
 
         if (vehicle)
@@ -351,7 +364,7 @@ public class AIController : MonoBehaviour
             vehicle.SetThrottleInput(throttleValue);
             vehicle.SetSteerInput(steer);
 
-            if(driftable && !vehicle.drifting && vehicle.forwardSpeed > vehicle.minDriftSpeed)
+            if (driftable && !vehicle.drifting && vehicle.forwardSpeed > vehicle.minDriftSpeed)
             {
                 vehicle.SetSteerInput(driftDir);
 
