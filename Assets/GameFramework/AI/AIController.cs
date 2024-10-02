@@ -31,12 +31,37 @@ public class AIController : MonoBehaviour
 
     //------------------------------------------------------------
 
+    public Controller_PID driftPID;
+
+    public float drift_p = 5.0f;
+    public float drift_i = 0.0f;
+    public float drift_d = 0.0f;
+
+    //------------------------------------------------------------
+
     public Controller_PID throttlePID;
 
     public float throttle_p = 20.0f;
     public float throttle_i = 0.8f;
     public float throttle_d = 0.35f;
 
+    //------------------------------------------------------------
+
+    private bool driftable = false;
+    private int driftDir = 0;
+
+    public void OnKilled()
+    {
+        driftable = false;
+        driftDir = 0;
+        vehicle.holdingJump = false;
+
+        steerPID.LimitIntegral(0);
+        driftPID.LimitIntegral(0);
+        throttlePID.LimitIntegral(0);
+
+        Start_Steer_Wind(10.0f);
+    }
 
     public void UpdateTargetPosition(int newPos)
     {
@@ -48,9 +73,30 @@ public class AIController : MonoBehaviour
 
     public void OnEnterNewRouteNode(AI_Route_Node node)
     {
+        AI_Route_Node prevNode = aiRouteNode_Current;
+
         aiRouteNode_Current = node;
 
         UpdateTargetNode();
+
+
+        if(vehicle && !vehicle.drifting)
+        {
+            driftDir = aiRouteNode_Current.GetDriftDirectionToTarget(aiRouteNode_Target);
+            if(driftDir != 0)
+                driftable = true;
+        }
+
+    }
+
+    public void TryDrifting()
+    {
+//         if(vehicle.forwardSpeed > vehicle.minDriftSpeed)
+//         {
+//             Debug.Log(vehicle.name + "   try drifting!");
+// 
+//             bWantsToDrift = true;
+//         }
     }
 
     public void UpdateTargetNode()
@@ -65,7 +111,7 @@ public class AIController : MonoBehaviour
 
         else
         {
-            aiRouteNode_Current = null;
+            aiRouteNode_Target = null;
         }
     }
 
@@ -166,6 +212,9 @@ public class AIController : MonoBehaviour
         vehicle = GetComponent<Vehicle>();
         steerPID = gameObject.AddComponent<Controller_PID>();
         throttlePID = gameObject.AddComponent<Controller_PID>();
+        driftPID = gameObject.AddComponent<Controller_PID>();
+
+        vehicle.killDelegate = OnKilled;
 
         SceneManager.RegisterAI(this);
 
@@ -178,6 +227,8 @@ public class AIController : MonoBehaviour
         Start_Steer_Wind(20.0f);
 
 
+        driftPID.Init(drift_p, drift_i, drift_d);
+
         throttlePID.Init(throttle_p, throttle_i, throttle_d);
     }
 
@@ -185,14 +236,10 @@ public class AIController : MonoBehaviour
     {
         bool rubberBanding = position_params.rubberBadingDist < vehicle.distanceFromFirstPlace;
 
-        Wind_Steer();
-
         Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange);
-
         float dist = Vector3.Distance(nearestpos, vehicle.vehicleProxy.transform.position);
 
         Vector3 right = Vector3.Cross(Vector3.up, aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position);
-
         dist = Vector3.Dot(right, vehicle.vehicleProxy.transform.position - nearestpos) > 0 ? dist : -dist;
 
         float samplePos = Time.time / 5.0f;
@@ -203,12 +250,26 @@ public class AIController : MonoBehaviour
 
         float optChance = rubberBanding ? Mathf.Clamp01(position_params.optimalPathChance + AI_Params.rbOptimalPathChanceIncrease) : position_params.optimalPathChance;
         targetTrackError = Mathf.Lerp(targetTrackError, optimalTrackError, optChance);
-        
+
         float steerError = targetTrackError - dist;
 
+        // -------------------------------------------------------------------------------------
 
-        float steer = steerPID.Step(steerError, Time.deltaTime);
-        steerPID.LimitIntegral(5);
+        float steer;
+
+        if (vehicle.drifting)
+        {
+            steer = driftPID.Step(-dist, Time.deltaTime);
+            steerPID.LimitIntegral(1);
+        }
+
+        else
+        {
+            Wind_Steer();
+
+            steer = steerPID.Step(steerError, Time.deltaTime);
+            steerPID.LimitIntegral(5);
+        }
 
         // -------------------------------------------------------------------------------------
 
@@ -234,10 +295,34 @@ public class AIController : MonoBehaviour
         float throttleValue = Mathf.Clamp01(throttlePID.Step(throttleError, Time.deltaTime));
         throttlePID.LimitIntegral(2);
 
+        // -------------------------------------------------------------------------------------
+
+        //bool bShouldDrift = targetSpeed > vehicle.GetMaxSpeedWithModifiers();
+
+        if(vehicle.drifting)
+        {
+            Debug.Log(steerError);
+        }
+
         if (vehicle)
         {
             vehicle.SetThrottleInput(throttleValue);
             vehicle.SetSteerInput(steer);
+
+            if(driftable && !vehicle.drifting && vehicle.forwardSpeed > vehicle.minDriftSpeed)
+            {
+                //Debug.Log(vehicle.name + "   try drifting!");
+
+                vehicle.SetSteerInput(driftDir);
+
+                vehicle.StartDrift();
+                vehicle.holdingJump = true;
+            }
+            else
+            {
+                driftable = false;
+            }
+
         }
 
     }

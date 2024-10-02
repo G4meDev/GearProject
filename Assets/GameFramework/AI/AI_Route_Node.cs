@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Unity.VisualScripting;
+using TreeEditor;
 
 public class AI_Route_Node : MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class AI_Route_Node : MonoBehaviour
     public List<AI_Route_Node> parents;
 
     public float optimalCrossSecion = 0.0f;
+
+    public int GetDriftDirectionToTarget(AI_Route_Node node)
+    {
+        float a = Vector3.Dot(transform.right, node.transform.forward);
+        return Mathf.Abs(a) > AI_Params.maxDriftableTurnAlpha ? (int)Mathf.Sign(a) : 0;
+    }
 
     private void OnDrawGizmos()
     {
@@ -26,7 +33,26 @@ public class AI_Route_Node : MonoBehaviour
                 Vector3 optimalStart = transform.position + r * optimalCrossSecion;
                 Vector3 optimalEnd = child.transform.position + r * child.optimalCrossSecion;
                 Vector3 optimalDir = optimalEnd - optimalStart;
-                DrawArrow.ForGizmo(optimalStart + Vector3.up * 2, optimalDir, Color.green, 5);
+
+                int driftDir = GetDriftDirectionToTarget(child);
+
+                Color color;
+                if (driftDir == 1)
+                {
+                    color = Color.red;
+                }
+
+                else if (driftDir == -1) 
+                {
+                     color = Color.blue;
+                }
+
+                else
+                {
+                    color = Color.green;
+                }
+
+                DrawArrow.ForGizmo(optimalStart + Vector3.up * 2, optimalDir, color, 5);
             }
         }
 
@@ -37,7 +63,7 @@ public class AI_Route_Node : MonoBehaviour
                 Vector3 offset = Vector3.up * 5;
 
                 Vector3 dir = parent.transform.position - transform.position;
-                DrawArrow.ForGizmo(transform.position + offset, (dir.magnitude - 5) * dir.normalized, Color.blue, 5);
+                DrawArrow.ForGizmo(transform.position + offset, (dir.magnitude - 5) * dir.normalized, Color.gray, 5);
             }
         }
 

@@ -22,6 +22,8 @@ public class AI_Params
     public static float rbOptimalPathChanceIncrease = 0.2f;
     public static float rbSpeedIncrease = 10.0f;
 
+    public static float maxDriftableTurnAlpha = 0.6f;
+
 
     // --------------------------------------------------------
     // -------------------------------      optimalPathChance   , minSpeed  , maxSpeed  , rubberBanddingDist
