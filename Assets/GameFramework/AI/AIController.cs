@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AIController : MonoBehaviour
@@ -33,9 +34,9 @@ public class AIController : MonoBehaviour
 
     public Controller_PID driftPID;
 
-    public float drift_p = 0.15f;
-    public float drift_i = 0.01f;
-    public float drift_d = 0.1f;
+    public float drift_p = 10.0f;
+    public float drift_i = 0.0f;
+    public float drift_d = 0.0f;
 
     //------------------------------------------------------------
 
@@ -95,6 +96,7 @@ public class AIController : MonoBehaviour
             {
                 driftDir = dir;
                 vehicle.drifting = false;
+                vehicle.holdingJump = false;
                 driftable = true;
             }
         }
@@ -265,15 +267,41 @@ public class AIController : MonoBehaviour
 
         float steerError = targetTrackError - dist;
 
+
+        float distanceFromRoadEdge = trackErrorRange / 2 - Mathf.Abs(dist);
+        //Debug.Log(distanceFromRoadEdge);
+
+        if(distanceFromRoadEdge < AI_Params.driftHaltDistanceToRoadEdge && vehicle.drifting)
+        {
+            // end drifting
+
+            Debug.Log("end drift!");
+
+            vehicle.EndDrift();
+            vehicle.holdingJump = false;
+        }
+
+
         // -------------------------------------------------------------------------------------
 
         float steer;
 
         if (vehicle.drifting)
         {
-            //steer = driftPID.Step(driftDir * trackErrorRange * 0.5f - dist, Time.deltaTime);
-            steer = driftPID.Step(steerError, Time.deltaTime);
-            steerPID.LimitIntegral(1);
+            Vector3 veloDir = vehicle.vehicleProxy.velocity.normalized;
+            Vector3 nodeDir = (aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position).normalized;
+
+            float dot = Vector3.Dot(nodeDir, veloDir);
+
+            Vector3 nodeRight = Vector3.Cross(Vector3.up, nodeDir);
+            float sign = Mathf.Sign(Vector3.Dot(veloDir, nodeRight));
+
+            dot = 1 - dot;
+            dot *= sign;
+
+            //Debug.Log(dot);
+
+            steer = driftPID.Step(-dot, Time.deltaTime);
         }
 
         else
@@ -314,7 +342,7 @@ public class AIController : MonoBehaviour
 
         if(vehicle.drifting)
         {
-            Debug.Log(steer);
+            //Debug.Log(steer);
         }
 
         if (vehicle)
@@ -324,12 +352,11 @@ public class AIController : MonoBehaviour
 
             if(driftable && !vehicle.drifting && vehicle.forwardSpeed > vehicle.minDriftSpeed)
             {
-                //Debug.Log(vehicle.name + "   try drifting!");
-
                 vehicle.SetSteerInput(driftDir);
 
                 vehicle.StartDrift();
                 vehicle.holdingJump = true;
+                driftPID.LimitIntegral(0);
             }
             else
             {
