@@ -26,7 +26,8 @@ public class AI_Route_Node : MonoBehaviour
             if (child)
             {
                 Vector3 dir = child.transform.position - transform.position;
-                //DrawArrow.ForGizmo(transform.position, (dir.magnitude - 5) * dir.normalized, Color.red, 5);
+
+                DrawArrow.ForGizmo(transform.position + Vector3.up * 2, transform.forward * dir.magnitude * 0.3f, Color.black, 5);
 
                 Vector3 r = Vector3.Normalize(Vector3.Cross(Vector3.up, dir));
 

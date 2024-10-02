@@ -129,10 +129,11 @@ public class AIController : MonoBehaviour
         }
     }
 
-    public Vector3 GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange)
+    public Vector3 GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange, out Vector3 tan)
     {
         optimalTrackError = 0.0f;
         trackErrorRange = 0.0f;
+        tan = Vector3.zero;
 
         if (aiRouteNode_Current && aiRouteNode_Target)
         {
@@ -146,7 +147,7 @@ public class AIController : MonoBehaviour
             {
                 OnEnterNewRouteNode(aiRouteNode_Target);
 
-                return GetNearestWorldPosition(out optimalTrackError, out trackErrorRange);
+                return GetNearestWorldPosition(out optimalTrackError, out trackErrorRange, out tan);
             }
 
             // should check for parent nodes
@@ -177,6 +178,7 @@ public class AIController : MonoBehaviour
                 float a = dot / d.magnitude;
                 optimalTrackError = Mathf.Lerp(bestParent.optimalCrossSecion, aiRouteNode_Current.optimalCrossSecion, a);
                 trackErrorRange = Mathf.Lerp(bestParent.transform.lossyScale.x, aiRouteNode_Current.transform.lossyScale.x, a);
+                tan = Vector3.Lerp(bestParent.transform.forward, aiRouteNode_Current.transform.forward, a);
 
                 return bestParent.transform.position + dot * d.normalized;
             }
@@ -187,6 +189,7 @@ public class AIController : MonoBehaviour
 
                 optimalTrackError = Mathf.Lerp(aiRouteNode_Current.optimalCrossSecion, aiRouteNode_Target.optimalCrossSecion, a);
                 trackErrorRange = Mathf.Lerp(aiRouteNode_Current.transform.lossyScale.x, aiRouteNode_Target.transform.lossyScale.x, a);
+                tan = Vector3.Lerp(aiRouteNode_Current.transform.forward, aiRouteNode_Target.transform.forward, a);
 
                 return aiRouteNode_Current.transform.position + dot * d.normalized;
             }
@@ -250,7 +253,7 @@ public class AIController : MonoBehaviour
     {
         bool rubberBanding = position_params.rubberBadingDist < vehicle.distanceFromFirstPlace;
 
-        Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange);
+        Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange, out Vector3 tan);
         float dist = Vector3.Distance(nearestpos, vehicle.vehicleProxy.transform.position);
 
         Vector3 right = Vector3.Cross(Vector3.up, aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position);
@@ -269,7 +272,6 @@ public class AIController : MonoBehaviour
 
 
         float distanceFromRoadEdge = trackErrorRange / 2 - Mathf.Abs(dist);
-        //Debug.Log(distanceFromRoadEdge);
 
         if(distanceFromRoadEdge < AI_Params.driftHaltDistanceToRoadEdge && vehicle.drifting)
         {
@@ -289,11 +291,10 @@ public class AIController : MonoBehaviour
         if (vehicle.drifting)
         {
             Vector3 veloDir = vehicle.vehicleProxy.velocity.normalized;
-            Vector3 nodeDir = (aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position).normalized;
 
-            float dot = Vector3.Dot(nodeDir, veloDir);
-
-            Vector3 nodeRight = Vector3.Cross(Vector3.up, nodeDir);
+            float dot = Vector3.Dot(tan, veloDir);
+            //@TODO: bake data
+            Vector3 nodeRight = Vector3.Cross(Vector3.up, tan);
             float sign = Mathf.Sign(Vector3.Dot(veloDir, nodeRight));
 
             dot = 1 - dot;
