@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
 
 public class Camera_Orient_Node : MonoBehaviour
 {
@@ -132,9 +131,11 @@ public class Camera_Orient_Node_Editor : Editor
     {
         Camera_Orient_Node node = target as Camera_Orient_Node;
 
-        Object obj = PrefabUtility.InstantiatePrefab(node.GetPrefabDefinition());
+        Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(node);
+        Object obj = PrefabUtility.InstantiatePrefab(prefab);
+        GameObject gameObj = PrefabUtility.GetNearestPrefabInstanceRoot(obj);
 
-        Camera_Orient_Node newNode = obj.GetComponent<Camera_Orient_Node>();
+        Camera_Orient_Node newNode = gameObj.GetComponent<Camera_Orient_Node>();
         newNode.transform.parent = node.transform.root;
 
         newNode.transform.SetPositionAndRotation(node.transform.position + node.transform.forward * 50, node.transform.rotation);

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
 
 public class AntiGravity_Node : MonoBehaviour
 {
@@ -163,9 +162,11 @@ public class AntiGravity_Node_Editor : Editor
     {
         AntiGravity_Node node = target as AntiGravity_Node;
 
-        Object obj = PrefabUtility.InstantiatePrefab(node.GetPrefabDefinition());
+        Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(node);
+        Object obj = PrefabUtility.InstantiatePrefab(prefab);
+        GameObject gameObj = PrefabUtility.GetNearestPrefabInstanceRoot(obj);
 
-        AntiGravity_Node newNode = obj.GetComponent<AntiGravity_Node>();
+        AntiGravity_Node newNode = gameObj.GetComponent<AntiGravity_Node>();
         newNode.transform.parent = node.transform.root;
 
         newNode.transform.position = node.transform.position + node.transform.forward * 50;
@@ -192,6 +193,7 @@ public class AntiGravity_Node_Editor : Editor
         {
             n.OnNeighboursChanged();
         }
+
     }
 }
 

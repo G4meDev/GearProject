@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
 
 public enum LapPathCheckPoint
 {
@@ -207,9 +206,11 @@ public class LapPath_Node_Editor : Editor
     {
         LapPath_Node node = target as LapPath_Node;
 
-        Object obj = PrefabUtility.InstantiatePrefab(node.GetPrefabDefinition());
-
-        LapPath_Node newNode = obj.GetComponent<LapPath_Node>();
+        Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(node);
+        Object obj = PrefabUtility.InstantiatePrefab(prefab);
+        GameObject gameObj = PrefabUtility.GetNearestPrefabInstanceRoot(obj);
+        
+        LapPath_Node newNode = gameObj.GetComponent<LapPath_Node>();
         newNode.transform.parent = node.transform.root;
 
         newNode.transform.SetPositionAndRotation(node.transform.position + node.transform.forward * 50, node.transform.rotation);

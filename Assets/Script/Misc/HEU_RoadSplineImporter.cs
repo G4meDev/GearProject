@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
-using Unity.Collections;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Splines;
-using UnityEngine.Timeline;
 using Vector3 = UnityEngine.Vector3;
 
 public struct RoadSplinePointData
@@ -103,7 +99,8 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
         if (!splineComp)
         {
-            splineComp = transform.AddComponent<SplineContainer>();
+            // removed do error
+            //splineComp = transform.AddComponent<SplineContainer>();
         }
 
         ParsedData = JsonUtility.FromJson<Rootobject>(arg);
@@ -172,7 +169,8 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
         if (!octree)
         {
-            octree = transform.AddComponent<Octree>();
+            // removed do error
+            //octree = transform.AddComponent<Octree>();
 
             tag = "RoadOctree";
 

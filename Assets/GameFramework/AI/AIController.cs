@@ -1,5 +1,3 @@
-using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class AIController : MonoBehaviour
@@ -277,7 +275,7 @@ public class AIController : MonoBehaviour
         {
             // end drifting
 
-            Debug.Log("end drift!");
+            //Debug.Log("end drift!");
 
             vehicle.EndDrift();
             vehicle.holdingJump = false;
@@ -304,7 +302,7 @@ public class AIController : MonoBehaviour
 
             if (dot > AI_Params.maxDriftHaltAngleAlpha)
             {
-                Debug.Log("end drift!");
+                //Debug.Log("end drift!");
 
                 vehicle.EndDrift();
                 vehicle.holdingJump = false;
@@ -356,7 +354,7 @@ public class AIController : MonoBehaviour
 
         if (vehicle.drifting)
         {
-            Debug.Log(steer);
+            //Debug.Log(steer);
         }
 
         if (vehicle)

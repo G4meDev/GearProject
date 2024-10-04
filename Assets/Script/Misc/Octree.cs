@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -237,6 +236,8 @@ public class Octree : MonoBehaviour
             comp.transform.position = comp.center;
             comp.transform.localScale = comp.boundary;
 
+            // removed do error
+            /*
             MeshFilter meshFilter = comp.AddComponent<MeshFilter>();
             meshFilter.sharedMesh = unitPreviewBox;
 
@@ -251,6 +252,7 @@ public class Octree : MonoBehaviour
             meshRenderer.material.SetColor("_Color", comp.randColor);
 
             comp.transform.gameObject.layer = LayerMask.NameToLayer("Octree");
+            */
         }
 #endif
     }

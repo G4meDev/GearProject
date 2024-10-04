@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
-using TreeEditor;
 
 public class AI_Route_Node : MonoBehaviour
 {
@@ -135,9 +133,11 @@ public class AI_Route_Node_Editor : Editor
     {
         AI_Route_Node node = target as AI_Route_Node;
 
-        Object obj = PrefabUtility.InstantiatePrefab(node.GetPrefabDefinition());
+        Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(node);
+        Object obj = PrefabUtility.InstantiatePrefab(prefab);
+        GameObject gameObj = PrefabUtility.GetNearestPrefabInstanceRoot(obj);
 
-        AI_Route_Node newNode = obj.GetComponent<AI_Route_Node>();
+        AI_Route_Node newNode = gameObj.GetComponent<AI_Route_Node>();
         newNode.transform.parent = node.transform.root;
 
         newNode.transform.SetPositionAndRotation(node.transform.position + node.transform.forward * 50, node.transform.rotation);
