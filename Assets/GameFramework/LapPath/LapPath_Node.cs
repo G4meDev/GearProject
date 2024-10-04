@@ -40,14 +40,13 @@ public class LapPath_Node : MonoBehaviour
 
         Vector3 toPos;
         Vector3 d;
-        float dot;
+        float dot = 0;
 
         foreach(LapPath_Node node in children)
         {
             d = node.transform.position - transform.position;
             toPos = worldPos - transform.position;
             dot = Vector3.Dot(d.normalized, toPos);
-            dot = Mathf.Clamp01(dot);
 
             float dist = Vector3.Distance(transform.position + d.normalized * dot, worldPos);
 
@@ -64,7 +63,6 @@ public class LapPath_Node : MonoBehaviour
             d = node.transform.position - transform.position;
             toPos = worldPos - transform.position;
             dot = Vector3.Dot(d.normalized, toPos);
-            dot = Mathf.Clamp01(dot);
 
             float dist = Vector3.Distance(transform.position + d.normalized * dot, worldPos);
 

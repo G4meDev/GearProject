@@ -218,6 +218,11 @@ public class Vehicle : MonoBehaviour
         {
             lapPathIndex = lapPathNode.GetIndexAtWorldPosition(vehicleProxy.transform.position);
         }
+
+        else
+        {
+            Debug.Log("no!!!!!!!!");
+        }
     }
 
     public void OnKilled()
@@ -576,6 +581,8 @@ public class Vehicle : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateLapPathIndex();
+
+        Debug.Log(lapPathIndex);
 
         Gravity();
 
