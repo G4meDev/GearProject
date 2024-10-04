@@ -8,7 +8,7 @@ public class SceneManager : MonoBehaviour
     // TODO: player spawning
     public static Vehicle playerVehicle;
 
-    public static List<AIController> aiControllers = new List<AIController>();
+    //public static List<AIController> aiControllers = new List<AIController>();
 
     public static List<Vehicle> allVehicles = new List<Vehicle>();
 
@@ -63,13 +63,13 @@ public class SceneManager : MonoBehaviour
         lapCounter.UpdateLapCounter();
     }
 
-    public static void RegisterAI(AIController controller)
-    {
-        aiControllers.Add(controller);
-        allVehicles.Add(controller.vehicle);
-
-        controller.UpdateTargetPosition(aiControllers.Count);
-    }
+//     public static void RegisterAI(AIController controller)
+//     {
+//         aiControllers.Add(controller);
+//         allVehicles.Add(controller.vehicle);
+// 
+//         controller.UpdateTargetPosition(aiControllers.Count);
+//     }
 
     public class VehiclePositionComparer : IComparer<Vehicle>
     {

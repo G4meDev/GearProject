@@ -1,3 +1,4 @@
+using Unity.MLAgents;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.UI;
@@ -11,7 +12,7 @@ public enum VehicleAeroState
     Gliding
 }
 
-public class Vehicle : MonoBehaviour
+public class Vehicle : Agent
 {
     public bool isPlayer = true;
 
@@ -160,6 +161,38 @@ public class Vehicle : MonoBehaviour
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
 
+    // ------------------------------------------------------------------
+
+    public AI_Route_Node aiRouteNode_Current;
+    public AI_Route_Node aiRouteNode_Target;
+
+    public void UpdateTargetNode()
+    {
+        if (aiRouteNode_Current.children.Count > 0)
+        {
+            aiRouteNode_Target = aiRouteNode_Current.children[0];
+
+            //             float targetScale = aiRouteNode_Target.transform.lossyScale.x / 8;
+            //             targetTrackError = Random.Range(-targetScale, targetScale);
+        }
+
+        else
+        {
+            aiRouteNode_Target = null;
+        }
+    }
+
+
+    public void OnEnterNewRouteNode(AI_Route_Node node)
+    {
+        aiRouteNode_Current = node;
+
+        UpdateTargetNode();
+
+    }
+
+    // ------------------------------------------------------------------
+
     public void SetThrottleInput(float input)
     {
         vInput = Mathf.Clamp(input, -1, 1);
@@ -217,11 +250,6 @@ public class Vehicle : MonoBehaviour
         if (lapPathNode)
         {
             lapPathIndex = lapPathNode.GetIndexAtWorldPosition(vehicleProxy.transform.position);
-        }
-
-        else
-        {
-            Debug.Log("no!!!!!!!!");
         }
     }
 
@@ -569,7 +597,7 @@ public class Vehicle : MonoBehaviour
 
         else
         {
-            gameObject.AddComponent<AIController>();
+            //gameObject.AddComponent<AIController>();
         }
     }
 
@@ -581,8 +609,6 @@ public class Vehicle : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateLapPathIndex();
-
-        Debug.Log(lapPathIndex);
 
         Gravity();
 

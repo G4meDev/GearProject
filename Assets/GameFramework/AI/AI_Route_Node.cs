@@ -72,10 +72,9 @@ public class AI_Route_Node : MonoBehaviour
     {
         Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
 
-        AIController controller = vehicle.GetComponent<AIController>();
-        if (controller)
+        if (vehicle)
         {
-            controller.OnEnterNewRouteNode(this);
+            vehicle.OnEnterNewRouteNode(this);
         }
     }
 

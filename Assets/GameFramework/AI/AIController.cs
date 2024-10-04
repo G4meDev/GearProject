@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AIController : MonoBehaviour
+public class AController : MonoBehaviour
 {
     public Vehicle vehicle;
 
@@ -231,7 +231,7 @@ public class AIController : MonoBehaviour
 
         vehicle.killDelegate = OnKilled;
 
-        SceneManager.RegisterAI(this);
+        //SceneManager.RegisterAI(this);
 
         steer_p_active = steer_p;
         steer_i_active = steer_i;
