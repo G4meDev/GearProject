@@ -173,6 +173,9 @@ public class Vehicle : Agent
 
     float lapIndexChange = 0.0f;
 
+    Vector3 startPos = Vector3.zero;
+    Quaternion startRot = Quaternion.identity;
+
     public override void CollectObservations(VectorSensor sensor)
     {
         float f = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? forwardSpeed : -forwardSpeed;
@@ -186,10 +189,10 @@ public class Vehicle : Agent
 
         float dot = Vector3.Dot(tan, vehicleBox.transform.forward);
 
-        sensor.AddObservation(f);
+        sensor.AddObservation(f / 50);
         sensor.AddObservation(dot);
-        sensor.AddObservation(dist);
-        sensor.AddObservation(roadWidth);
+        sensor.AddObservation(dist / 40);
+        sensor.AddObservation(roadWidth / 40);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -197,7 +200,7 @@ public class Vehicle : Agent
         hInput = actions.ContinuousActions[0];
         vInput = actions.ContinuousActions[1];
 
-        float reward = lapIndexChange;
+        float reward = lapIndexChange - 0.0001f;
         Debug.Log(reward);
 
         SetReward(reward);
@@ -213,7 +216,38 @@ public class Vehicle : Agent
 
     public override void OnEpisodeBegin()
     {
+        vehicleProxy.velocity = Vector3.zero;
+        vehicleProxy.angularVelocity = Vector3.zero;
+        
+        EndDrift();
+        
+        speedModifierIntensity = 0.0f;
+        speedModifierReserveTime = 0.0f;
 
+//         Vector3 targetPos;
+//         Quaternion q;
+// 
+//         if(lapPathNode)
+//         {
+//             Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
+//             LayerMask layerMask = LayerMask.GetMask("Default");
+//             bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
+// 
+//             targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
+//             q = lapPathNode.spawnPoint.transform.rotation;
+//         }
+//         else
+//         {
+//             targetPos = vehicleProxy.transform.position;
+//             q = vehicleProxy.transform.rotation;
+//         }
+
+        
+        vehicleProxy.MovePosition(startPos);
+        vehicleBox.transform.SetPositionAndRotation(startPos, startRot);
+        vehicleMesh.transform.SetPositionAndRotation(startPos, startRot);
+        
+        killDelegate?.Invoke();
     }
 
 
@@ -377,25 +411,29 @@ public class Vehicle : Agent
 
     public void OnKilled()
     {
-        vehicleProxy.velocity = Vector3.zero;
-        vehicleProxy.angularVelocity = Vector3.zero;
+        SetReward(-1);
 
-        EndDrift();
+        EndEpisode();
 
-        speedModifierIntensity = 0.0f;
-        speedModifierReserveTime = 0.0f;
-
-        Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
-        LayerMask layerMask = LayerMask.GetMask("Default");
-        bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
-
-        Vector3 targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
-
-        vehicleProxy.MovePosition(targetPos);
-        vehicleBox.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
-        vehicleMesh.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
-
-        killDelegate?.Invoke();
+//         vehicleProxy.velocity = Vector3.zero;
+//         vehicleProxy.angularVelocity = Vector3.zero;
+// 
+//         EndDrift();
+// 
+//         speedModifierIntensity = 0.0f;
+//         speedModifierReserveTime = 0.0f;
+// 
+//         Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
+//         LayerMask layerMask = LayerMask.GetMask("Default");
+//         bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
+// 
+//         Vector3 targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
+// 
+//         vehicleProxy.MovePosition(targetPos);
+//         vehicleBox.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
+//         vehicleMesh.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
+// 
+//         killDelegate?.Invoke();
     }
 
     public void StartGliding(Glider_Node node)
@@ -721,6 +759,9 @@ public class Vehicle : Agent
         {
             //gameObject.AddComponent<AIController>();
         }
+
+        startPos = transform.position;
+        startRot = transform.rotation;
     }
 
     private void Update()
