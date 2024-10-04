@@ -1,4 +1,6 @@
 using Unity.MLAgents;
+using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Sensors;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.UI;
@@ -166,6 +168,55 @@ public class Vehicle : Agent
     public AI_Route_Node aiRouteNode_Current;
     public AI_Route_Node aiRouteNode_Target;
 
+    float roadWidth = 0;
+    Vector3 tan = Vector3.zero;
+
+    float lapIndexChange = 0.0f;
+
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        float f = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? forwardSpeed : -forwardSpeed;
+
+        Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out roadWidth, out tan);
+        float dist = Vector3.Distance(nearestpos, vehicleProxy.transform.position);
+        
+        //fix
+        Vector3 right = aiRouteNode_Current && aiRouteNode_Target ? Vector3.Cross(Vector3.up, aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position) : Vector3.zero;
+        dist = Vector3.Dot(right, vehicleProxy.transform.position - nearestpos) > 0 ? dist : -dist;
+
+        float dot = Vector3.Dot(tan, vehicleBox.transform.forward);
+
+        sensor.AddObservation(f);
+        sensor.AddObservation(dot);
+        sensor.AddObservation(dist);
+        sensor.AddObservation(roadWidth);
+    }
+
+    public override void OnActionReceived(ActionBuffers actions)
+    {
+        hInput = actions.ContinuousActions[0];
+        vInput = actions.ContinuousActions[1];
+
+        float reward = lapIndexChange;
+        Debug.Log(reward);
+
+        SetReward(reward);
+    }
+
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+        var a = actionsOut.ContinuousActions;
+
+        a[0] = UnityEngine.Input.GetAxis("Horizontal");
+        a[1] = UnityEngine.Input.GetAxis("Vertical");
+    }
+
+    public override void OnEpisodeBegin()
+    {
+
+    }
+
+
     public void UpdateTargetNode()
     {
         if (aiRouteNode_Current.children.Count > 0)
@@ -189,6 +240,75 @@ public class Vehicle : Agent
 
         UpdateTargetNode();
 
+    }
+
+    public Vector3 GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange, out Vector3 tan)
+    {
+        optimalTrackError = 0.0f;
+        trackErrorRange = 0.0f;
+        tan = Vector3.zero;
+
+        if (aiRouteNode_Current && aiRouteNode_Target)
+        {
+            Vector3 d = aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position;
+            Vector3 toPos = vehicleProxy.transform.position - aiRouteNode_Current.transform.position;
+
+            float dot = Vector3.Dot(d.normalized, toPos);
+
+            // passed target without hitting collision
+            if (dot > d.magnitude)
+            {
+                OnEnterNewRouteNode(aiRouteNode_Target);
+
+                return GetNearestWorldPosition(out optimalTrackError, out trackErrorRange, out tan);
+            }
+
+            // should check for parent nodes
+            else if (dot < 0)
+            {
+                AI_Route_Node bestParent = null;
+                float min_dist = float.MaxValue;
+
+                foreach (AI_Route_Node parent in aiRouteNode_Current.parents)
+                {
+                    float dist = Vector3.Distance(vehicleProxy.transform.position, parent.transform.position);
+
+                    if (dist < min_dist)
+                    {
+                        min_dist = dist;
+                        bestParent = parent;
+                    }
+                }
+
+
+
+                d = aiRouteNode_Current.transform.position - bestParent.transform.position;
+                toPos = vehicleProxy.transform.position - bestParent.transform.position;
+
+                dot = Vector3.Dot(d.normalized, toPos);
+                dot = Mathf.Clamp(dot, 0, d.magnitude);
+
+                float a = dot / d.magnitude;
+                optimalTrackError = Mathf.Lerp(bestParent.optimalCrossSecion, aiRouteNode_Current.optimalCrossSecion, a);
+                trackErrorRange = Mathf.Lerp(bestParent.transform.lossyScale.x, aiRouteNode_Current.transform.lossyScale.x, a);
+                tan = Vector3.Lerp(bestParent.transform.forward, aiRouteNode_Current.transform.forward, a);
+
+                return bestParent.transform.position + dot * d.normalized;
+            }
+
+            else
+            {
+                float a = dot / d.magnitude;
+
+                optimalTrackError = Mathf.Lerp(aiRouteNode_Current.optimalCrossSecion, aiRouteNode_Target.optimalCrossSecion, a);
+                trackErrorRange = Mathf.Lerp(aiRouteNode_Current.transform.lossyScale.x, aiRouteNode_Target.transform.lossyScale.x, a);
+                tan = Vector3.Lerp(aiRouteNode_Current.transform.forward, aiRouteNode_Target.transform.forward, a);
+
+                return aiRouteNode_Current.transform.position + dot * d.normalized;
+            }
+        }
+
+        return Vector3.zero;
     }
 
     // ------------------------------------------------------------------
@@ -249,7 +369,9 @@ public class Vehicle : Agent
     {
         if (lapPathNode)
         {
-            lapPathIndex = lapPathNode.GetIndexAtWorldPosition(vehicleProxy.transform.position);
+            float a = lapPathNode.GetIndexAtWorldPosition(vehicleProxy.transform.position);
+            lapIndexChange = a - lapPathIndex;
+            lapPathIndex = a;
         }
     }
 
