@@ -220,8 +220,9 @@ public class Vehicle : Agent
         float indexChangeReward = lapIndexChange * 1;
 
         float constantDec = -0.001f;
+        float jumpDec = pressedJump ? -0.001f : 0;
 
-        float reward = speedReward + constantDec;
+        float reward = speedReward + constantDec + jumpDec;
         //Debug.Log(reward + "    " + speedReward + "    " + indexChangeReward);
 
         SetReward(reward);
@@ -867,8 +868,10 @@ public class Vehicle : Agent
             float enginePower = Mathf.Abs(forwardSpeed) < maxSpeedWithModifier ? accel : 0;
             enginePower *= vInput;
 
-
-            vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
+            if(aeroState == VehicleAeroState.OnGround)
+            {
+                vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
+            }
 
             float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
             float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : slipingSpeed / vehicleProxy.velocity.magnitude;
@@ -885,7 +888,6 @@ public class Vehicle : Agent
             }
 
         }
-
 
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
 
