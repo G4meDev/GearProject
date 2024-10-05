@@ -1,0 +1,2 @@
+mlagents-learn --force
+pause

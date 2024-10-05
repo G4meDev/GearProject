@@ -2,22 +2,22 @@
     "Drive": {
         "checkpoints": [
             {
-                "steps": 36482,
-                "file_path": "results\\ppo\\Drive\\Drive-36482.onnx",
-                "reward": -0.5562809376278892,
-                "creation_time": 1728085211.3173,
+                "steps": 228305,
+                "file_path": "results\\ppo\\Drive\\Drive-228305.onnx",
+                "reward": null,
+                "creation_time": 1728116261.9267921,
                 "auxillary_file_paths": [
-                    "results\\ppo\\Drive\\Drive-36482.pt"
+                    "results\\ppo\\Drive\\Drive-228305.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 36482,
+            "steps": 228305,
             "file_path": "results\\ppo\\Drive.onnx",
-            "reward": -0.5562809376278892,
-            "creation_time": 1728085211.3173,
+            "reward": null,
+            "creation_time": 1728116261.9267921,
             "auxillary_file_paths": [
-                "results\\ppo\\Drive\\Drive-36482.pt"
+                "results\\ppo\\Drive\\Drive-228305.pt"
             ]
         }
     },

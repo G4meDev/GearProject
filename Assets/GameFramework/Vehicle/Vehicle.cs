@@ -176,10 +176,10 @@ public class Vehicle : Agent
     Vector3 startPos = Vector3.zero;
     Quaternion startRot = Quaternion.identity;
 
+    float targetSpeed = 45.0f;
+
     public override void CollectObservations(VectorSensor sensor)
     {
-        float f = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? forwardSpeed : -forwardSpeed;
-
         Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out roadWidth, out tan);
         float dist = Vector3.Distance(nearestpos, vehicleProxy.transform.position);
         
@@ -187,12 +187,22 @@ public class Vehicle : Agent
         Vector3 right = aiRouteNode_Current && aiRouteNode_Target ? Vector3.Cross(Vector3.up, aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position) : Vector3.zero;
         dist = Vector3.Dot(right, vehicleProxy.transform.position - nearestpos) > 0 ? dist : -dist;
 
+        float targetDist = aiRouteNode_Target ? Vector3.Distance(vehicleProxy.transform.position, aiRouteNode_Target.transform.position) : 0;
+
         float dot = Vector3.Dot(tan, vehicleBox.transform.forward);
 
-        sensor.AddObservation(f / 50);
+        
+
+        sensor.AddObservation(forwardSpeed/maxSpeed);
+        sensor.AddObservation(targetSpeed/maxSpeed);
         sensor.AddObservation(dot);
         sensor.AddObservation(dist / 40);
-        sensor.AddObservation(roadWidth / 40);
+        //sensor.AddObservation(roadWidth / 40);
+        sensor.AddObservation((roadWidth - dist) / 40);
+        sensor.AddObservation((roadWidth + dist) / 40);
+        sensor.AddObservation(targetDist/10);
+
+        sensor.AddOneHotObservation(((int)aeroState), 4);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -200,8 +210,19 @@ public class Vehicle : Agent
         hInput = actions.ContinuousActions[0];
         vInput = actions.ContinuousActions[1];
 
-        float reward = lapIndexChange - 0.0001f;
-        Debug.Log(reward);
+        bool jump = actions.DiscreteActions[0] == 1;
+        pressedJump = jump && !holdingJump;
+        holdingJump = jump;
+
+        float speedReward = Mathf.Clamp(Mathf.InverseLerp(0, targetSpeed, forwardSpeed), -1, 1);
+        speedReward *= 0.1f;
+
+        float indexChangeReward = lapIndexChange * 1;
+
+        float constantDec = -0.001f;
+
+        float reward = speedReward + constantDec;
+        //Debug.Log(reward + "    " + speedReward + "    " + indexChangeReward);
 
         SetReward(reward);
     }
@@ -209,40 +230,53 @@ public class Vehicle : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var a = actionsOut.ContinuousActions;
+        var b = actionsOut.DiscreteActions;
 
         a[0] = UnityEngine.Input.GetAxis("Horizontal");
         a[1] = UnityEngine.Input.GetAxis("Vertical");
-    }
 
+        b[0] = UnityEngine.Input.GetButton("Jump") ? 1 : 0;
+    }
+    public override void Initialize()
+    {
+        
+    }
     public override void OnEpisodeBegin()
     {
         vehicleProxy.velocity = Vector3.zero;
         vehicleProxy.angularVelocity = Vector3.zero;
-        
+
+        //lapPathNode = null;
+        //aiRouteNode_Current = null;
+        //aiRouteNode_Target = null;
+        lapPathIndex = 0;
+        currentLap = 1;
+
         EndDrift();
         
         speedModifierIntensity = 0.0f;
         speedModifierReserveTime = 0.0f;
 
-//         Vector3 targetPos;
-//         Quaternion q;
-// 
-//         if(lapPathNode)
-//         {
-//             Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
-//             LayerMask layerMask = LayerMask.GetMask("Default");
-//             bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
-// 
-//             targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
-//             q = lapPathNode.spawnPoint.transform.rotation;
-//         }
-//         else
-//         {
-//             targetPos = vehicleProxy.transform.position;
-//             q = vehicleProxy.transform.rotation;
-//         }
+        //         Vector3 targetPos;
+        //         Quaternion q;
+        // 
+        //         if(lapPathNode)
+        //         {
+        //             Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
+        //             LayerMask layerMask = LayerMask.GetMask("Default");
+        //             bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
+        // 
+        //             targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
+        //             q = lapPathNode.spawnPoint.transform.rotation;
+        //         }
+        //         else
+        //         {
+        //             targetPos = vehicleProxy.transform.position;
+        //             q = vehicleProxy.transform.rotation;
+        //         }
 
         
+
         vehicleProxy.MovePosition(startPos);
         vehicleBox.transform.SetPositionAndRotation(startPos, startRot);
         vehicleMesh.transform.SetPositionAndRotation(startPos, startRot);
@@ -366,6 +400,9 @@ public class Vehicle : Agent
     {
         currentLap++;
 
+        SetReward(1);
+        EndEpisode();
+
         if (currentLap > SceneManager.lapCount)
         {
             EndRace();
@@ -396,6 +433,8 @@ public class Vehicle : Agent
         else if (lapPathNode.checkpoint == node.checkpoint || lapPathNode.checkpoint + 1 == node.checkpoint)
         {
             lapPathNode = node;
+
+            SetReward(0.3f);
         }
     }
 
@@ -750,7 +789,7 @@ public class Vehicle : Agent
                 obj.transform.position = transform.position;
             }
 
-            gameObject.AddComponent<PlayerInput>();
+            //gameObject.AddComponent<PlayerInput>();
 
             SceneManager.OnPlayerChanged(this);
         }
@@ -766,7 +805,7 @@ public class Vehicle : Agent
 
     private void Update()
     {
-        distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
+        //distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
     }
 
     private void FixedUpdate()
