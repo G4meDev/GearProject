@@ -174,7 +174,7 @@ public class Vehicle : Agent
     Vector3 startPos = Vector3.zero;
     Quaternion startRot = Quaternion.identity;
 
-    float targetSpeed = 45.0f;
+    float targetSpeed = 60.0f;
 
     public override void CollectObservations(VectorSensor sensor)
     {
@@ -196,10 +196,8 @@ public class Vehicle : Agent
         sensor.AddObservation(targetSpeed/maxSpeed);
         sensor.AddObservation(dot);
         sensor.AddObservation(dist / 40);
-        //sensor.AddObservation(roadWidth / 40);
         sensor.AddObservation((roadWidth - dist) / 40);
         sensor.AddObservation((roadWidth + dist) / 40);
-        //sensor.AddObservation(targetDist/10);
 
         sensor.AddOneHotObservation(((int)aeroState), 4);
     }
@@ -213,15 +211,13 @@ public class Vehicle : Agent
         pressedJump = jump && !holdingJump;
         holdingJump = jump;
 
-        float speedReward = Mathf.Clamp(Mathf.InverseLerp(0, targetSpeed, forwardSpeed), -1, 1);
-        speedReward *= 0.1f;
-
-        float indexChangeReward = lapIndexChange * 1;
+        float speedReward = 1 - (Mathf.Abs(forwardSpeed - targetSpeed)/60);
+        speedReward *= 1.0f;
 
         float constantDec = -0.001f;
 
         float reward = speedReward + constantDec;
-        Debug.Log(reward + "    " + speedReward);
+        Debug.Log(reward + "    " + forwardSpeed + "    " + targetSpeed);
 
         SetReward(reward);
     }
@@ -246,6 +242,8 @@ public class Vehicle : Agent
     {
         vehicleProxy.velocity = Vector3.zero;
         vehicleProxy.angularVelocity = Vector3.zero;
+
+        //targetSpeed = Random.Range(30, 60);
 
         //lapPathNode = null;
         //aiRouteNode_Current = null;

@@ -11,7 +11,7 @@ public class VehicleCamera : MonoBehaviour
     {
         vehicle = transform.root.GetComponentInChildren<Vehicle>();
     }
-
+    
     void FixedUpdate()
     {
         if (vehicle)
