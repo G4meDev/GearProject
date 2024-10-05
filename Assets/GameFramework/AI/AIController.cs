@@ -174,7 +174,6 @@ public class AController : MonoBehaviour
                 dot = Mathf.Clamp(dot, 0, d.magnitude);
 
                 float a = dot / d.magnitude;
-                optimalTrackError = Mathf.Lerp(bestParent.optimalCrossSecion, aiRouteNode_Current.optimalCrossSecion, a);
                 trackErrorRange = Mathf.Lerp(bestParent.transform.lossyScale.x, aiRouteNode_Current.transform.lossyScale.x, a);
                 tan = Vector3.Lerp(bestParent.transform.forward, aiRouteNode_Current.transform.forward, a);
 
@@ -185,7 +184,6 @@ public class AController : MonoBehaviour
             {
                 float a = dot / d.magnitude;
 
-                optimalTrackError = Mathf.Lerp(aiRouteNode_Current.optimalCrossSecion, aiRouteNode_Target.optimalCrossSecion, a);
                 trackErrorRange = Mathf.Lerp(aiRouteNode_Current.transform.lossyScale.x, aiRouteNode_Target.transform.lossyScale.x, a);
                 tan = Vector3.Lerp(aiRouteNode_Current.transform.forward, aiRouteNode_Target.transform.forward, a);
 

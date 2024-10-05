@@ -7,8 +7,6 @@ public class AI_Route_Node : MonoBehaviour
     public List<AI_Route_Node> children;
     public List<AI_Route_Node> parents;
 
-    public float optimalCrossSecion = 0.0f;
-
     public int GetDriftDirectionToTarget(AI_Route_Node node)
     {
         float a = Vector3.Dot(transform.right, node.transform.forward);
@@ -26,32 +24,6 @@ public class AI_Route_Node : MonoBehaviour
                 Vector3 dir = child.transform.position - transform.position;
 
                 DrawArrow.ForGizmo(transform.position + Vector3.up * 2, transform.forward * dir.magnitude * 0.3f, Color.black, 5);
-
-                Vector3 r = Vector3.Normalize(Vector3.Cross(Vector3.up, dir));
-
-                Vector3 optimalStart = transform.position + r * optimalCrossSecion;
-                Vector3 optimalEnd = child.transform.position + r * child.optimalCrossSecion;
-                Vector3 optimalDir = optimalEnd - optimalStart;
-
-                int driftDir = GetDriftDirectionToTarget(child);
-
-                Color color;
-                if (driftDir == 1)
-                {
-                    color = Color.red;
-                }
-
-                else if (driftDir == -1) 
-                {
-                     color = Color.blue;
-                }
-
-                else
-                {
-                    color = Color.green;
-                }
-
-                DrawArrow.ForGizmo(optimalStart + Vector3.up * 2, optimalDir, color, 5);
             }
         }
 

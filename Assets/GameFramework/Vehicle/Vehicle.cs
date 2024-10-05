@@ -180,7 +180,7 @@ public class Vehicle : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out roadWidth, out tan);
+        Vector3 nearestpos = GetNearestWorldPosition(out roadWidth, out tan);
         float dist = Vector3.Distance(nearestpos, vehicleProxy.transform.position);
         
         //fix
@@ -313,10 +313,9 @@ public class Vehicle : Agent
 
     }
 
-    public Vector3 GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange, out Vector3 tan)
+    public Vector3 GetNearestWorldPosition(out float trackWidth, out Vector3 tan)
     {
-        optimalTrackError = 0.0f;
-        trackErrorRange = 0.0f;
+        trackWidth = 20.0f;
         tan = Vector3.zero;
 
         if (aiRouteNode_Current && aiRouteNode_Target)
@@ -331,7 +330,7 @@ public class Vehicle : Agent
             {
                 OnEnterNewRouteNode(aiRouteNode_Target);
 
-                return GetNearestWorldPosition(out optimalTrackError, out trackErrorRange, out tan);
+                return GetNearestWorldPosition(out trackWidth, out tan);
             }
 
             // should check for parent nodes
@@ -360,8 +359,7 @@ public class Vehicle : Agent
                 dot = Mathf.Clamp(dot, 0, d.magnitude);
 
                 float a = dot / d.magnitude;
-                optimalTrackError = Mathf.Lerp(bestParent.optimalCrossSecion, aiRouteNode_Current.optimalCrossSecion, a);
-                trackErrorRange = Mathf.Lerp(bestParent.transform.lossyScale.x, aiRouteNode_Current.transform.lossyScale.x, a);
+                trackWidth = Mathf.Lerp(bestParent.transform.lossyScale.x, aiRouteNode_Current.transform.lossyScale.x, a);
                 tan = Vector3.Lerp(bestParent.transform.forward, aiRouteNode_Current.transform.forward, a);
 
                 return bestParent.transform.position + dot * d.normalized;
@@ -371,8 +369,7 @@ public class Vehicle : Agent
             {
                 float a = dot / d.magnitude;
 
-                optimalTrackError = Mathf.Lerp(aiRouteNode_Current.optimalCrossSecion, aiRouteNode_Target.optimalCrossSecion, a);
-                trackErrorRange = Mathf.Lerp(aiRouteNode_Current.transform.lossyScale.x, aiRouteNode_Target.transform.lossyScale.x, a);
+                trackWidth = Mathf.Lerp(aiRouteNode_Current.transform.lossyScale.x, aiRouteNode_Target.transform.lossyScale.x, a);
                 tan = Vector3.Lerp(aiRouteNode_Current.transform.forward, aiRouteNode_Target.transform.forward, a);
 
                 return aiRouteNode_Current.transform.position + dot * d.normalized;
