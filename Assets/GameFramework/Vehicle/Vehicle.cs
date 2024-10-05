@@ -219,9 +219,8 @@ public class Vehicle : Agent
         float indexChangeReward = lapIndexChange * 1;
 
         float constantDec = -0.001f;
-        float jumpDec = pressedJump ? -0.01f : 0;
 
-        float reward = speedReward + constantDec + jumpDec;
+        float reward = speedReward + constantDec;
         Debug.Log(reward + "    " + speedReward);
 
         SetReward(reward);
