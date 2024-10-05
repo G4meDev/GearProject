@@ -233,10 +233,12 @@ public class Vehicle : Agent
         var a = actionsOut.ContinuousActions;
         var b = actionsOut.DiscreteActions;
 
-        a[0] = UnityEngine.Input.GetAxis("Horizontal");
-        a[1] = UnityEngine.Input.GetAxis("Vertical");
+        PlayerInput i = GetComponent<PlayerInput>();
 
-        b[0] = UnityEngine.Input.GetButton("Jump") ? 1 : 0;
+        a[0] = i.hInput;
+        a[1] = i.vInput;
+
+        b[0] = i.holdingJump ? 1 : 0;
     }
     public override void Initialize()
     {
@@ -790,7 +792,7 @@ public class Vehicle : Agent
                 obj.transform.position = transform.position;
             }
 
-            //gameObject.AddComponent<PlayerInput>();
+            gameObject.AddComponent<PlayerInput>();
 
             SceneManager.OnPlayerChanged(this);
         }
