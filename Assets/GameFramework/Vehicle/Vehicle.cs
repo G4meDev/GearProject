@@ -62,9 +62,7 @@ public class Vehicle : Agent
 
     public float coyoteTime = 0.1f;
 
-    public float jumpDelayTime = 0.1f;
-
-    public float jumpResetTime = 0.4f;
+    public float jumpDuration = 0.1f;
 
     public float lowJumpTime = 0.6f;
     public SpeedModifierData lowJumpSpeedModifier;
@@ -76,7 +74,7 @@ public class Vehicle : Agent
     public SpeedModifierData highJumpSpeedModifier;
 
     [HideInInspector]
-    float lastjumpTime = 0;
+    public float jumpStartTime = 0;
 
     [HideInInspector]
     public float vInput;
@@ -105,7 +103,7 @@ public class Vehicle : Agent
     private float maxSpeedWithModifier;
 
     [HideInInspector]
-    VehicleAeroState aeroState = VehicleAeroState.OnGround;
+    public VehicleAeroState aeroState = VehicleAeroState.OnGround;
 
     [HideInInspector]
     public float airborneTime = 0.0f;
@@ -506,7 +504,7 @@ public class Vehicle : Agent
 
     private bool CanJump()
     {
-        return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote) && Time.time > lastjumpTime + jumpResetTime;
+        return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote);
     }
 
     private bool CanDrift()
@@ -576,11 +574,11 @@ public class Vehicle : Agent
     {
         if (CanJump())
         {
-            vehicleProxy.AddForce(jumpStr * contactSmoothNormal, ForceMode.Acceleration);
+            //vehicleProxy.AddForce(jumpStr * contactSmoothNormal, ForceMode.Acceleration);
 
             aeroState = VehicleAeroState.Jumping;
 
-            lastjumpTime = Time.time;
+            jumpStartTime = Time.time;
         }
     }
 
@@ -663,8 +661,7 @@ public class Vehicle : Agent
         {
             if (aeroState == VehicleAeroState.Jumping)
             {
-                // add delay to let ray get out of surface (ray is longer than vehicle proxy radius)
-                if (Time.time > lastjumpTime + jumpDelayTime)
+                if (Time.time > jumpStartTime + jumpDuration)
                 {
                     aeroState = VehicleAeroState.OnGround;
                     lastTimeOnGround = Time.time;
@@ -756,7 +753,7 @@ public class Vehicle : Agent
         }
 
         // applying vehicle yaw to the box
-        if (!drifting)
+        if (!drifting && aeroState == VehicleAeroState.OnGround)
         {
             steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
@@ -841,7 +838,7 @@ public class Vehicle : Agent
 
         maxSpeedWithModifier = GetMaxSpeedWithModifiers();
 
-        airborneTime = aeroState == VehicleAeroState.Jumping ? Time.time - lastjumpTime : 0.0f;
+        airborneTime = aeroState == VehicleAeroState.Jumping ? Time.time - jumpStartTime : 0.0f;
 
         UpdateAeroState();
 

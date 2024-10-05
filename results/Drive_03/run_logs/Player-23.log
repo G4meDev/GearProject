@@ -1,0 +1,1336 @@
+Mono path[0] = 'C:/SelfProjects/GearProject/Builds/Build_02/My project_Data/Managed'
+Mono config path = 'C:/SelfProjects/GearProject/Builds/Build_02/MonoBleedingEdge/etc'
+[PhysX] Initialized MultithreadedTaskDispatcher with 16 workers.
+Initialize engine version: 2022.3.49f1 (4dae1bb8668d)
+[Subsystems] Discovering subsystems at path C:/SelfProjects/GearProject/Builds/Build_02/My project_Data/UnitySubsystems
+Forcing GfxDevice: Null
+GfxDevice: creating device client; threaded=0; jobified=0
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.213 seconds
+- Finished resetting the current domain, in  0.002 seconds
+ERROR: Shader Sprites/Default shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+Microsoft Media Foundation video decoding to texture disabled: graphics device is Null, only Direct3D 11 and Direct3D 12 (only on desktop) are supported for hardware-accelerated video decoding.
+ERROR: Shader Sprites/Mask shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+ERROR: Shader Legacy Shaders/VertexLit shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_10' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_CakeSurface_10 shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_10' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_AI_Route_Node' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_AI_Route_Node shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_AI_Route_Node' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_UI_NoDepthTests' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_UI_NoDepthTests shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_UI_NoDepthTests' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_KillZone' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_KillZone shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_KillZone' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_9' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_CakeSurface_9 shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_9' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Camera_Orbit_Box' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_Camera_Orbit_Box shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Camera_Orbit_Box' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader GUI/Text Shader shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakePattern_1' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_CakePattern_1 shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakePattern_1' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Ribbon_1' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_Ribbon_1 shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Ribbon_1' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_8' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_CakeSurface_8 shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_8' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Donat_1' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_Donat_1 shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Donat_1' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_7' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_CakeSurface_7 shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_7' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_DebugTrasparent' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_DebugTrasparent shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_DebugTrasparent' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_AeroMeter' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_AeroMeter shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_AeroMeter' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_LapPath_Node' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_LapPath_Node shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_LapPath_Node' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_BoosIndicator' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_BoosIndicator shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_BoosIndicator' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_AntiGravity_Node' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_AntiGravity_Node shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_AntiGravity_Node' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Graybox' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_Graybox shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Graybox' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Standard' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Standard shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Standard' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Glider_Node' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_Glider_Node shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Glider_Node' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_UI_InputButton' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_UI_InputButton shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_UI_InputButton' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Sedan' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_Sedan shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Sedan' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_6' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_CakeSurface_6 shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_6' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Flower_Core' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_Flower_Core shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Flower_Core' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_11' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_CakeSurface_11 shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_CakeSurface_11' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Flower_Leaf' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_Flower_Leaf shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_Flower_Leaf' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+WARNING: Shader Unsupported: 'Shader Graphs/SG_DriftMeter' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+ERROR: Shader Shader Graphs/SG_DriftMeter shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+WARNING: Shader Unsupported: 'Shader Graphs/SG_DriftMeter' - All subshaders removed
+WARNING: Shader Did you use #pragma only_renderers and omit this platform?
+WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
+[PhysX] Initialized MultithreadedTaskDispatcher with 16 workers.
+UnloadTime: 0.766500 ms
+GRPC Exception: Status(StatusCode=Unknown, Detail="Stream removed"). Disconnecting from trainer.
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.0007777776    0.001777778
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.002488889    0.003488889
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+0.0042    0.0052
+-0.0009084791    9.152095E-05
+-0.001    0
+-0.001    0
+-0.0009084791    9.152095E-05
+-0.0009087175    9.128253E-05
+-0.000908479    9.1521E-05
+-0.0009084791    9.152095E-05
+-0.0009087175    9.128253E-05
+-0.000908479    9.1521E-05
+-0.0009087175    9.128253E-05
+-0.0009088871    9.111299E-05
+-0.0009087175    9.128253E-05
+-0.0009088871    9.111299E-05
+-0.0009088711    9.112893E-05
+-0.0009084791    9.152095E-05
+-0.0009087175    9.128253E-05
+-0.0009087175    9.128253E-05
+-0.000908479    9.1521E-05
+-0.0009088871    9.111299E-05
+-0.001    0
+-0.0009088711    9.112893E-05
+-0.0009087175    9.128253E-05
+-0.0009087175    9.128253E-05
+-0.0009088871    9.111299E-05
+-0.0009088711    9.112893E-05
+-0.0009083254    9.167464E-05
+-0.0009088871    9.111299E-05
+-0.0009088711    9.112893E-05
+-0.001    0
+-0.0009088711    9.112893E-05
+-0.0009087175    9.128253E-05
+-0.000908479    9.1521E-05
+-0.0009088871    9.111299E-05
+-0.001    0
+-0.001    0
+-0.0009088711    9.112893E-05
+-0.0009087175    9.128253E-05
+-0.0009087175    9.128253E-05
+-0.0009087175    9.128253E-05
+-0.0009088711    9.112893E-05
+-0.0009084791    9.152095E-05
+-0.000908479    9.1521E-05
+-0.001    0
+-0.0009087175    9.128253E-05
+-0.0009087175    9.128253E-05
+-0.0009084791    9.152095E-05
+-0.000908479    9.1521E-05
+-0.000908479    9.1521E-05
+-0.0009084791    9.152095E-05
+-0.0009088871    9.111299E-05
+-0.0009816948    1.830525E-05
+-0.0009816578    1.834234E-05
+-0.0009816578    1.834234E-05
+-0.0009816948    1.830525E-05
+-0.0009817425    1.825757E-05
+-0.001    0
+-0.0009816948    1.830525E-05
+-0.0009817425    1.825757E-05
+-0.001    0
+-0.0009817425    1.825757E-05
+-0.0009817689    1.823107E-05
+-0.0009817425    1.825757E-05
+-0.0009817689    1.823107E-05
+-0.001    0
+-0.0009816948    1.830525E-05
+-0.0009817425    1.825757E-05
+-0.0009817425    1.825757E-05
+-0.001    0
+-0.0009817689    1.823107E-05
+-0.0009816578    1.834234E-05
+-0.001    0
+-0.0009817425    1.825757E-05
+-0.0009817425    1.825757E-05
+-0.0009817689    1.823107E-05
+-0.001    0
+-0.001    0
+-0.0009817689    1.823107E-05
+-0.001    0
+-0.0009816578    1.834234E-05
+-0.001    0
+-0.0009817425    1.825757E-05
+-0.001    0
+-0.0009817689    1.823107E-05
+-0.0009816578    1.834234E-05
+-0.0009816578    1.834234E-05
+-0.001    0
+-0.0009817425    1.825757E-05
+-0.0009817425    1.825757E-05
+-0.0009817425    1.825757E-05
+-0.001    0
+-0.0009816948    1.830525E-05
+-0.001    0
+-0.0009816578    1.834234E-05
+-0.0009817425    1.825757E-05
+-0.0009817425    1.825757E-05
+-0.0009816948    1.830525E-05
+-0.001    0
+-0.001    0
+-0.0009816948    1.830525E-05
+-0.0009817689    1.823107E-05
+-0.000996339    3.66105E-06
+-0.001    0
+-0.001    0
+-0.000996339    3.66105E-06
+-0.0009963496    3.650453E-06
+-0.0009963381    3.66192E-06
+-0.000996339    3.66105E-06
+-0.0009963496    3.650453E-06
+-0.0009963381    3.66192E-06
+-0.0009963496    3.650453E-06
+-0.001    0
+-0.0009963496    3.650453E-06
+-0.001    0
+-0.0009963487    3.651362E-06
+-0.000996339    3.66105E-06
+-0.0009963496    3.650453E-06
+-0.0009963496    3.650453E-06
+-0.0009963381    3.66192E-06
+-0.001    0
+-0.001    0
+-0.0009963487    3.651362E-06
+-0.0009963496    3.650453E-06
+-0.0009963496    3.650453E-06
+-0.001    0
+-0.0009963487    3.651362E-06
+-0.0009963381    3.661917E-06
+-0.001    0
+-0.0009963487    3.651362E-06
+-0.001    0
+-0.0009963487    3.651362E-06
+-0.0009963496    3.650453E-06
+-0.0009963381    3.66192E-06
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009963487    3.651362E-06
+-0.0009963496    3.650453E-06
+-0.0009963496    3.650453E-06
+-0.0009963496    3.650453E-06
+-0.0009963487    3.651362E-06
+-0.000996339    3.66105E-06
+-0.0009963381    3.66192E-06
+-0.0009963284    3.671646E-06
+-0.0009963496    3.650453E-06
+-0.0009963496    3.650453E-06
+-0.000996339    3.66105E-06
+-0.0009963381    3.66192E-06
+-0.0009963381    3.66192E-06
+-0.000996339    3.66105E-06
+-0.001    0
+-0.001    0
+-0.000999266    7.339765E-07
+-0.000999266    7.339765E-07
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009992688    7.311504E-07
+-0.001    0
+-0.0009992688    7.311504E-07
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009992688    7.311504E-07
+-0.000999266    7.339765E-07
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009992688    7.311504E-07
+-0.001    0
+-0.001    0
+-0.0009992688    7.311504E-07
+-0.001    0
+-0.000999266    7.339765E-07
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009992688    7.311504E-07
+-0.000999266    7.339765E-07
+-0.000999266    7.339765E-07
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009992688    7.311504E-07
+-0.0009998559    1.440962E-07
+-0.001    0
+-0.001    0
+-0.0009998559    1.440962E-07
+-0.0009998612    1.388426E-07
+-0.0009629669    3.703309E-05
+-0.0009998559    1.440962E-07
+-0.0009998612    1.388426E-07
+-0.0009629669    3.703309E-05
+-0.0009998612    1.388426E-07
+-0.001    0
+-0.0009998612    1.388426E-07
+-0.001    0
+-0.0009625702    3.742985E-05
+-0.0009998559    1.440962E-07
+-0.0009998612    1.388426E-07
+-0.0009998612    1.388426E-07
+-0.0009629669    3.703309E-05
+-0.001    0
+-0.001    0
+-0.0009625702    3.742985E-05
+-0.0009998612    1.388426E-07
+-0.0009998612    1.388426E-07
+-0.001    0
+-0.0009625702    3.742985E-05
+-0.0009631909    3.680911E-05
+-0.001    0
+-0.0009625702    3.742985E-05
+-0.001    0
+-0.0009625702    3.742985E-05
+-0.0009998612    1.388426E-07
+-0.0009629669    3.703309E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009625702    3.742985E-05
+-0.0009998612    1.388426E-07
+-0.0009998612    1.388426E-07
+-0.0009998612    1.388426E-07
+-0.0009625702    3.742985E-05
+-0.0009998559    1.440962E-07
+-0.0009629669    3.703309E-05
+-0.0009998612    1.388261E-07
+-0.0009998612    1.388426E-07
+-0.0009998612    1.388426E-07
+-0.0009998559    1.440962E-07
+-0.0009629669    3.703309E-05
+-0.0009629669    3.703309E-05
+-0.0009998559    1.440962E-07
+-0.001    0
+-0.001    0
+-0.0009562948    4.370521E-05
+-0.0009562948    4.370521E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009938156    6.184456E-06
+-0.001    0
+-0.0009938156    6.184456E-06
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009938156    6.184456E-06
+-0.0009562948    4.370521E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009938156    6.184456E-06
+-0.001    0
+-0.001    0
+-0.0009938156    6.184456E-06
+-0.001    0
+-0.0009562948    4.370521E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009938156    6.184456E-06
+-0.0009562948    4.370521E-05
+-0.0009562948    4.370521E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009938156    6.184456E-06
+-0.0009577649    4.223514E-05
+-0.001    0
+-0.001    0
+-0.0009577649    4.223514E-05
+-0.0009579823    4.201781E-05
+-0.0009630571    3.694296E-05
+-0.0009577649    4.223514E-05
+-0.0009579823    4.201776E-05
+-0.0009630571    3.694296E-05
+-0.0009579823    4.201781E-05
+-0.001    0
+-0.0009579823    4.201781E-05
+-0.001    0
+-0.0009626796    3.732043E-05
+-0.0009577649    4.223514E-05
+-0.0009579823    4.201781E-05
+-0.0009579823    4.201781E-05
+-0.0009630571    3.694296E-05
+-0.001    0
+-0.001    0
+-0.0009626796    3.732043E-05
+-0.0009579823    4.201776E-05
+-0.0009579823    4.201781E-05
+-0.001    0
+-0.0009626796    3.732043E-05
+-0.0009631906    3.680943E-05
+-0.001    0
+-0.0009626796    3.732043E-05
+-0.001    0
+-0.0009626796    3.732043E-05
+-0.0009579823    4.201776E-05
+-0.0009630571    3.694296E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009626796    3.732043E-05
+-0.0009579823    4.201776E-05
+-0.0009579823    4.201776E-05
+-0.0009579823    4.201776E-05
+-0.0009626796    3.732043E-05
+-0.0009577649    4.223514E-05
+-0.0009630571    3.694296E-05
+-0.0009579337    4.206641E-05
+-0.0009579823    4.201776E-05
+-0.0009579823    4.201781E-05
+-0.0009577649    4.223514E-05
+-0.0009630571    3.694296E-05
+-0.0009630571    3.694296E-05
+-0.0009577649    4.223514E-05
+-0.001    0
+-0.001    0
+-0.00095817    4.183009E-05
+-0.00095817    4.183009E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009917419    8.258203E-06
+-0.001    0
+-0.0009917419    8.258203E-06
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009917419    8.258203E-06
+-0.00095817    4.183009E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009917419    8.258203E-06
+-0.001    0
+-0.001    0
+-0.0009917419    8.258203E-06
+-0.001    0
+-0.00095817    4.183009E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009917419    8.258203E-06
+-0.00095817    4.183009E-05
+-0.00095817    4.183009E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009917419    8.258203E-06
+-0.0009596256    4.037441E-05
+-0.001    0
+-0.001    0
+-0.0009596256    4.037441E-05
+-0.0009598186    4.018146E-05
+-0.0009629612    3.70389E-05
+-0.0009596256    4.037441E-05
+-0.0009598187    4.018141E-05
+-0.0009629612    3.70389E-05
+-0.0009598186    4.018146E-05
+-0.001    0
+-0.0009598186    4.018146E-05
+-0.001    0
+-0.0009627139    3.728615E-05
+-0.0009596256    4.037441E-05
+-0.0009598186    4.018146E-05
+-0.0009598186    4.018146E-05
+-0.0009629612    3.70389E-05
+-0.001    0
+-0.001    0
+-0.0009627139    3.728615E-05
+-0.0009598187    4.018141E-05
+-0.0009598186    4.018146E-05
+-0.001    0
+-0.0009627139    3.728615E-05
+-0.0009632958    3.670432E-05
+-0.001    0
+-0.0009627139    3.728615E-05
+-0.001    0
+-0.0009627139    3.728615E-05
+-0.0009598187    4.018141E-05
+-0.0009629612    3.70389E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009627139    3.728615E-05
+-0.0009598187    4.018141E-05
+-0.0009598187    4.018141E-05
+-0.0009598187    4.018141E-05
+-0.0009627139    3.728615E-05
+-0.0009596256    4.037441E-05
+-0.0009629612    3.70389E-05
+-0.0009597688    4.02313E-05
+-0.0009598187    4.018141E-05
+-0.0009598186    4.018146E-05
+-0.0009596256    4.037441E-05
+-0.0009629612    3.70389E-05
+-0.0009629612    3.70389E-05
+-0.0009596256    4.037441E-05
+-0.001    0
+-0.001    0
+-0.0009601351    3.986492E-05
+-0.0009601351    3.986492E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009896767    1.032332E-05
+-0.001    0
+-0.0009896767    1.032332E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009896767    1.032332E-05
+-0.0009601351    3.986492E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009896767    1.032332E-05
+-0.001    0
+-0.001    0
+-0.0009896767    1.032332E-05
+-0.001    0
+-0.0009601351    3.986492E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009896767    1.032332E-05
+-0.0009601351    3.986492E-05
+-0.0009601351    3.986492E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009896767    1.032332E-05
+-0.0009615194    3.84807E-05
+-0.001    0
+-0.001    0
+-0.0009615194    3.84807E-05
+-0.0009616876    3.83124E-05
+-0.0009631532    3.684683E-05
+-0.0009615194    3.84807E-05
+-0.0009616877    3.831236E-05
+-0.0009631532    3.684683E-05
+-0.0009616876    3.83124E-05
+-0.001    0
+-0.0009616876    3.83124E-05
+-0.001    0
+-0.000962774    3.722607E-05
+-0.0009615194    3.84807E-05
+-0.0009616876    3.83124E-05
+-0.0009616876    3.83124E-05
+-0.0009631532    3.684683E-05
+-0.001    0
+-0.001    0
+-0.000962774    3.722607E-05
+-0.0009616877    3.831236E-05
+-0.0009616876    3.83124E-05
+-0.001    0
+-0.000962774    3.722607E-05
+-0.0009633097    3.669035E-05
+-0.001    0
+-0.000962774    3.722607E-05
+-0.001    0
+-0.000962774    3.722607E-05
+-0.0009616877    3.831236E-05
+-0.0009631532    3.684683E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.000962774    3.722607E-05
+-0.0009616877    3.831236E-05
+-0.0009616877    3.831236E-05
+-0.0009616877    3.831236E-05
+-0.000962774    3.722607E-05
+-0.0009615194    3.84807E-05
+-0.0009631532    3.684683E-05
+-0.0009616558    3.834427E-05
+-0.0009616877    3.831236E-05
+-0.0009616876    3.83124E-05
+-0.0009615194    3.84807E-05
+-0.0009631532    3.684683E-05
+-0.0009631532    3.684683E-05
+-0.0009615194    3.84807E-05
+-0.001    0
+-0.001    0
+-0.0009620857    3.791431E-05
+-0.0009620857    3.79143E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009876235    1.237653E-05
+-0.001    0
+-0.0009876235    1.237653E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009876235    1.237653E-05
+-0.0009620857    3.791431E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009876235    1.237653E-05
+-0.001    0
+-0.001    0
+-0.0009876235    1.237653E-05
+-0.001    0
+-0.0009620857    3.791431E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009876235    1.237653E-05
+-0.0009620857    3.791431E-05
+-0.0009620857    3.791431E-05
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.001    0
+-0.0009876235    1.237653E-05
+ERROR: Shader UI/Default shader is not supported on this GPU (none of subshaders/fallbacks are suitable)
+Memory Statistics:
+[ALLOC_TEMP_TLS] TLS Allocator
+  StackAllocators : 
+    [ALLOC_TEMP_MAIN]
+      Peak usage frame count: [2.0 MB-4.0 MB]: 1 frames
+      Initial Block Size 4.0 MB
+      Current Block Size 4.0 MB
+      Peak Allocated Bytes 2.0 MB
+      Overflow Count 0
+    [ALLOC_TEMP_Loading.AsyncRead]
+      Initial Block Size 64.0 KB
+      Current Block Size 64.0 KB
+      Peak Allocated Bytes 273 B
+      Overflow Count 0
+    [ALLOC_TEMP_Loading.PreloadManager]
+      Initial Block Size 256.0 KB
+      Current Block Size 488.0 KB
+      Peak Allocated Bytes 303.4 KB
+      Overflow Count 5
+    [ALLOC_TEMP_Background Job.Worker 8]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 9]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 0]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 0 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 10]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 6]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 0.7 KB
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 5]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 0 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 14]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 6]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 4]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 1.8 KB
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 14]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 3]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 1.9 KB
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 13]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 12]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_EnlightenWorker] x 8
+      Initial Block Size 64.0 KB
+      Current Block Size 64.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 15]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 1]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 2]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 7]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_AssetGarbageCollectorHelper] x 15
+      Initial Block Size 64.0 KB
+      Current Block Size 64.0 KB
+      Peak Allocated Bytes 138 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 5]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 9]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 0 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 13]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 8]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 0.7 KB
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 7]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 312 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 1]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 488 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 2]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 0 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 3]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 11]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 10]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 0]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 11]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Job.Worker 12]
+      Initial Block Size 256.0 KB
+      Current Block Size 256.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_Background Job.Worker 4]
+      Initial Block Size 32.0 KB
+      Current Block Size 32.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+    [ALLOC_TEMP_BatchDeleteObjects]
+      Initial Block Size 64.0 KB
+      Current Block Size 64.0 KB
+      Peak Allocated Bytes 54 B
+      Overflow Count 0
+[ALLOC_DEFAULT] Dual Thread Allocator
+  Peak main deferred allocation count 38
+    [ALLOC_BUCKET]
+      Large Block size 4.0 MB
+      Used Block count 1
+      Peak Allocated bytes 1.6 MB
+    [ALLOC_DEFAULT_MAIN]
+      Peak usage frame count: [16.0 MB-32.0 MB]: 1 frames
+      Requested Block Size 16.0 MB
+      Peak Block count 1
+      Peak Allocated memory 31.1 MB
+      Peak Large allocation bytes 16.0 MB
+    [ALLOC_DEFAULT_THREAD]
+      Peak usage frame count: [4.0 MB-8.0 MB]: 1 frames
+      Requested Block Size 16.0 MB
+      Peak Block count 1
+      Peak Allocated memory 6.3 MB
+      Peak Large allocation bytes 0 B
+[ALLOC_TEMP_JOB_1_FRAME]
+  Initial Block Size 2.0 MB
+  Used Block Count 0
+  Overflow Count (too large) 0
+  Overflow Count (full) 0
+[ALLOC_TEMP_JOB_2_FRAMES]
+  Initial Block Size 2.0 MB
+  Used Block Count 0
+  Overflow Count (too large) 0
+  Overflow Count (full) 0
+[ALLOC_TEMP_JOB_4_FRAMES (JobTemp)]
+  Initial Block Size 2.0 MB
+  Used Block Count 1
+  Overflow Count (too large) 0
+  Overflow Count (full) 0
+[ALLOC_TEMP_JOB_ASYNC (Background)]
+  Initial Block Size 1.0 MB
+  Used Block Count 1
+  Overflow Count (too large) 0
+  Overflow Count (full) 0
+[ALLOC_GFX] Dual Thread Allocator
+  Peak main deferred allocation count 0
+    [ALLOC_BUCKET]
+      Large Block size 4.0 MB
+      Used Block count 1
+      Peak Allocated bytes 1.6 MB
+    [ALLOC_GFX_MAIN]
+      Peak usage frame count: [64.0 KB-128.0 KB]: 1 frames
+      Requested Block Size 16.0 MB
+      Peak Block count 1
+      Peak Allocated memory 110.8 KB
+      Peak Large allocation bytes 0 B
+    [ALLOC_GFX_THREAD]
+      Peak usage frame count: [0.5 MB-1.0 MB]: 1 frames
+      Requested Block Size 16.0 MB
+      Peak Block count 1
+      Peak Allocated memory 0.9 MB
+      Peak Large allocation bytes 0 B
+[ALLOC_CACHEOBJECTS] Dual Thread Allocator
+  Peak main deferred allocation count 3
+    [ALLOC_BUCKET]
+      Large Block size 4.0 MB
+      Used Block count 1
+      Peak Allocated bytes 1.6 MB
+    [ALLOC_CACHEOBJECTS_MAIN]
+      Peak usage frame count: [0.5 MB-1.0 MB]: 1 frames
+      Requested Block Size 4.0 MB
+      Peak Block count 1
+      Peak Allocated memory 0.8 MB
+      Peak Large allocation bytes 0 B
+    [ALLOC_CACHEOBJECTS_THREAD]
+      Peak usage frame count: [32.0 MB-64.0 MB]: 1 frames
+      Requested Block Size 4.0 MB
+      Peak Block count 3
+      Peak Allocated memory 34.3 MB
+      Peak Large allocation bytes 25.5 MB
+[ALLOC_TYPETREE] Dual Thread Allocator
+  Peak main deferred allocation count 0
+    [ALLOC_BUCKET]
+      Large Block size 4.0 MB
+      Used Block count 1
+      Peak Allocated bytes 1.6 MB
+    [ALLOC_TYPETREE_MAIN]
+      Peak usage frame count: [4.0 KB-8.0 KB]: 1 frames
+      Requested Block Size 2.0 MB
+      Peak Block count 1
+      Peak Allocated memory 4.1 KB
+      Peak Large allocation bytes 0 B
+    [ALLOC_TYPETREE_THREAD]
+      Peak usage frame count: [1.0 KB-2.0 KB]: 1 frames
+      Requested Block Size 2.0 MB
+      Peak Block count 1
+      Peak Allocated memory 1.9 KB
+      Peak Large allocation bytes 0 B
