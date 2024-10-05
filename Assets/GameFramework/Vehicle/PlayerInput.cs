@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
-using UnityEngine.Windows;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
+
 
 public class PlayerInput : MonoBehaviour
 {
@@ -35,7 +31,6 @@ public class PlayerInput : MonoBehaviour
 
         hInput = screenInput.data.hInput;
         vInput = screenInput.data.vInput;
-        pressedJump = screenInput.data.pressedJump;
         holdingJump = screenInput.data.holdingJump;
 #endif
     }
