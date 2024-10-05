@@ -194,13 +194,14 @@ public class Vehicle : Agent
         
 
         sensor.AddObservation(forwardSpeed/maxSpeed);
+        sensor.AddObservation(hInput);
         sensor.AddObservation(targetSpeed/maxSpeed);
         sensor.AddObservation(dot);
         sensor.AddObservation(dist / 40);
         //sensor.AddObservation(roadWidth / 40);
         sensor.AddObservation((roadWidth - dist) / 40);
         sensor.AddObservation((roadWidth + dist) / 40);
-        sensor.AddObservation(targetDist/10);
+        //sensor.AddObservation(targetDist/10);
 
         sensor.AddOneHotObservation(((int)aeroState), 4);
     }
@@ -220,10 +221,10 @@ public class Vehicle : Agent
         float indexChangeReward = lapIndexChange * 1;
 
         float constantDec = -0.001f;
-        float jumpDec = pressedJump ? -0.001f : 0;
+        float jumpDec = pressedJump ? -0.01f : 0;
 
         float reward = speedReward + constantDec + jumpDec;
-        //Debug.Log(reward + "    " + speedReward + "    " + indexChangeReward);
+        Debug.Log(reward + "    " + speedReward);
 
         SetReward(reward);
     }
