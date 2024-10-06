@@ -174,7 +174,7 @@ public class Vehicle : Agent
     Vector3 startPos = Vector3.zero;
     Quaternion startRot = Quaternion.identity;
 
-    float targetSpeed = 60.0f;
+    float targetSpeed = 50.0f;
 
     public override void CollectObservations(VectorSensor sensor)
     {
@@ -193,6 +193,7 @@ public class Vehicle : Agent
 
         sensor.AddObservation(forwardSpeed/maxSpeed);
         sensor.AddObservation(hInput);
+        sensor.AddObservation(driftDir);
         sensor.AddObservation(targetSpeed/maxSpeed);
         sensor.AddObservation(dot);
         sensor.AddObservation(dist / 40);
