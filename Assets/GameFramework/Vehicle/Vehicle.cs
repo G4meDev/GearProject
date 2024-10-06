@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.UI;
 
+// @TODO: Develop jump
+
 public enum VehicleAeroState
 {
     OnGround,
@@ -83,8 +85,6 @@ public class Vehicle : Agent
     public float hInput;
 
     [HideInInspector]
-    public bool pressedJump;
-    [HideInInspector]
     public bool holdingJump;
 
     [HideInInspector]
@@ -122,8 +122,8 @@ public class Vehicle : Agent
 
     public SpeedModifierData thirdDirftSpeedModifier;
 
-    [HideInInspector]
-    public bool drifting = false;
+    //[HideInInspector]
+    //public bool drifting = false;
 
     [HideInInspector]
     public float driftStartTime = 0.0f;
@@ -135,7 +135,7 @@ public class Vehicle : Agent
     public float driftYaw = 0.0f;
 
     [HideInInspector]
-    private bool rightDrift = false;
+    private float driftDir = 0;
 
     [HideInInspector]
     private float lastDriftEndTime = 0.0f;
@@ -208,7 +208,6 @@ public class Vehicle : Agent
         vInput = actions.ContinuousActions[1];
 
         bool jump = actions.DiscreteActions[0] == 1;
-        pressedJump = jump && !holdingJump;
         holdingJump = jump;
 
         float speedReward = 1 - (Mathf.Abs(forwardSpeed - targetSpeed)/60);
@@ -504,6 +503,11 @@ public class Vehicle : Agent
         return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote);
     }
 
+    public bool isDrifting()
+    {
+        return driftDir != 0;
+    }
+
     private bool CanDrift()
     {
         return holdingJump && Mathf.Abs(hInput) > 0.5f && forwardSpeed > minDriftSpeed;
@@ -511,12 +515,11 @@ public class Vehicle : Agent
 
     public void StartDrift()
     {
-        drifting = true;
+        driftDir = Mathf.Sign(hInput);
+        
         driftStartTime = Time.time;
         driftCounter = 0;
         driftYaw = 0.0f;
-
-        rightDrift = hInput > 0.0f;
     }
 
     private void StepDrift()
@@ -553,7 +556,7 @@ public class Vehicle : Agent
 
             float a = (hInput + 1) / 2;
 
-            driftYaw = rightDrift ? Mathf.Lerp(driftMinAngle , driftMaxAngle, a) : -Mathf.Lerp(driftMinAngle, driftMaxAngle, 1 - a);
+            driftYaw = driftDir > 0 ? Mathf.Lerp(driftMinAngle , driftMaxAngle, a) : -Mathf.Lerp(driftMinAngle, driftMaxAngle, 1 - a);
             driftYaw *= Time.fixedDeltaTime;
 
             vehicleBox.transform.Rotate(Vector3.up, driftYaw, Space.Self);
@@ -562,7 +565,7 @@ public class Vehicle : Agent
 
     public void EndDrift()
     {
-        drifting = false;
+        driftDir = 0;
 
         lastDriftEndTime = Time.time;
     }
@@ -750,7 +753,7 @@ public class Vehicle : Agent
         }
 
         // applying vehicle yaw to the box
-        if (!drifting && aeroState == VehicleAeroState.OnGround)
+        if (!isDrifting() && aeroState == VehicleAeroState.OnGround)
         {
             steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
@@ -821,7 +824,7 @@ public class Vehicle : Agent
 
         //Gravity();
 
-        if (drifting)
+        if (isDrifting())
         {
             StepDrift();
         }
@@ -880,7 +883,7 @@ public class Vehicle : Agent
                 //float t = drifting ? 0 : Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime);
                 //float t = drifting ? driftTraction : traction;
 
-                float t = drifting ? driftTraction : Mathf.Lerp(driftTraction, GetContactSurfaceLateralFriction(), Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime));
+                float t = isDrifting() ? driftTraction : Mathf.Lerp(driftTraction, GetContactSurfaceLateralFriction(), Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime));
 
                 vehicleProxy.AddForce(-slipingSpeed * t * vehicleBox.transform.right, ForceMode.VelocityChange);
             }
@@ -888,11 +891,6 @@ public class Vehicle : Agent
         }
 
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
-
-        if (pressedJump)
-        {
-            OnStartJump();
-        }
 
         Vector3 origin;
         VectorHelpers.LineLineIntersection(out origin, vehicleBox.transform.position, vehicleBox.transform.right,

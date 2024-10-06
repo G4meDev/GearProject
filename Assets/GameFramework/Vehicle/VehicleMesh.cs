@@ -31,7 +31,7 @@ public class VehicleMesh : MonoBehaviour
 
             transform.position = vehicle.vehicleBox.transform.TransformPoint(localPos);
 
-            Quaternion targetRotaton = vehicle.drifting
+            Quaternion targetRotaton = vehicle.isDrifting()
                 ? Quaternion.AngleAxis(vehicle.driftYaw * 30.0f, vehicle.vehicleBox.transform.up) * vehicle.vehicleBox.transform.rotation
                 : Quaternion.AngleAxis(vehicle.steerValue * 5.0f, vehicle.vehicleBox.transform.up) * vehicle.vehicleBox.transform.rotation;
 

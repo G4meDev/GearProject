@@ -78,7 +78,7 @@ public class AController : MonoBehaviour
 
         UpdateTargetNode();
 
-        if (vehicle && !vehicle.drifting)
+        if (vehicle && !vehicle.isDrifting())
         {
             driftDir = aiRouteNode_Current.GetDriftDirectionToTarget(aiRouteNode_Target);
             if (driftDir != 0)
@@ -86,14 +86,14 @@ public class AController : MonoBehaviour
         }
 
         // moving in drift node with diffrent dir
-        else if (vehicle && vehicle.drifting)
+        else if (vehicle && vehicle.isDrifting())
         {
             int dir = aiRouteNode_Current.GetDriftDirectionToTarget(aiRouteNode_Target);
 
             if (dir != 0 && dir != driftDir)
             {
                 driftDir = dir;
-                vehicle.drifting = false;
+                //vehicle.dr = false;
                 vehicle.holdingJump = false;
                 driftable = true;
             }
@@ -269,7 +269,7 @@ public class AController : MonoBehaviour
 
         float distanceFromRoadEdge = trackErrorRange / 2 - Mathf.Abs(dist);
 
-        if (distanceFromRoadEdge < AI_Params.driftHaltDistanceToRoadEdge && vehicle.drifting)
+        if (distanceFromRoadEdge < AI_Params.driftHaltDistanceToRoadEdge && vehicle.isDrifting())
         {
             // end drifting
 
@@ -287,7 +287,7 @@ public class AController : MonoBehaviour
         Debug.DrawRay(vehicle.vehicleProxy.transform.position + Vector3.up * 5, tan * 5, Color.blue);
         Debug.DrawRay(vehicle.vehicleProxy.transform.position + Vector3.up * 5, vehicle.vehicleProxy.velocity.normalized * 5, Color.red);
 
-        if (vehicle.drifting)
+        if (vehicle.isDrifting())
         {
             Vector3 veloDir = vehicle.vehicleProxy.velocity.normalized;
 
@@ -350,7 +350,7 @@ public class AController : MonoBehaviour
 
         //bool bShouldDrift = targetSpeed > vehicle.GetMaxSpeedWithModifiers();
 
-        if (vehicle.drifting)
+        if (vehicle.isDrifting())
         {
             //Debug.Log(steer);
         }
@@ -360,7 +360,7 @@ public class AController : MonoBehaviour
             vehicle.SetThrottleInput(throttleValue);
             vehicle.SetSteerInput(steer);
 
-            if (driftable && !vehicle.drifting && vehicle.forwardSpeed > vehicle.minDriftSpeed)
+            if (driftable && !vehicle.isDrifting() && vehicle.forwardSpeed > vehicle.minDriftSpeed)
             {
                 vehicle.SetSteerInput(driftDir);
 
