@@ -97,7 +97,7 @@ public class Vehicle : Agent
     private Vector3 contactSmoothNormal;
 
     [HideInInspector]
-    private float steerValue;
+    public float steerValue;
 
     [HideInInspector]
     private float maxSpeedWithModifier;

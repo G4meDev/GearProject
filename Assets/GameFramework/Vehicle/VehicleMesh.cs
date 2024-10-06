@@ -33,7 +33,7 @@ public class VehicleMesh : MonoBehaviour
 
             Quaternion targetRotaton = vehicle.drifting
                 ? Quaternion.AngleAxis(vehicle.driftYaw * 30.0f, vehicle.vehicleBox.transform.up) * vehicle.vehicleBox.transform.rotation
-                : vehicle.vehicleBox.transform.rotation;
+                : Quaternion.AngleAxis(vehicle.steerValue * 5.0f, vehicle.vehicleBox.transform.up) * vehicle.vehicleBox.transform.rotation;
 
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotaton, Time.deltaTime * lerpRate);
         }
