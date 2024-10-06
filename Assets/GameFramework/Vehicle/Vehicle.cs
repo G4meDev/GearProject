@@ -596,10 +596,10 @@ public class Vehicle : Agent
             ApplySpeedModifier(ref lowJumpSpeedModifier);
         }
 
-        if (CanDrift())
-        {
-            StartDrift();
-        }
+//         if (CanDrift())
+//         {
+//             StartDrift();
+//         }
 
     }
 
@@ -824,6 +824,10 @@ public class Vehicle : Agent
         if (drifting)
         {
             StepDrift();
+        }
+        else if (CanDrift())
+        {
+            StartDrift();
         }
 
         //forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);

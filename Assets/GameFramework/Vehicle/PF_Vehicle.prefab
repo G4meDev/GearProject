@@ -161,14 +161,14 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: Infinity
-      outSlope: 7
+      outSlope: 4.5
       tangentMode: 71
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 10
-      value: 70
+      value: 45
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -177,7 +177,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 25
-      value: 70
+      value: 45
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -206,6 +206,7 @@ MonoBehaviour:
   hInput: 0
   pressedJump: 0
   holdingJump: 0
+  steerValue: 0
   aeroState: 0
   airborneTime: 0
   minDriftSpeed: 30
