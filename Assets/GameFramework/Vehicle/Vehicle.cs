@@ -163,11 +163,14 @@ public class Vehicle : Agent
 
     // ------------------------------------------------------------------
 
+    public Image rewardImage;
+
     public AI_Route_Node aiRouteNode_Current;
     public AI_Route_Node aiRouteNode_Target;
 
     float roadWidth = 0;
     Vector3 tan = Vector3.zero;
+    float dot = 0.0f;
 
     float lapIndexChange = 0.0f;
 
@@ -175,28 +178,15 @@ public class Vehicle : Agent
     Quaternion startRot = Quaternion.identity;
 
     float targetSpeed = 50.0f;
+    float dist = 0.0f;
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        Vector3 nearestpos = GetNearestWorldPosition(out roadWidth, out tan);
-        float dist = Vector3.Distance(nearestpos, vehicleProxy.transform.position);
-        
-        //fix
-        Vector3 right = aiRouteNode_Current && aiRouteNode_Target ? Vector3.Cross(Vector3.up, aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position) : Vector3.zero;
-        dist = Vector3.Dot(right, vehicleProxy.transform.position - nearestpos) > 0 ? dist : -dist;
-
-        float targetDist = aiRouteNode_Target ? Vector3.Distance(vehicleProxy.transform.position, aiRouteNode_Target.transform.position) : 0;
-
-        float dot = Vector3.Dot(tan, vehicleBox.transform.forward);
-
-        
-
-        sensor.AddObservation(forwardSpeed/maxSpeed);
+        sensor.AddObservation(forwardSpeed/60);
         sensor.AddObservation(hInput);
         sensor.AddObservation(driftDir);
-        sensor.AddObservation(targetSpeed/maxSpeed);
+        sensor.AddObservation(targetSpeed/60);
         sensor.AddObservation(dot);
-        sensor.AddObservation(dist / 40);
         sensor.AddObservation((roadWidth - dist) / 40);
         sensor.AddObservation((roadWidth + dist) / 40);
 
@@ -211,13 +201,22 @@ public class Vehicle : Agent
         bool jump = actions.DiscreteActions[0] == 1;
         holdingJump = jump;
 
-        float speedReward = 1 - (Mathf.Abs(forwardSpeed - targetSpeed)/60);
-        speedReward *= 1.0f;
+        if (Mathf.Abs(dist) > roadWidth / 2)
+        {
+            OnKilled();
+        }
 
-        float constantDec = -0.001f;
+        float speedReward = 1 - (Mathf.Abs(forwardSpeed * dot - targetSpeed)/60);
+        speedReward *= 0.8f;
 
-        float reward = speedReward + constantDec;
+        float dirReward = dot * 0.2f;
+
+        float constantDec = -0.01f;
+
+        float reward = speedReward + dirReward + constantDec;
         Debug.Log(reward + "    " + forwardSpeed + "    " + targetSpeed);
+
+        rewardImage.material.SetFloat("_reward", reward);
 
         SetReward(reward);
     }
@@ -243,7 +242,7 @@ public class Vehicle : Agent
         vehicleProxy.velocity = Vector3.zero;
         vehicleProxy.angularVelocity = Vector3.zero;
 
-        //targetSpeed = Random.Range(30, 60);
+        targetSpeed = Random.Range(30, 60);
 
         //lapPathNode = null;
         //aiRouteNode_Current = null;
@@ -396,7 +395,7 @@ public class Vehicle : Agent
     {
         currentLap++;
 
-        SetReward(1);
+        //SetReward(1);
         EndEpisode();
 
         if (currentLap > SceneManager.lapCount)
@@ -430,7 +429,7 @@ public class Vehicle : Agent
         {
             lapPathNode = node;
 
-            SetReward(0.3f);
+            //SetReward(0.3f);
         }
     }
 
@@ -897,19 +896,26 @@ public class Vehicle : Agent
         VectorHelpers.LineLineIntersection(out origin, vehicleBox.transform.position, vehicleBox.transform.right,
             lastPos, lastRight);
 
-        //DrawHelpers.DrawSphere(origin, 5, Color.black);
-        //Debug.Log(Vector3.Distance(origin, lastPos));
 
-        lastPos = vehicleBox.transform.position;
-        lastRight = vehicleBox.transform.right;
 
-//         if (bHit && pullPath && forwardSpeed < maxSpeedWithModifier)
-//         {
-//             Vector3 tan = pullPath.GetForceAtPosition(vehicleProxy.transform.position);
-// 
-//             Debug.DrawLine(vehicleProxy.transform.position + Vector3.up * 2, vehicleProxy.transform.position + (Vector3.up * 2) + Vector3.Normalize(tan), Color.black);
-// 
-//             vehicleProxy.AddForce(tan, ForceMode.Acceleration);
-//         }
+        Vector3 nearestpos = GetNearestWorldPosition(out roadWidth, out tan);
+        dist = Vector3.Distance(nearestpos, vehicleProxy.transform.position);
+
+        //fix
+        Vector3 right = aiRouteNode_Current && aiRouteNode_Target ? Vector3.Cross(Vector3.up, aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position) : Vector3.zero;
+        dist = Vector3.Dot(right, vehicleProxy.transform.position - nearestpos) > 0 ? dist : -dist;
+
+        float targetDist = aiRouteNode_Target ? Vector3.Distance(vehicleProxy.transform.position, aiRouteNode_Target.transform.position) : 0;
+
+        dot = Vector3.Dot(tan, vehicleBox.transform.forward);
+
+        //         if (bHit && pullPath && forwardSpeed < maxSpeedWithModifier)
+        //         {
+        //             Vector3 tan = pullPath.GetForceAtPosition(vehicleProxy.transform.position);
+        // 
+        //             Debug.DrawLine(vehicleProxy.transform.position + Vector3.up * 2, vehicleProxy.transform.position + (Vector3.up * 2) + Vector3.Normalize(tan), Color.black);
+        // 
+        //             vehicleProxy.AddForce(tan, ForceMode.Acceleration);
+        //         }
     }
 }
