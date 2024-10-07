@@ -168,29 +168,30 @@ public class Vehicle : Agent
     public AI_Route_Node aiRouteNode_Current;
     public AI_Route_Node aiRouteNode_Target;
 
-    float roadWidth = 0;
+    float roadWidth = 40;
     Vector3 tan = Vector3.zero;
-    float dot = 0.0f;
+    float dot = 1.0f;
 
     float lapIndexChange = 0.0f;
 
     Vector3 startPos = Vector3.zero;
     Quaternion startRot = Quaternion.identity;
 
-    float targetSpeed = 50.0f;
+    public float targetSpeed = 30.0f;
     float dist = 0.0f;
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(forwardSpeed/60);
+        sensor.AddObservation(forwardSpeed/55);
         sensor.AddObservation(hInput);
         sensor.AddObservation(driftDir);
-        sensor.AddObservation(targetSpeed/60);
+        sensor.AddObservation(isDrifting() ? Mathf.Clamp01((Time.time - driftStartTime) / 6) : 0);
+        sensor.AddObservation(targetSpeed/55);
         sensor.AddObservation(dot);
         sensor.AddObservation((roadWidth - dist) / 40);
         sensor.AddObservation((roadWidth + dist) / 40);
 
-        sensor.AddOneHotObservation(((int)aeroState), 4);
+        //sensor.AddOneHotObservation(((int)aeroState), 4);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -206,15 +207,20 @@ public class Vehicle : Agent
             OnKilled();
         }
 
-        float speedReward = 1 - (Mathf.Abs(forwardSpeed * dot - targetSpeed)/60);
-        speedReward *= 0.8f;
+        float speedReward = 1 - (Mathf.Abs(forwardSpeed * dot - targetSpeed)/55);
+        speedReward *= Mathf.Abs(lapIndexChange);
+        speedReward *= 30.0f;
 
-        float dirReward = dot * 0.2f;
+        //float dirReward = dot * 0.05f;
 
-        float constantDec = -0.01f;
+        float constantDec = 0;
 
-        float reward = speedReward + dirReward + constantDec;
-        Debug.Log(reward + "    " + forwardSpeed + "    " + targetSpeed);
+        float reward = speedReward;
+
+        if(isPlayer)
+        {
+            Debug.Log(reward + "    " + forwardSpeed + "    " + targetSpeed);
+        }
 
         rewardImage.material.SetFloat("_reward", reward);
 
@@ -242,7 +248,7 @@ public class Vehicle : Agent
         vehicleProxy.velocity = Vector3.zero;
         vehicleProxy.angularVelocity = Vector3.zero;
 
-        targetSpeed = Random.Range(30, 60);
+        //targetSpeed = Random.Range(30, 55);
 
         //lapPathNode = null;
         //aiRouteNode_Current = null;
@@ -389,14 +395,16 @@ public class Vehicle : Agent
     public void EndRace()
     {
         Debug.Log(name + "    End Race!");
+
+        //SetReward(1);
+        EndEpisode();
     }
 
     public void IncreaseLap()
     {
         currentLap++;
 
-        //SetReward(1);
-        EndEpisode();
+
 
         if (currentLap > SceneManager.lapCount)
         {
@@ -429,7 +437,12 @@ public class Vehicle : Agent
         {
             lapPathNode = node;
 
-            //SetReward(0.3f);
+            float speedReward = 1 - (Mathf.Abs(forwardSpeed * dot - targetSpeed) / 55);
+            speedReward = Mathf.Lerp(0.2f, 1.0f, speedReward);
+
+            //Debug.Log(speedReward);
+
+            //SetReward(speedReward);
         }
     }
 
