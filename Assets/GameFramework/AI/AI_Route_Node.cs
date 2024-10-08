@@ -85,9 +85,9 @@ public class AI_Route_Node : MonoBehaviour
 
     public float GetDistToNode(AI_Route_Node inChild)
     {
-        int i = children.FindIndex(x => x = inChild);
+        int i = children.FindIndex(x => x == inChild);
 
-        return i > 0 ? childDist[i] : 30;
+        return i != -1 ? childDist[i] : 30;
     }
 
     public int GetDriftDirectionToTarget(AI_Route_Node node)

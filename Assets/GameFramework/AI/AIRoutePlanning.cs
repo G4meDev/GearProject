@@ -17,7 +17,7 @@ public class AIRoutePlanning : MonoBehaviour
             return data;
 
 
-        float maxProjectionDistance = AI_Params.projection_3_dist;
+        float maxProjectionDistance = AI_Params.projection_3_dist * 1.3f;
 
         int i = 2;
 
@@ -72,6 +72,7 @@ public class AIRoutePlanning : MonoBehaviour
 
             dot = Vector3.Dot(parentToNode.normalized, parentToVehicle);
             dot = dot / parentToNode.magnitude;
+            dot = Mathf.Clamp01(dot);
         }
 
         else
@@ -110,11 +111,25 @@ public class AIRoutePlanning : MonoBehaviour
 
                 float a = Mathf.InverseLerp(currentDist, nextDist, AI_Params.projection_1_dist);
                 Vector3 e = Vector3.Lerp(n.Value.transform.position, n.Next.Value.transform.position, a);
-                DrawHelpers.DrawSphere(e, 5, Color.yellow);
-
-                Debug.Log(Vector3.Distance(inter, e));
+                DrawHelpers.DrawSphere(e, 3, Color.yellow);
             }
 
+            if (!projection_2_flag && AI_Params.projection_2_dist > currentDist && AI_Params.projection_2_dist < nextDist)
+            {
+                projection_2_flag = true;
+
+                float a = Mathf.InverseLerp(currentDist, nextDist, AI_Params.projection_2_dist);
+                Vector3 e = Vector3.Lerp(n.Value.transform.position, n.Next.Value.transform.position, a);
+                DrawHelpers.DrawSphere(e, 3, Color.yellow);
+            }
+
+            if (AI_Params.projection_3_dist > currentDist && AI_Params.projection_3_dist < nextDist)
+            {
+                float a = Mathf.InverseLerp(currentDist, nextDist, AI_Params.projection_3_dist);
+                Vector3 e = Vector3.Lerp(n.Value.transform.position, n.Next.Value.transform.position, a);
+                DrawHelpers.DrawSphere(e, 3, Color.yellow);
+                break;
+            }
 
             currentDist = nextDist;
             n = n.Next;
