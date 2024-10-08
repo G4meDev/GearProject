@@ -36,7 +36,7 @@ public class AIRoutePlanning : MonoBehaviour
             return null;
 
 
-        float maxProjectionDistance = AI_Params.projection_3_dist * 2.0f;
+        float maxProjectionDistance = AI_Params.projection_3_dist;
 
         int i = 2;
 
@@ -49,7 +49,11 @@ public class AIRoutePlanning : MonoBehaviour
             }
 
             float dist = path.ElementAt(i - 1).childDist[0];
-            maxProjectionDistance -= dist;
+            
+            if (i != 2)
+            {
+                maxProjectionDistance -= dist;
+            }
 
             i++;
         }
