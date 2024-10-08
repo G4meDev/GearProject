@@ -159,6 +159,8 @@ public class Vehicle : Agent
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
 
+    public float maxPossibleSpeed = 55.0f;
+
     // ------------------------------------------------------------------
     [NonSerialized]
     public AIRoutePlanning routePlanning;
@@ -182,85 +184,51 @@ public class Vehicle : Agent
     public float targetSpeed = 30.0f;
     float dist = 0.0f;
 
+    private Vector2 crossTrackLocal = Vector2.zero;
+    private float crossTrackScale = 20.0f;
+
+    private Vector2 p_1_Local = Vector2.zero;
+    private float p_1_Scale = 20.0f;
+
+    private Vector2 p_2_Local = Vector2.zero;
+    private float p_2_Scale = 20.0f;
+
+    private Vector2 p_3_Local = Vector2.zero;
+    private float p_3_Scale = 20.0f;
+
+    private float changedDist = 0.0f;
+
     public override void CollectObservations(VectorSensor sensor)
     {
-        Vector3 crossTrackPos = Vector3.zero;
-        float crossTrackScale = 20.0f;
-        
-        Vector3 projection_1_Pos = Vector3.zero;
-        float projection_1_Scale = 20.0f;
-        
-        Vector3 projection_2_Pos = Vector3.zero;
-        float projection_2_Scale = 20.0f;
-
-        Vector3 projection_3_Pos = Vector3.zero;
-        float projection_3_Scale = 20.0f;
-
-
-        float changedDist = 0.0f;
-
-        if(routePlanning.projectionData != null)
-        {
-            crossTrackPos = Vector3.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.position,
-                routePlanning.projectionData.crossTrackProjection.child.transform.position,
-                routePlanning.projectionData.crossTrackProjection.t);
-
-            crossTrackScale = Mathf.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.lossyScale.x,
-                routePlanning.projectionData.crossTrackProjection.child.transform.lossyScale.x,
-                routePlanning.projectionData.crossTrackProjection.t);
-
-
-            projection_1_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_1.parent.transform.position,
-                routePlanning.projectionData.Projection_1.child.transform.position,
-                routePlanning.projectionData.Projection_1.t);
-
-            projection_1_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_1.parent.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_1.child.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_1.t);
-
-
-            projection_2_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_2.parent.transform.position,
-                routePlanning.projectionData.Projection_2.child.transform.position,
-                routePlanning.projectionData.Projection_2.t);
-
-            projection_2_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_2.parent.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_2.child.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_2.t);
-
-
-            projection_3_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_3.parent.transform.position,
-                routePlanning.projectionData.Projection_3.child.transform.position,
-                routePlanning.projectionData.Projection_3.t);
-
-            projection_3_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_3.parent.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_3.child.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_3.t);
-
-            changedDist = routePlanning.projectionData.changedDist;
-        }
-
-        UnityEngine.Random.State state = UnityEngine.Random.state;
-        UnityEngine.Random.InitState(name.GetHashCode());
-        Color color = UnityEngine.Random.ColorHSV();
-        UnityEngine.Random.state = state;
-
-        DrawHelpers.DrawSphere(crossTrackPos, 3, color);
-        DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
-        DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
-        DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
-
-
-
-
-
-        sensor.AddObservation(forwardSpeed/55);
+        sensor.AddObservation(forwardSpeed/ maxPossibleSpeed);
         sensor.AddObservation(hInput);
         sensor.AddObservation(driftDir);
         sensor.AddObservation(isDrifting() ? Mathf.Clamp01((Time.time - driftStartTime) / 6) : 0);
-        sensor.AddObservation(targetSpeed/55);
-        sensor.AddObservation(dot);
-        sensor.AddObservation((roadWidth - dist) / 40);
-        sensor.AddObservation((roadWidth + dist) / 40);
+        sensor.AddObservation(targetSpeed/ maxPossibleSpeed);
+
+        float scaleDivide = 60;
+
+        sensor.AddObservation(crossTrackLocal);
+        sensor.AddObservation(crossTrackScale / scaleDivide);
+
+        sensor.AddObservation(p_1_Local);
+        sensor.AddObservation(p_1_Scale / scaleDivide);
+
+        sensor.AddObservation(p_2_Local);
+        sensor.AddObservation(p_2_Scale / scaleDivide);
+
+
+        sensor.AddObservation(p_3_Local);
+        sensor.AddObservation(p_3_Scale / scaleDivide);
+
+//         DrawHelpers.DrawSphere(crossLocal, 3, color);
+//         DrawHelpers.DrawSphere(p_1_Local, 3, color);
+//         DrawHelpers.DrawSphere(p_2_Local, 3, color);
+//         DrawHelpers.DrawSphere(p_3_Local, 3, color);
+
+        //         sensor.AddObservation(dot);
+        //         sensor.AddObservation((roadWidth - dist) / 40);
+        //         sensor.AddObservation((roadWidth + dist) / 40);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -276,19 +244,16 @@ public class Vehicle : Agent
             OnKilled();
         }
 
-        float speedReward = 1 - (Mathf.Abs(forwardSpeed * dot - targetSpeed)/55);
-        speedReward *= Mathf.Abs(lapIndexChange);
-        speedReward *= 30.0f;
+        float speedReward = 1 - (Mathf.Clamp(forwardSpeed, 0, float.MaxValue) - targetSpeed) / maxPossibleSpeed;
+        speedReward *= changedDist * 0.7f;
 
-        //float dirReward = dot * 0.05f;
+        float constantDec = -0.005f;
 
-        float constantDec = 0;
-
-        float reward = speedReward;
+        float reward = speedReward + constantDec;
 
         if(isPlayer)
         {
-            //Debug.Log(reward + "    " + forwardSpeed + "    " + targetSpeed);
+            Debug.Log(reward + "    " + speedReward + "    " + targetSpeed);
         }
 
         rewardImage.material.SetFloat("_reward", reward);
@@ -355,6 +320,103 @@ public class Vehicle : Agent
         vehicleMesh.transform.SetPositionAndRotation(startPos, startRot);
         
         killDelegate?.Invoke();
+    }
+
+    private void UpdateRoute()
+    {
+        Vector3 temp;
+
+        if (routePlanning.projectionData != null)
+        {
+            Vector3 crossTrackPos = Vector3.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.position,
+                routePlanning.projectionData.crossTrackProjection.child.transform.position,
+                routePlanning.projectionData.crossTrackProjection.t);
+
+            temp = vehicleBox.transform.InverseTransformPointUnscaled(crossTrackPos);
+            crossTrackLocal = new Vector2(temp.x, temp.z) / AI_Params.projection_3_dist;
+
+            crossTrackScale = Mathf.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.lossyScale.x,
+                routePlanning.projectionData.crossTrackProjection.child.transform.lossyScale.x,
+                routePlanning.projectionData.crossTrackProjection.t);
+
+            // -------------------------------------------------------------------------------------------------------------------------------------------
+
+            Vector3 projection_1_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_1.parent.transform.position,
+                routePlanning.projectionData.Projection_1.child.transform.position,
+                routePlanning.projectionData.Projection_1.t);
+
+            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_1_Pos);
+            p_1_Local = new Vector2(temp.x, temp.z) / AI_Params.projection_3_dist;
+
+            p_1_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_1.parent.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_1.child.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_1.t);
+
+            // -------------------------------------------------------------------------------------------------------------------------------------------
+
+            Vector3 projection_2_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_2.parent.transform.position,
+                routePlanning.projectionData.Projection_2.child.transform.position,
+                routePlanning.projectionData.Projection_2.t);
+
+            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_2_Pos);
+            p_2_Local = new Vector2(temp.x, temp.z) / AI_Params.projection_3_dist;
+
+            p_2_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_2.parent.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_2.child.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_2.t);
+
+            // -------------------------------------------------------------------------------------------------------------------------------------------
+
+            Vector3 projection_3_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_3.parent.transform.position,
+                routePlanning.projectionData.Projection_3.child.transform.position,
+                routePlanning.projectionData.Projection_3.t);
+
+            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_3_Pos);
+            p_3_Local = new Vector2(temp.x, temp.z) / AI_Params.projection_3_dist;
+
+            p_3_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_3.parent.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_3.child.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_3.t);
+
+
+            changedDist = routePlanning.projectionData.changedDist;
+
+#if UNITY_EDITOR
+
+            UnityEngine.Random.State state = UnityEngine.Random.state;
+            UnityEngine.Random.InitState(name.GetHashCode());
+            Color color = UnityEngine.Random.ColorHSV();
+            UnityEngine.Random.state = state;
+
+            DrawHelpers.DrawSphere(crossTrackPos, 3, color);
+            DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
+            DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
+            DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
+
+            DrawHelpers.DrawSphere(new Vector3(crossTrackLocal.x, 0, crossTrackLocal.y) * AI_Params.projection_3_dist, 3, color);
+            DrawHelpers.DrawSphere(new Vector3(p_1_Local.x, 0, p_1_Local.y) * AI_Params.projection_3_dist, 3, color);
+            DrawHelpers.DrawSphere(new Vector3(p_2_Local.x, 0, p_2_Local.y) * AI_Params.projection_3_dist, 3, color);
+            DrawHelpers.DrawSphere(new Vector3(p_3_Local.x, 0, p_3_Local.y) * AI_Params.projection_3_dist, 3, color);
+
+#endif
+        }
+
+        else
+        {
+            crossTrackLocal = Vector2.zero;
+            crossTrackScale = 20.0f;
+
+            p_1_Local = Vector2.zero;
+            p_1_Scale = 20.0f;
+
+            p_2_Local = Vector2.zero;
+            p_2_Scale = 20.0f;
+
+            p_3_Local = Vector2.zero;
+            p_3_Scale = 20.0f;
+
+            changedDist = 0.0f;
+        }
     }
 
     // ------------------------------------------------------------------
@@ -883,5 +945,9 @@ public class Vehicle : Agent
         }
 
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
+
+
+        UpdateRoute();
+
     }
 }
