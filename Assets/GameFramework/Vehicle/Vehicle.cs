@@ -178,16 +178,16 @@ public class Vehicle : Agent
 
     public float targetSpeed = 30.0f;
 
-    private Vector2 crossTrackLocal = Vector2.zero;
+    private Vector3 crossTrackLocal = Vector2.zero;
     private float crossTrackScale = 20.0f;
 
-    private Vector2 p_1_Local = Vector2.zero;
+    private Vector3 p_1_Local = Vector2.zero;
     private float p_1_Scale = 20.0f;
 
-    private Vector2 p_2_Local = Vector2.zero;
+    private Vector3 p_2_Local = Vector2.zero;
     private float p_2_Scale = 20.0f;
 
-    private Vector2 p_3_Local = Vector2.zero;
+    private Vector3 p_3_Local = Vector2.zero;
     private float p_3_Scale = 20.0f;
 
     private float changedDist = 0.0f;
@@ -316,16 +316,13 @@ public class Vehicle : Agent
 
     private void UpdateRoute()
     {
-        Vector3 temp;
-
         if (routePlanning.projectionData != null)
         {
             Vector3 crossTrackPos = Vector3.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.position,
                 routePlanning.projectionData.crossTrackProjection.child.transform.position,
                 routePlanning.projectionData.crossTrackProjection.t);
 
-            temp = vehicleBox.transform.InverseTransformPointUnscaled(crossTrackPos);
-            crossTrackLocal = new Vector2(temp.x, temp.z);
+            crossTrackLocal = vehicleBox.transform.InverseTransformPointUnscaled(crossTrackPos);
 
             crossTrackScale = Mathf.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.lossyScale.x,
                 routePlanning.projectionData.crossTrackProjection.child.transform.lossyScale.x,
@@ -337,8 +334,7 @@ public class Vehicle : Agent
                 routePlanning.projectionData.Projection_1.child.transform.position,
                 routePlanning.projectionData.Projection_1.t);
 
-            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_1_Pos);
-            p_1_Local = new Vector2(temp.x, temp.z);
+            p_1_Local = vehicleBox.transform.InverseTransformPointUnscaled(projection_1_Pos);
 
             p_1_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_1.parent.transform.lossyScale.x,
                 routePlanning.projectionData.Projection_1.child.transform.lossyScale.x,
@@ -350,8 +346,7 @@ public class Vehicle : Agent
                 routePlanning.projectionData.Projection_2.child.transform.position,
                 routePlanning.projectionData.Projection_2.t);
 
-            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_2_Pos);
-            p_2_Local = new Vector2(temp.x, temp.z);
+            p_2_Local = vehicleBox.transform.InverseTransformPointUnscaled(projection_2_Pos);
 
             p_2_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_2.parent.transform.lossyScale.x,
                 routePlanning.projectionData.Projection_2.child.transform.lossyScale.x,
@@ -363,8 +358,7 @@ public class Vehicle : Agent
                 routePlanning.projectionData.Projection_3.child.transform.position,
                 routePlanning.projectionData.Projection_3.t);
 
-            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_3_Pos);
-            p_3_Local = new Vector2(temp.x, temp.z);
+            p_3_Local = vehicleBox.transform.InverseTransformPointUnscaled(projection_3_Pos);
 
             p_3_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_3.parent.transform.lossyScale.x,
                 routePlanning.projectionData.Projection_3.child.transform.lossyScale.x,

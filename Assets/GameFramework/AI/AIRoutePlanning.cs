@@ -50,6 +50,7 @@ public class AIRoutePlanning : MonoBehaviour
 
             float dist = path.ElementAt(i - 1).childDist[0];
             
+            // count after target as distance
             if (i != 2)
             {
                 maxProjectionDistance -= dist;
