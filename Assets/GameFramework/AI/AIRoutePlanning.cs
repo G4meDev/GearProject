@@ -36,7 +36,7 @@ public class AIRoutePlanning : MonoBehaviour
             return null;
 
 
-        float maxProjectionDistance = AI_Params.projection_3_dist * 1.3f;
+        float maxProjectionDistance = AI_Params.projection_3_dist * 2.0f;
 
         int i = 2;
 
