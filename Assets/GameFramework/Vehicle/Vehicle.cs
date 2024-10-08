@@ -1,3 +1,5 @@
+using Google.Protobuf.WellKnownTypes;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -183,9 +185,17 @@ public class Vehicle : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         Vector3 crossTrackPos = Vector3.zero;
+        float crossTrackScale = 20.0f;
+        
         Vector3 projection_1_Pos = Vector3.zero;
+        float projection_1_Scale = 20.0f;
+        
         Vector3 projection_2_Pos = Vector3.zero;
+        float projection_2_Scale = 20.0f;
+
         Vector3 projection_3_Pos = Vector3.zero;
+        float projection_3_Scale = 20.0f;
+
 
         float changedDist = 0.0f;
 
@@ -195,16 +205,35 @@ public class Vehicle : Agent
                 routePlanning.projectionData.crossTrackProjection.child.transform.position,
                 routePlanning.projectionData.crossTrackProjection.t);
 
+            crossTrackScale = Mathf.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.lossyScale.x,
+                routePlanning.projectionData.crossTrackProjection.child.transform.lossyScale.x,
+                routePlanning.projectionData.crossTrackProjection.t);
+
+
             projection_1_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_1.parent.transform.position,
                 routePlanning.projectionData.Projection_1.child.transform.position,
                 routePlanning.projectionData.Projection_1.t);
+
+            projection_1_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_1.parent.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_1.child.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_1.t);
+
 
             projection_2_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_2.parent.transform.position,
                 routePlanning.projectionData.Projection_2.child.transform.position,
                 routePlanning.projectionData.Projection_2.t);
 
+            projection_2_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_2.parent.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_2.child.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_2.t);
+
+
             projection_3_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_3.parent.transform.position,
                 routePlanning.projectionData.Projection_3.child.transform.position,
+                routePlanning.projectionData.Projection_3.t);
+
+            projection_3_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_3.parent.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_3.child.transform.lossyScale.x,
                 routePlanning.projectionData.Projection_3.t);
 
             changedDist = routePlanning.projectionData.changedDist;
@@ -220,7 +249,7 @@ public class Vehicle : Agent
         DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
         DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
 
-        Debug.Log(changedDist);
+
 
 
 
