@@ -187,6 +187,8 @@ public class Vehicle : Agent
         Vector3 projection_2_Pos = Vector3.zero;
         Vector3 projection_3_Pos = Vector3.zero;
 
+        float changedDist = 0.0f;
+
         if(routePlanning.projectionData != null)
         {
             crossTrackPos = Vector3.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.position,
@@ -204,6 +206,8 @@ public class Vehicle : Agent
             projection_3_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_3.parent.transform.position,
                 routePlanning.projectionData.Projection_3.child.transform.position,
                 routePlanning.projectionData.Projection_3.t);
+
+            changedDist = routePlanning.projectionData.changedDist;
         }
 
         UnityEngine.Random.State state = UnityEngine.Random.state;
@@ -215,6 +219,10 @@ public class Vehicle : Agent
         DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
         DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
         DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
+
+        Debug.Log(changedDist);
+
+
 
         sensor.AddObservation(forwardSpeed/55);
         sensor.AddObservation(hInput);

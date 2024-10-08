@@ -146,7 +146,37 @@ public class AIRoutePlanning : MonoBehaviour
             n = n.Next;
         }
 
-        //@TODO: changed distance
+        float d = 0;
+
+        if(projectionData != null)
+        {
+            if (projectionData.crossTrackProjection.parent == data.crossTrackProjection.parent)
+            {
+                float d1 = data.crossTrackProjection.t * (data.crossTrackProjection.parent.GetDistToNode(data.crossTrackProjection.child));
+                float d2 = projectionData.crossTrackProjection.t * (projectionData.crossTrackProjection.parent.GetDistToNode(projectionData.crossTrackProjection.child));
+
+                d = d1 - d2;
+            }
+
+            else if (projectionData.crossTrackProjection.child == data.crossTrackProjection.parent)
+            {
+                float d1 = data.crossTrackProjection.t * (data.crossTrackProjection.parent.GetDistToNode(data.crossTrackProjection.child));
+                float d2 = (1 - projectionData.crossTrackProjection.t) * (projectionData.crossTrackProjection.parent.GetDistToNode(projectionData.crossTrackProjection.child));
+
+                d = d1 + d2;
+            }
+
+            else if (projectionData.crossTrackProjection.parent == data.crossTrackProjection.child)
+            {
+                float d1 = (1 - data.crossTrackProjection.t) * (data.crossTrackProjection.parent.GetDistToNode(data.crossTrackProjection.child));
+                float d2 = projectionData.crossTrackProjection.t * (projectionData.crossTrackProjection.parent.GetDistToNode(projectionData.crossTrackProjection.child));
+
+                d = -(d1 + d2);
+            }
+        }
+
+        data.changedDist = d;
+
 
 //         foreach (AI_Route_Node e in path)
 //         {
