@@ -149,6 +149,7 @@ MonoBehaviour:
   gravityStr: 40
   counterForceStr: 0.03
   maxSpeed: 45
+  maxSpeedReverse: -10
   accel: 35
   rayDist: 1.2
   speedModifierIntensity: 0
@@ -224,7 +225,6 @@ MonoBehaviour:
   driftStartTime: 0
   driftCounter: 0
   driftYaw: 0
-  pullPath: {fileID: 0}
   orientNode: {fileID: 0}
   antiGravityNode: {fileID: 0}
   gliderNode: {fileID: 0}
@@ -232,6 +232,7 @@ MonoBehaviour:
   lapPathIndex: -1
   currentLap: 1
   distanceFromFirstPlace: -1
+  maxPossibleSpeed: 55
   rewardImage: {fileID: 6043755062790010195}
   aiRouteNode_Current: {fileID: 0}
   aiRouteNode_Target: {fileID: 0}
@@ -249,7 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 8
+    VectorObservationSize: 17
     NumStackedVectorObservations: 3
     m_ActionSpec:
       m_NumContinuousActions: 2

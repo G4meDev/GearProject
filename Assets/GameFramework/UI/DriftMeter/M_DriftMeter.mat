@@ -65,7 +65,7 @@ Material:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
     - _BumpScale: 1
-    - _Counter: 0
+    - _Counter: 3
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _Drifting: 0
@@ -81,7 +81,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StartTime: 44.02
+    - _StartTime: 9.66
     - _UVSec: 0
     - _ZWrite: 1
     - _airborneTime: 0

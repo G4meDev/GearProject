@@ -44,6 +44,7 @@ public class Vehicle : Agent
     public float counterForceStr = 0.03f;
 
     public float maxSpeed = 20.0f;
+    public float maxSpeedReverse = -10.0f;
     public float accel = 20.0f;
 
     public float rayDist = 1.0f;
@@ -920,7 +921,19 @@ public class Vehicle : Agent
                 IncreaseSpeedTo(maxSpeedWithModifier);
             }
 
-            float enginePower = Mathf.Abs(forwardSpeed) < maxSpeedWithModifier ? accel : 0;
+            float enginePower;
+
+            if (vInput > 0)
+            {
+                enginePower = forwardSpeed < maxSpeedWithModifier ? accel : 0;
+            }
+
+            else
+            {
+                enginePower = forwardSpeed > maxSpeedReverse ? accel : 0;
+            }
+
+
             enginePower *= vInput;
 
             if(aeroState == VehicleAeroState.OnGround)
