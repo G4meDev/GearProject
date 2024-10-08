@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.IO;
 
 public class RouteData
 {
@@ -15,18 +16,6 @@ public class AI_Route_Node : MonoBehaviour
     public List<AI_Route_Node> children;
     public List<AI_Route_Node> parents;
     public List<float> childDist;
-
-    public RouteData GetRouteData(Vehicle vehicle)
-    {
-        RouteData data = new();
-
-
-
-
-
-        return data;
-    }
-
 
 //     public Vector3 GetNearestWorldPosition(out float trackWidth, out Vector3 tan)
 //     {
@@ -94,6 +83,13 @@ public class AI_Route_Node : MonoBehaviour
 //         return Vector3.zero;
 //     }
 
+    public float GetDistToNode(AI_Route_Node inChild)
+    {
+        int i = children.FindIndex(x => x = inChild);
+
+        return i > 0 ? childDist[i] : 30;
+    }
+
     public int GetDriftDirectionToTarget(AI_Route_Node node)
     {
         float a = Vector3.Dot(transform.right, node.transform.forward);
@@ -136,7 +132,7 @@ public class AI_Route_Node : MonoBehaviour
 
         if (vehicle)
         {
-            vehicle.OnEnterNewRouteNode(this);
+            vehicle.routePlanning.OnEnterNewRouteNode(this);
         }
     }
 

@@ -26,6 +26,10 @@ public class AI_Params
     public static float driftHaltDistanceToRoadEdge = 5.0f;
     public static float maxDriftHaltAngleAlpha = 0.095f;
 
+    public static float projection_1_dist = 15;
+    public static float projection_2_dist = 40;
+    public static float projection_3_dist = 100;
+
 
     // --------------------------------------------------------
     // -------------------------------      optimalPathChance   , minSpeed  , maxSpeed  , rubberBanddingDist

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.MLAgents;
@@ -124,8 +125,6 @@ public class Vehicle : Agent
 
     public SpeedModifierData thirdDirftSpeedModifier;
 
-    //[HideInInspector]
-    //public bool drifting = false;
 
     [HideInInspector]
     public float driftStartTime = 0.0f;
@@ -142,9 +141,6 @@ public class Vehicle : Agent
     [HideInInspector]
     private float lastDriftEndTime = 0.0f;
 
-    //TODO: Delete
-    public PullPath pullPath;
-
     public Camera_Orient_Node orientNode;
 
     public AntiGravity_Node antiGravityNode;
@@ -155,15 +151,14 @@ public class Vehicle : Agent
     public float lapPathIndex = -1;
     public int currentLap = 1;
 
-    private Vector3 lastRight;
-    private Vector3 lastPos;
-
     public float distanceFromFirstPlace = -1;
 
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
 
     // ------------------------------------------------------------------
+    [NonSerialized]
+    public AIRoutePlanning routePlanning;
 
     public Image rewardImage;
 
@@ -223,7 +218,7 @@ public class Vehicle : Agent
 
         if(isPlayer)
         {
-            Debug.Log(reward + "    " + forwardSpeed + "    " + targetSpeed);
+            //Debug.Log(reward + "    " + forwardSpeed + "    " + targetSpeed);
         }
 
         rewardImage.material.SetFloat("_reward", reward);
@@ -290,95 +285,6 @@ public class Vehicle : Agent
         vehicleMesh.transform.SetPositionAndRotation(startPos, startRot);
         
         killDelegate?.Invoke();
-    }
-
-    private void RecounstructAiRoute(AI_Route_Node node)
-    {
-        aiRoutePath.Clear();
-
-        //@TODO: choose parents
-        aiRoutePath.AddLast(node.parents[0]);
-
-        aiRoutePath.AddLast(node);
-    }
-
-    public void OnEnterNewRouteNode(AI_Route_Node node)
-    {
-        if (aiRoutePath.Count > 3 && aiRoutePath.ElementAt(2) == node)
-        {
-            aiRoutePath.RemoveFirst();
-        }
-
-        else
-        {
-            RecounstructAiRoute(node);
-        }
-    }
-
-    public Vector3 GetNearestWorldPosition(out float trackWidth, out Vector3 tan)
-    {
-        trackWidth = 20.0f;
-        tan = Vector3.zero;
-
-        if (aiRouteNode_Current && aiRouteNode_Target)
-        {
-            Vector3 d = aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position;
-            Vector3 toPos = vehicleProxy.transform.position - aiRouteNode_Current.transform.position;
-
-            float dot = Vector3.Dot(d.normalized, toPos);
-
-            // passed target without hitting collision
-            if (dot > d.magnitude)
-            {
-                OnEnterNewRouteNode(aiRouteNode_Target);
-
-                return GetNearestWorldPosition(out trackWidth, out tan);
-            }
-
-            // should check for parent nodes
-            else if (dot < 0)
-            {
-                AI_Route_Node bestParent = null;
-                float min_dist = float.MaxValue;
-
-                foreach (AI_Route_Node parent in aiRouteNode_Current.parents)
-                {
-                    float dist = Vector3.Distance(vehicleProxy.transform.position, parent.transform.position);
-
-                    if (dist < min_dist)
-                    {
-                        min_dist = dist;
-                        bestParent = parent;
-                    }
-                }
-
-
-
-                d = aiRouteNode_Current.transform.position - bestParent.transform.position;
-                toPos = vehicleProxy.transform.position - bestParent.transform.position;
-
-                dot = Vector3.Dot(d.normalized, toPos);
-                dot = Mathf.Clamp(dot, 0, d.magnitude);
-
-                float a = dot / d.magnitude;
-                trackWidth = Mathf.Lerp(bestParent.transform.lossyScale.x, aiRouteNode_Current.transform.lossyScale.x, a);
-                tan = Vector3.Lerp(bestParent.transform.forward, aiRouteNode_Current.transform.forward, a);
-
-                return bestParent.transform.position + dot * d.normalized;
-            }
-
-            else
-            {
-                float a = dot / d.magnitude;
-
-                trackWidth = Mathf.Lerp(aiRouteNode_Current.transform.lossyScale.x, aiRouteNode_Target.transform.lossyScale.x, a);
-                tan = Vector3.Lerp(aiRouteNode_Current.transform.forward, aiRouteNode_Target.transform.forward, a);
-
-                return aiRouteNode_Current.transform.position + dot * d.normalized;
-            }
-        }
-
-        return Vector3.zero;
     }
 
     // ------------------------------------------------------------------
@@ -792,6 +698,8 @@ public class Vehicle : Agent
 
     void Start()
     {
+        routePlanning = GetComponent<AIRoutePlanning>();
+
         if(isPlayer)
         {
             if(cameraPrefab)
@@ -822,6 +730,8 @@ public class Vehicle : Agent
 
     private void FixedUpdate()
     {
+        routePlanning.GetRouteData();
+
         UpdateLapPathIndex();
 
         Gravity();
@@ -905,31 +815,5 @@ public class Vehicle : Agent
         }
 
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
-
-        Vector3 origin;
-        VectorHelpers.LineLineIntersection(out origin, vehicleBox.transform.position, vehicleBox.transform.right,
-            lastPos, lastRight);
-
-
-
-        Vector3 nearestpos = GetNearestWorldPosition(out roadWidth, out tan);
-        dist = Vector3.Distance(nearestpos, vehicleProxy.transform.position);
-
-        //fix
-        Vector3 right = aiRouteNode_Current && aiRouteNode_Target ? Vector3.Cross(Vector3.up, aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position) : Vector3.zero;
-        dist = Vector3.Dot(right, vehicleProxy.transform.position - nearestpos) > 0 ? dist : -dist;
-
-        float targetDist = aiRouteNode_Target ? Vector3.Distance(vehicleProxy.transform.position, aiRouteNode_Target.transform.position) : 0;
-
-        dot = Vector3.Dot(tan, vehicleBox.transform.forward);
-
-        //         if (bHit && pullPath && forwardSpeed < maxSpeedWithModifier)
-        //         {
-        //             Vector3 tan = pullPath.GetForceAtPosition(vehicleProxy.transform.position);
-        // 
-        //             Debug.DrawLine(vehicleProxy.transform.position + Vector3.up * 2, vehicleProxy.transform.position + (Vector3.up * 2) + Vector3.Normalize(tan), Color.black);
-        // 
-        //             vehicleProxy.AddForce(tan, ForceMode.Acceleration);
-        //         }
     }
 }
