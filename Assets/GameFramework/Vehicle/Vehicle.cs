@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
@@ -181,6 +182,40 @@ public class Vehicle : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
+        Vector3 crossTrackPos = Vector3.zero;
+        Vector3 projection_1_Pos = Vector3.zero;
+        Vector3 projection_2_Pos = Vector3.zero;
+        Vector3 projection_3_Pos = Vector3.zero;
+
+        if(routePlanning.projectionData != null)
+        {
+            crossTrackPos = Vector3.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.position,
+                routePlanning.projectionData.crossTrackProjection.child.transform.position,
+                routePlanning.projectionData.crossTrackProjection.t);
+
+            projection_1_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_1.parent.transform.position,
+                routePlanning.projectionData.Projection_1.child.transform.position,
+                routePlanning.projectionData.Projection_1.t);
+
+            projection_2_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_2.parent.transform.position,
+                routePlanning.projectionData.Projection_2.child.transform.position,
+                routePlanning.projectionData.Projection_2.t);
+
+            projection_3_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_3.parent.transform.position,
+                routePlanning.projectionData.Projection_3.child.transform.position,
+                routePlanning.projectionData.Projection_3.t);
+        }
+
+        UnityEngine.Random.State state = UnityEngine.Random.state;
+        UnityEngine.Random.InitState(name.GetHashCode());
+        Color color = UnityEngine.Random.ColorHSV();
+        UnityEngine.Random.state = state;
+
+        DrawHelpers.DrawSphere(crossTrackPos, 3, color);
+        DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
+        DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
+        DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
+
         sensor.AddObservation(forwardSpeed/55);
         sensor.AddObservation(hInput);
         sensor.AddObservation(driftDir);
@@ -189,8 +224,6 @@ public class Vehicle : Agent
         sensor.AddObservation(dot);
         sensor.AddObservation((roadWidth - dist) / 40);
         sensor.AddObservation((roadWidth + dist) / 40);
-
-        //sensor.AddOneHotObservation(((int)aeroState), 4);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -730,8 +763,6 @@ public class Vehicle : Agent
 
     private void FixedUpdate()
     {
-        routePlanning.GetRouteData();
-
         UpdateLapPathIndex();
 
         Gravity();

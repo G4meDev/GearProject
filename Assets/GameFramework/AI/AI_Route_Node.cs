@@ -4,13 +4,6 @@ using UnityEditor;
 using System;
 using System.IO;
 
-public class RouteData
-{
-    Vector3 projection_1;
-    Vector3 projection_2;
-    Vector3 projection_3;
-}
-
 public class AI_Route_Node : MonoBehaviour
 {
     public List<AI_Route_Node> children;

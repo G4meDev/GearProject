@@ -3,18 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public class RouteProjectionData
+{
+    public RouteSegmentProjection crossTrackProjection = new();
+    public RouteSegmentProjection Projection_1 = new();
+    public RouteSegmentProjection Projection_2 = new();
+    public RouteSegmentProjection Projection_3 = new();
+
+    public float changedDist = 0;
+}
+
+public class RouteSegmentProjection
+{
+    public AI_Route_Node parent;
+    public AI_Route_Node child;
+    public float t;
+}
+
 public class AIRoutePlanning : MonoBehaviour
 {
     private Vehicle vehicle;
 
     public LinkedList<AI_Route_Node> path = new();
+    public RouteProjectionData projectionData = null;
 
-    public RouteData GetRouteData()
+
+    public RouteProjectionData GetProjectionData()
     {
-        RouteData data = new();
+        RouteProjectionData data = new();
 
         if (path.Count < 2)
-            return data;
+            return null;
 
 
         float maxProjectionDistance = AI_Params.projection_3_dist * 1.3f;
@@ -59,7 +78,7 @@ public class AIRoutePlanning : MonoBehaviour
         if (dot > 1)
         {
             OnEnterNewRouteNode(child.Value);
-            return GetRouteData();
+            return GetProjectionData();
         }
 
         // vehicle is behind node
@@ -80,18 +99,9 @@ public class AIRoutePlanning : MonoBehaviour
             behind = false;
         }
 
-        Vector3 inter;
-
-        if (behind)
-        {
-            inter = Vector3.LerpUnclamped(parentPos, nodePos, dot);
-        }
-        else
-        {
-            inter = Vector3.LerpUnclamped(nodePos, childPos, dot);
-        }
-        
-        DrawHelpers.DrawSphere(inter, 3, Color.blue);
+        data.crossTrackProjection.parent = behind ? parent.Value : node.Value;
+        data.crossTrackProjection.child = behind ? node.Value : child.Value;
+        data.crossTrackProjection.t = dot;
 
         LinkedListNode<AI_Route_Node> n = behind ? parent : node;
         float distToNext = n.Value.GetDistToNode(n.Next.Value);
@@ -109,25 +119,26 @@ public class AIRoutePlanning : MonoBehaviour
             {
                 projection_1_flag = true;
 
-                float a = Mathf.InverseLerp(currentDist, nextDist, AI_Params.projection_1_dist);
-                Vector3 e = Vector3.Lerp(n.Value.transform.position, n.Next.Value.transform.position, a);
-                DrawHelpers.DrawSphere(e, 3, Color.yellow);
+                data.Projection_1.parent = n.Value;
+                data.Projection_1.child = n.Next.Value;
+                data.Projection_1.t = Mathf.InverseLerp(currentDist, nextDist, AI_Params.projection_1_dist);
             }
 
             if (!projection_2_flag && AI_Params.projection_2_dist > currentDist && AI_Params.projection_2_dist < nextDist)
             {
                 projection_2_flag = true;
 
-                float a = Mathf.InverseLerp(currentDist, nextDist, AI_Params.projection_2_dist);
-                Vector3 e = Vector3.Lerp(n.Value.transform.position, n.Next.Value.transform.position, a);
-                DrawHelpers.DrawSphere(e, 3, Color.yellow);
+                data.Projection_2.parent = n.Value;
+                data.Projection_2.child = n.Next.Value;
+                data.Projection_2.t = Mathf.InverseLerp(currentDist, nextDist, AI_Params.projection_2_dist);
             }
 
             if (AI_Params.projection_3_dist > currentDist && AI_Params.projection_3_dist < nextDist)
             {
-                float a = Mathf.InverseLerp(currentDist, nextDist, AI_Params.projection_3_dist);
-                Vector3 e = Vector3.Lerp(n.Value.transform.position, n.Next.Value.transform.position, a);
-                DrawHelpers.DrawSphere(e, 3, Color.yellow);
+                data.Projection_3.parent = n.Value;
+                data.Projection_3.child = n.Next.Value;
+                data.Projection_3.t = Mathf.InverseLerp(currentDist, nextDist, AI_Params.projection_3_dist);
+
                 break;
             }
 
@@ -135,10 +146,12 @@ public class AIRoutePlanning : MonoBehaviour
             n = n.Next;
         }
 
-        foreach (AI_Route_Node e in path)
-        {
-            DrawHelpers.DrawSphere(e.transform.position, 5, Color.red);
-        }
+        //@TODO: changed distance
+
+//         foreach (AI_Route_Node e in path)
+//         {
+//             DrawHelpers.DrawSphere(e.transform.position, , Color.red);
+//         }
 
         return data;
     }
@@ -176,8 +189,8 @@ public class AIRoutePlanning : MonoBehaviour
         vehicle = GetComponent<Vehicle>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        
+        projectionData = GetProjectionData();
     }
 }
