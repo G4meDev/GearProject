@@ -1,11 +1,98 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
+
+public class RouteData
+{
+    Vector3 projection_1;
+    Vector3 projection_2;
+    Vector3 projection_3;
+}
 
 public class AI_Route_Node : MonoBehaviour
 {
     public List<AI_Route_Node> children;
     public List<AI_Route_Node> parents;
+    public List<float> childDist;
+
+    public RouteData GetRouteData(Vehicle vehicle)
+    {
+        RouteData data = new();
+
+
+
+
+
+        return data;
+    }
+
+
+//     public Vector3 GetNearestWorldPosition(out float trackWidth, out Vector3 tan)
+//     {
+//         trackWidth = 20.0f;
+//         tan = Vector3.zero;
+// 
+//         if (aiRouteNode_Current && aiRouteNode_Target)
+//         {
+//             Vector3 d = aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position;
+//             Vector3 toPos = vehicleProxy.transform.position - aiRouteNode_Current.transform.position;
+// 
+//             float dot = Vector3.Dot(d.normalized, toPos);
+// 
+//             // passed target without hitting collision
+//             if (dot > d.magnitude)
+//             {
+//                 OnEnterNewRouteNode(aiRouteNode_Target);
+// 
+//                 return GetNearestWorldPosition(out trackWidth, out tan);
+//             }
+// 
+//             // should check for parent nodes
+//             else if (dot < 0)
+//             {
+//                 AI_Route_Node bestParent = null;
+//                 float min_dist = float.MaxValue;
+// 
+//                 foreach (AI_Route_Node parent in aiRouteNode_Current.parents)
+//                 {
+//                     float dist = Vector3.Distance(vehicleProxy.transform.position, parent.transform.position);
+// 
+//                     if (dist < min_dist)
+//                     {
+//                         min_dist = dist;
+//                         bestParent = parent;
+//                     }
+//                 }
+// 
+// 
+// 
+//                 d = aiRouteNode_Current.transform.position - bestParent.transform.position;
+//                 toPos = vehicleProxy.transform.position - bestParent.transform.position;
+// 
+//                 dot = Vector3.Dot(d.normalized, toPos);
+//                 dot = Mathf.Clamp(dot, 0, d.magnitude);
+// 
+//                 float a = dot / d.magnitude;
+//                 trackWidth = Mathf.Lerp(bestParent.transform.lossyScale.x, aiRouteNode_Current.transform.lossyScale.x, a);
+//                 tan = Vector3.Lerp(bestParent.transform.forward, aiRouteNode_Current.transform.forward, a);
+// 
+//                 return bestParent.transform.position + dot * d.normalized;
+//             }
+// 
+//             else
+//             {
+//                 float a = dot / d.magnitude;
+// 
+//                 trackWidth = Mathf.Lerp(aiRouteNode_Current.transform.lossyScale.x, aiRouteNode_Target.transform.lossyScale.x, a);
+//                 tan = Vector3.Lerp(aiRouteNode_Current.transform.forward, aiRouteNode_Target.transform.forward, a);
+// 
+//                 return aiRouteNode_Current.transform.position + dot * d.normalized;
+//             }
+//         }
+// 
+//         return Vector3.zero;
+//     }
 
     public int GetDriftDirectionToTarget(AI_Route_Node node)
     {
@@ -15,15 +102,18 @@ public class AI_Route_Node : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        //DrawHelpers.DrawSphere(transform.position + transform.right * transform.lossyScale.x, 2, Color.green);
-
-        foreach (AI_Route_Node child in children)
+        for(int i = 0; i < children.Count; ++i)
         {
+            var child = children[i];
+
             if (child)
             {
                 Vector3 dir = child.transform.position - transform.position;
 
                 DrawArrow.ForGizmo(transform.position + Vector3.up * 2, transform.forward * dir.magnitude * 0.3f, Color.black, 5);
+
+                float dist = childDist.Count > i ? childDist[i] : 0;
+                DrawHelpers.drawString(((int)dist).ToString(), (transform.position + Vector3.up * 3) + dir.magnitude * transform.forward * 0.15f, 0, 0, 34);
             }
         }
 
@@ -104,8 +194,8 @@ public class AI_Route_Node_Editor : Editor
     {
         AI_Route_Node node = target as AI_Route_Node;
 
-        Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(node);
-        Object obj = PrefabUtility.InstantiatePrefab(prefab);
+        UnityEngine.Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(node);
+        UnityEngine.Object obj = PrefabUtility.InstantiatePrefab(prefab);
         GameObject gameObj = PrefabUtility.GetNearestPrefabInstanceRoot(obj);
 
         AI_Route_Node newNode = gameObj.GetComponent<AI_Route_Node>();

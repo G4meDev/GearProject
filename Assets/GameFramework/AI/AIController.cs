@@ -115,7 +115,7 @@ public class AController : MonoBehaviour
     {
         if (aiRouteNode_Current.children.Count > 0)
         {
-            aiRouteNode_Target = aiRouteNode_Current.children[0];
+            //aiRouteNode_Target = aiRouteNode_Current.children[0];
 
             //             float targetScale = aiRouteNode_Target.transform.lossyScale.x / 8;
             //             targetTrackError = Random.Range(-targetScale, targetScale);

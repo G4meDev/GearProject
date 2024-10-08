@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
@@ -168,6 +170,8 @@ public class Vehicle : Agent
     public AI_Route_Node aiRouteNode_Current;
     public AI_Route_Node aiRouteNode_Target;
 
+    public LinkedList<AI_Route_Node> aiRoutePath = new();
+
     float roadWidth = 40;
     Vector3 tan = Vector3.zero;
     float dot = 1.0f;
@@ -288,30 +292,27 @@ public class Vehicle : Agent
         killDelegate?.Invoke();
     }
 
-
-    public void UpdateTargetNode()
+    private void RecounstructAiRoute(AI_Route_Node node)
     {
-        if (aiRouteNode_Current.children.Count > 0)
-        {
-            aiRouteNode_Target = aiRouteNode_Current.children[0];
+        aiRoutePath.Clear();
 
-            //             float targetScale = aiRouteNode_Target.transform.lossyScale.x / 8;
-            //             targetTrackError = Random.Range(-targetScale, targetScale);
+        //@TODO: choose parents
+        aiRoutePath.AddLast(node.parents[0]);
+
+        aiRoutePath.AddLast(node);
+    }
+
+    public void OnEnterNewRouteNode(AI_Route_Node node)
+    {
+        if (aiRoutePath.Count > 3 && aiRoutePath.ElementAt(2) == node)
+        {
+            aiRoutePath.RemoveFirst();
         }
 
         else
         {
-            aiRouteNode_Target = null;
+            RecounstructAiRoute(node);
         }
-    }
-
-
-    public void OnEnterNewRouteNode(AI_Route_Node node)
-    {
-        aiRouteNode_Current = node;
-
-        UpdateTargetNode();
-
     }
 
     public Vector3 GetNearestWorldPosition(out float trackWidth, out Vector3 tan)
