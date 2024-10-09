@@ -43,7 +43,7 @@ public class UI_ScreenInput : MonoBehaviour
         itemButton.OnRelease = DeactivateAll;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         data.hInput = steerButton.steerValue;
 

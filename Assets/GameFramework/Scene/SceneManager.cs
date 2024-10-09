@@ -102,7 +102,9 @@ public class SceneManager : MonoBehaviour
 
     void Start()
     {
-        //Application.targetFrameRate = 60;
+#if UNITY_ANDROID
+        Application.targetFrameRate = 60;
+#endif
 
         lapCount = lap_Count;
 

@@ -2,8 +2,8 @@ behaviors:
   Drive:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 2024
-      buffer_size: 2024
+      batch_size: 100
+      buffer_size: 1000
       learning_rate: 0.0003
       beta: 0.005
       epsilon: 0.2
@@ -11,9 +11,9 @@ behaviors:
       num_epoch: 3
       learning_rate_schedule: linear
     network_settings:
-      normalize: true
-      hidden_units: 256
-      num_layers: 3
+      normalize: false
+      hidden_units: 64
+      num_layers: 2
     reward_signals:
       extrinsic:
         gamma: 0.99

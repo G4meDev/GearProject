@@ -8,6 +8,8 @@ public class AI_Route : MonoBehaviour
 
     private void Update()
     {
+
+#if UNITY_EDITOR
         if (dirty == true)
         {
             dirty = false;
@@ -27,8 +29,12 @@ public class AI_Route : MonoBehaviour
                         node.childDist.Add(dist);
                     }
                 }
+
+                EditorUtility.SetDirty(node);
             }
         }
+
+#endif
     }
 }
 
