@@ -752,7 +752,9 @@ public class Vehicle : Agent
         LayerMask layerMask = LayerMask.GetMask("Default");
         bHit = Physics.Raycast(ray, out hit, rayDist, layerMask);
 
-        contactSmoothNormal = bHit ? MeshHelpers.GetSmoothNormalFromHit(ref hit) : -gravityDir;
+        // @TODO: find faster way
+        //contactSmoothNormal = bHit ? MeshHelpers.GetSmoothNormalFromHit(ref hit) : -gravityDir;
+        contactSmoothNormal = bHit ? hit.normal : -gravityDir;
     }
 
     private void Gravity()
@@ -939,6 +941,6 @@ public class Vehicle : Agent
 
 
         UpdateRoute();
-
+        //RequestDecision();
     }
 }

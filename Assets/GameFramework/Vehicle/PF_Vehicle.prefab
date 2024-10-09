@@ -95,7 +95,6 @@ GameObject:
   - component: {fileID: 5592306509037148780}
   - component: {fileID: 3947225319184177958}
   - component: {fileID: 1979289670658476072}
-  - component: {fileID: 1655140815917380505}
   - component: {fileID: 5954489393428183134}
   m_Layer: 9
   m_Name: PF_Vehicle
@@ -251,7 +250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BrainParameters:
     VectorObservationSize: 21
-    NumStackedVectorObservations: 3
+    NumStackedVectorObservations: 2
     m_ActionSpec:
       m_NumContinuousActions: 2
       BranchSizes: 02000000
@@ -267,20 +266,6 @@ MonoBehaviour:
   m_UseChildSensors: 1
   m_UseChildActuators: 1
   m_ObservableAttributeHandling: 0
---- !u!114 &1655140815917380505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3985926892625339986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DecisionPeriod: 1
-  TakeActionsBetweenDecisions: 1
 --- !u!114 &5954489393428183134
 MonoBehaviour:
   m_ObjectHideFlags: 0
