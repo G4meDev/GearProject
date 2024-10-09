@@ -18,7 +18,7 @@ public class VehicleCamera : MonoBehaviour
         {
             target.transform.position = vehicle.vehicleBox.transform.position;
 
-            Vector3 cameraUp = vehicle.orientNode.GetCameraUpVector(vehicle.vehicleBox.transform.position);
+            Vector3 cameraUp = vehicle.orientNode ? vehicle.orientNode.GetCameraUpVector(vehicle.vehicleBox.transform.position) : Vector3.up;
             Vector3 forward = Vector3.Cross(vehicle.vehicleBox.transform.right, cameraUp);
 
             target.transform.rotation = Quaternion.LookRotation(forward, cameraUp);
