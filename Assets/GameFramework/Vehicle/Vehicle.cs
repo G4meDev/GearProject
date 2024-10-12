@@ -115,7 +115,7 @@ public class Vehicle : Agent
     [HideInInspector]
     public float airborneTime = 0.0f;
 
-    public float minDriftSpeed = 30.0f;
+    public float minDriftSpeed = 20.0f;
     public float driftMinAngle = 15.0f;
     public float driftMaxAngle = 60.0f;
 
@@ -178,16 +178,16 @@ public class Vehicle : Agent
 
     public float targetSpeed = 30.0f;
 
-    private Vector3 crossTrackLocal = Vector2.zero;
+    private Vector2 crossTrackLocal = Vector2.zero;
     private float crossTrackScale = 20.0f;
 
-    private Vector3 p_1_Local = Vector2.zero;
+    private Vector2 p_1_Local = Vector2.zero;
     private float p_1_Scale = 20.0f;
 
-    private Vector3 p_2_Local = Vector2.zero;
+    private Vector2 p_2_Local = Vector2.zero;
     private float p_2_Scale = 20.0f;
 
-    private Vector3 p_3_Local = Vector2.zero;
+    private Vector2 p_3_Local = Vector2.zero;
     private float p_3_Scale = 20.0f;
 
     private float changedDist = 0.0f;
@@ -195,13 +195,36 @@ public class Vehicle : Agent
     private float localDivide = AI_Params.projection_3_dist * 1.5f;
     private float scaleDivide = 60.0f;
 
+    EnvironmentParameters envParams;
+
+    Vector2 localSpeed2D;
+    int trainingSteps = 2500;
+    int currentTraningSteps = 0;
+
+
+    public AI_Route trainingRoute;
+
+    public override void Initialize()
+    {
+        envParams = Academy.Instance.EnvironmentParameters;
+        SetEnvironemntParameters();
+    }
+
+    public void SetEnvironemntParameters()
+    {
+        targetSpeed = envParams.GetWithDefault("speed", 30.0f);
+        maxSpeed = targetSpeed;
+        trainingSteps = (int)envParams.GetWithDefault("trainingsteps", 2500.0f);
+    }
+
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(forwardSpeed/ maxPossibleSpeed);
-        sensor.AddObservation(hInput);
-        sensor.AddObservation(driftDir);
+        sensor.AddObservation(localSpeed2D / maxPossibleSpeed);
+        sensor.AddObservation(targetSpeed / maxPossibleSpeed);
+        sensor.AddObservation(steerValue / 90);
+        sensor.AddObservation((int)driftDir);
         sensor.AddObservation(isDrifting() ? Mathf.Clamp01((Time.time - driftStartTime) / 6) : 0);
-        sensor.AddObservation(targetSpeed/ maxPossibleSpeed);
+        sensor.AddObservation(driftYaw / driftMaxAngle);
 
 
         sensor.AddObservation(crossTrackLocal / localDivide);
@@ -216,10 +239,6 @@ public class Vehicle : Agent
 
         sensor.AddObservation(p_3_Local / localDivide);
         sensor.AddObservation(p_3_Scale / scaleDivide);
-
-        //         sensor.AddObservation(dot);
-        //         sensor.AddObservation((roadWidth - dist) / 40);
-        //         sensor.AddObservation((roadWidth + dist) / 40);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -227,25 +246,36 @@ public class Vehicle : Agent
         hInput = actions.ContinuousActions[0];
         vInput = actions.ContinuousActions[1];
 
-        bool jump = actions.DiscreteActions[0] == 1;
-        holdingJump = jump;
 
+        holdingJump = actions.DiscreteActions[0] == 1;
 
         if (routePlanning.projectionData != null && crossTrackLocal.magnitude > crossTrackScale / 2)
         {
             OnKilled();
         }
 
-        float speedReward = 1 - (Mathf.Clamp(forwardSpeed, 0, float.MaxValue) - targetSpeed) / maxPossibleSpeed;
-        speedReward *= changedDist * 0.7f;
+        float speedReward;
+        if (forwardSpeed < targetSpeed)
+        {
+            speedReward = Mathf.InverseLerp(0, targetSpeed, forwardSpeed);
+        }
 
-        float constantDec = -0.005f;
+        else
+        {
+            speedReward = Mathf.InverseLerp(targetSpeed * 2, targetSpeed, forwardSpeed);
+        }
 
-        float reward = speedReward + constantDec;
+        speedReward = forwardSpeed / maxPossibleSpeed;
+
+        float con = -.001f;
+
+        float reward = speedReward * changedDist; 
+
+        reward -= con;
 
         if(isPlayer)
         {
-            //Debug.Log(reward + "    " + speedReward + "    " + targetSpeed);
+            Debug.Log(reward + "    " + forwardSpeed + "    " + targetSpeed);
         }
 
         rewardImage.material.SetFloat("_reward", reward);
@@ -265,20 +295,12 @@ public class Vehicle : Agent
 
         b[0] = i.holdingJump ? 1 : 0;
     }
-    public override void Initialize()
-    {
-        
-    }
+
     public override void OnEpisodeBegin()
     {
         vehicleProxy.velocity = Vector3.zero;
         vehicleProxy.angularVelocity = Vector3.zero;
 
-        //targetSpeed = Random.Range(30, 55);
-
-        //lapPathNode = null;
-        //aiRouteNode_Current = null;
-        //aiRouteNode_Target = null;
         lapPathIndex = 0;
         currentLap = 1;
 
@@ -287,42 +309,40 @@ public class Vehicle : Agent
         speedModifierIntensity = 0.0f;
         speedModifierReserveTime = 0.0f;
 
-        //         Vector3 targetPos;
-        //         Quaternion q;
-        // 
-        //         if(lapPathNode)
-        //         {
-        //             Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
-        //             LayerMask layerMask = LayerMask.GetMask("Default");
-        //             bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
-        // 
-        //             targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
-        //             q = lapPathNode.spawnPoint.transform.rotation;
-        //         }
-        //         else
-        //         {
-        //             targetPos = vehicleProxy.transform.position;
-        //             q = vehicleProxy.transform.rotation;
-        //         }
+        AI_Route_Node[] nodes = trainingRoute.GetComponentsInChildren<AI_Route_Node>();
+        int r = UnityEngine.Random.Range(0, nodes.Length);
 
-        
 
-        vehicleProxy.MovePosition(startPos);
-        vehicleBox.transform.SetPositionAndRotation(startPos, startRot);
-        vehicleMesh.transform.SetPositionAndRotation(startPos, startRot);
+        Ray ray = new(nodes[r].transform.position + Vector3.up * 2, Vector3.down);
+        LayerMask layerMask = LayerMask.GetMask("Default");
+        bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
         
-        killDelegate?.Invoke();
+        Vector3 targetPos = hit.point + Vector3.up * 0.65f;
+        Quaternion targetRot = nodes[r].transform.rotation;
+
+        targetPos = startPos;
+        targetRot = startRot;
+
+        vehicleProxy.MovePosition(targetPos);
+        vehicleBox.transform.SetPositionAndRotation(targetPos, targetRot);
+        vehicleMesh.transform.SetPositionAndRotation(targetPos, targetRot);
+
+        SetEnvironemntParameters();
+        currentTraningSteps = 0;
     }
 
     private void UpdateRoute()
     {
+        Vector3 temp;
+
         if (routePlanning.projectionData != null)
         {
             Vector3 crossTrackPos = Vector3.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.position,
                 routePlanning.projectionData.crossTrackProjection.child.transform.position,
                 routePlanning.projectionData.crossTrackProjection.t);
 
-            crossTrackLocal = vehicleBox.transform.InverseTransformPointUnscaled(crossTrackPos);
+            temp = vehicleBox.transform.InverseTransformPointUnscaled(crossTrackPos);
+            crossTrackLocal = new Vector2(temp.x, temp.z);
 
             crossTrackScale = Mathf.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.lossyScale.x,
                 routePlanning.projectionData.crossTrackProjection.child.transform.lossyScale.x,
@@ -334,7 +354,8 @@ public class Vehicle : Agent
                 routePlanning.projectionData.Projection_1.child.transform.position,
                 routePlanning.projectionData.Projection_1.t);
 
-            p_1_Local = vehicleBox.transform.InverseTransformPointUnscaled(projection_1_Pos);
+            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_1_Pos);
+            p_1_Local = new Vector2(temp.x, temp.z);
 
             p_1_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_1.parent.transform.lossyScale.x,
                 routePlanning.projectionData.Projection_1.child.transform.lossyScale.x,
@@ -346,7 +367,8 @@ public class Vehicle : Agent
                 routePlanning.projectionData.Projection_2.child.transform.position,
                 routePlanning.projectionData.Projection_2.t);
 
-            p_2_Local = vehicleBox.transform.InverseTransformPointUnscaled(projection_2_Pos);
+            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_2_Pos);
+            p_2_Local = new Vector2(temp.x, temp.z);
 
             p_2_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_2.parent.transform.lossyScale.x,
                 routePlanning.projectionData.Projection_2.child.transform.lossyScale.x,
@@ -358,7 +380,8 @@ public class Vehicle : Agent
                 routePlanning.projectionData.Projection_3.child.transform.position,
                 routePlanning.projectionData.Projection_3.t);
 
-            p_3_Local = vehicleBox.transform.InverseTransformPointUnscaled(projection_3_Pos);
+            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_3_Pos);
+            p_3_Local = new Vector2(temp.x, temp.z);
 
             p_3_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_3.parent.transform.lossyScale.x,
                 routePlanning.projectionData.Projection_3.child.transform.lossyScale.x,
@@ -378,11 +401,11 @@ public class Vehicle : Agent
             DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
             DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
             DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
-
-//             DrawHelpers.DrawSphere(new Vector3(crossTrackLocal.x, 0, crossTrackLocal.y) * AI_Params.projection_3_dist, 3, color);
-//             DrawHelpers.DrawSphere(new Vector3(p_1_Local.x, 0, p_1_Local.y) * AI_Params.projection_3_dist, 3, color);
-//             DrawHelpers.DrawSphere(new Vector3(p_2_Local.x, 0, p_2_Local.y) * AI_Params.projection_3_dist, 3, color);
-//             DrawHelpers.DrawSphere(new Vector3(p_3_Local.x, 0, p_3_Local.y) * AI_Params.projection_3_dist, 3, color);
+// 
+//             DrawHelpers.DrawSphere(crossTrackLocal, 3, color);
+//             DrawHelpers.DrawSphere(p_1_Local, 3, color);
+//             DrawHelpers.DrawSphere(p_2_Local, 3, color);
+//             DrawHelpers.DrawSphere(p_3_Local, 3, color);
 
 #endif
         }
@@ -422,14 +445,14 @@ public class Vehicle : Agent
         Debug.Log(name + "    End Race!");
 
         //SetReward(1);
-        EndEpisode();
+        //EndEpisode();
     }
 
     public void IncreaseLap()
     {
         currentLap++;
 
-
+        EndEpisode();
 
         if (currentLap > SceneManager.lapCount)
         {
@@ -778,6 +801,8 @@ public class Vehicle : Agent
 
     private void ApplySteer()
     {
+
+
         if(gliderNode)
         {
             vehicleProxy.AddForce(100 * hInput * vehicleBox.transform.right, ForceMode.Acceleration);
@@ -843,6 +868,17 @@ public class Vehicle : Agent
 
     private void FixedUpdate()
     {
+        currentTraningSteps += 1;
+        if (currentTraningSteps > trainingSteps)
+        {
+            //EndEpisode();
+        }
+
+
+        Vector3 localSpeed = vehicleBox.transform.InverseTransformPointUnscaled(vehicleProxy.transform.position + vehicleProxy.velocity);
+        localSpeed2D = new Vector2(localSpeed.x, localSpeed.z);
+
+
         UpdateLapPathIndex();
 
         Gravity();
@@ -942,5 +978,10 @@ public class Vehicle : Agent
 
         UpdateRoute();
         //RequestDecision();
+
+        if (isPlayer)
+        {
+            //RequestDecision();
+        }
     }
 }

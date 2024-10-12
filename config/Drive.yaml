@@ -2,8 +2,8 @@ behaviors:
   Drive:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 32
-      buffer_size: 256
+      batch_size: 1024
+      buffer_size: 10240
       learning_rate: 0.0003
       beta: 0.005
       epsilon: 0.2
@@ -12,12 +12,25 @@ behaviors:
       learning_rate_schedule: linear
     network_settings:
       normalize: false
-      hidden_units: 20
-      num_layers: 1
+      hidden_units: 512
+      num_layers: 3
     reward_signals:
       extrinsic:
-        gamma: 0.99
+        gamma: 0.999
         strength: 1.0
     max_steps: 5000000
-    time_horizon: 64
+    time_horizon: 1000
     summary_freq: 50000
+    
+environment_parameters:
+  speed:
+    sampler_type: uniform
+    sampler_parameters:
+      min_value: 30
+      max_value: 45
+      
+  trainingsteps:
+    sampler_type: uniform
+    sampler_parameters:
+      min_value: 1500
+      max_value: 1500
