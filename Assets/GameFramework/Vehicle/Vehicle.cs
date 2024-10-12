@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Burst.CompilerServices;
 using Unity.Mathematics;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
@@ -202,8 +203,6 @@ public class Vehicle : Agent
     int currentTraningSteps = 0;
 
 
-    public AI_Route trainingRoute;
-
     public override void Initialize()
     {
         envParams = Academy.Instance.EnvironmentParameters;
@@ -309,23 +308,10 @@ public class Vehicle : Agent
         speedModifierIntensity = 0.0f;
         speedModifierReserveTime = 0.0f;
 
-        AI_Route_Node[] nodes = trainingRoute.GetComponentsInChildren<AI_Route_Node>();
-        int r = UnityEngine.Random.Range(0, nodes.Length);
 
-
-        Ray ray = new(nodes[r].transform.position + Vector3.up * 2, Vector3.down);
-        LayerMask layerMask = LayerMask.GetMask("Default");
-        bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
-        
-        Vector3 targetPos = hit.point + Vector3.up * 0.65f;
-        Quaternion targetRot = nodes[r].transform.rotation;
-
-        targetPos = startPos;
-        targetRot = startRot;
-
-        vehicleProxy.MovePosition(targetPos);
-        vehicleBox.transform.SetPositionAndRotation(targetPos, targetRot);
-        vehicleMesh.transform.SetPositionAndRotation(targetPos, targetRot);
+        vehicleProxy.MovePosition(startPos);
+        vehicleBox.transform.SetPositionAndRotation(startPos, startRot);
+        vehicleMesh.transform.SetPositionAndRotation(startPos, startRot);
 
         SetEnvironemntParameters();
         currentTraningSteps = 0;
@@ -979,9 +965,15 @@ public class Vehicle : Agent
         UpdateRoute();
         //RequestDecision();
 
-        if (isPlayer)
+        if (aeroState != VehicleAeroState.Gliding)
         {
-            //RequestDecision();
+            RequestDecision();
         }
+        else
+        {
+            hInput = 0;
+            vInput = 0;
+        }
+
     }
 }
