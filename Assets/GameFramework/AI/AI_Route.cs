@@ -1,10 +1,41 @@
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
 
+[ExecuteInEditMode]
 public class AI_Route : MonoBehaviour
 {
-    
+    public bool dirty = false;
+
+    private void Update()
+    {
+
+#if UNITY_EDITOR
+        if (dirty == true)
+        {
+            dirty = false;
+
+            AI_Route_Node[] nodes = GetComponentsInChildren<AI_Route_Node>();
+            foreach (AI_Route_Node node in nodes)
+            {
+                if(node)
+                {
+                    node.childDist.Clear();
+
+                    for (int i = 0; i < node.children.Count; i++)
+                    {
+                        AI_Route_Node child = node.children[i];
+
+                        float dist = child ? Vector3.Distance(node.transform.position, child.transform.position) : 0;
+                        node.childDist.Add(dist);
+                    }
+                }
+
+                EditorUtility.SetDirty(node);
+            }
+        }
+
+#endif
+    }
 }
 
 #if UNITY_EDITOR

@@ -11,9 +11,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Scene_2/Scene_2.unity
     guid: 53754364f9a2a1b40b1a001e7d1b31c6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Scene_3/Scene_3.unity
     guid: 689ff5420f73c014a964a94ee7b7fe68
+  - enabled: 1
+    path: Assets/Scenes/Scene_TrainAI/Scene_TrainAI.unity
+    guid: c2ca00eec20a377498c69f5a0330cecc
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 236aa23efafdb9745a0813f854f0bf18,
       type: 2}

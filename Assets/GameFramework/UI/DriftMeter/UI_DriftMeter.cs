@@ -17,7 +17,7 @@ public class UI_DriftMeter : MonoBehaviour
     {
         if (SceneManager.playerVehicle)
         {
-            image.material.SetFloat("_Drifting", SceneManager.playerVehicle.drifting ? 1 : 0);
+            image.material.SetFloat("_Drifting", SceneManager.playerVehicle.isDrifting() ? 1 : 0);
             image.material.SetFloat("_StartTime", SceneManager.playerVehicle.driftStartTime);
             image.material.SetFloat("_Duration", SceneManager.playerVehicle.driftTimer);
             image.material.SetFloat("_Counter", SceneManager.playerVehicle.driftCounter);

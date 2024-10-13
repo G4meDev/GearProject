@@ -35,6 +35,9 @@ public class SceneManager : MonoBehaviour
     public int lap_Count = 3;
     public static int lapCount;
 
+    public bool training_Session = false;
+    public static bool trainingSession;
+
     // -------------------------------------------------
 
     public static UI_ScreenInput GetScreenInput() { return screenInput; }
@@ -75,12 +78,7 @@ public class SceneManager : MonoBehaviour
     {
         public int Compare(Vehicle x, Vehicle y)
         {
-            if(x.currentLap == y.currentLap)
-            {
-                return x.lapPathIndex > y.lapPathIndex ? -1 : 1;
-            }
-
-            return x.currentLap > y.currentLap ? -1 : 1;
+            return x.distanceFromStart > y.distanceFromStart ? -1 : 1;
         }
     }
 
@@ -97,14 +95,17 @@ public class SceneManager : MonoBehaviour
     public static float GetDistanceFromFirstPlace(Vehicle vehicle)
     {
         return ((allVehicles[0].currentLap - vehicle.currentLap) * vehicle.lapPathNode.GetMaxNodeIndex())
-            + allVehicles[0].lapPathIndex - vehicle.lapPathIndex;
+            + allVehicles[0].distanceFromStart - vehicle.distanceFromStart;
     }
 
     void Start()
     {
+#if UNITY_ANDROID && !UNITY_EDITOR
         Application.targetFrameRate = 60;
+#endif
 
         lapCount = lap_Count;
+        trainingSession = training_Session;
 
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();

@@ -1,15 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
-using TreeEditor;
+using System;
+using System.IO;
 
 public class AI_Route_Node : MonoBehaviour
 {
     public List<AI_Route_Node> children;
     public List<AI_Route_Node> parents;
+    public List<float> childDist;
 
-    public float optimalCrossSecion = 0.0f;
+    public float GetDistToNode(AI_Route_Node inChild)
+    {
+        int i = children.FindIndex(x => x == inChild);
+
+        return i != -1 ? childDist[i] : 30;
+    }
 
     public int GetDriftDirectionToTarget(AI_Route_Node node)
     {
@@ -19,41 +25,18 @@ public class AI_Route_Node : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        //DrawHelpers.DrawSphere(transform.position + transform.right * transform.lossyScale.x, 2, Color.green);
-
-        foreach (AI_Route_Node child in children)
+        for(int i = 0; i < children.Count; ++i)
         {
+            var child = children[i];
+
             if (child)
             {
                 Vector3 dir = child.transform.position - transform.position;
 
-                DrawArrow.ForGizmo(transform.position + Vector3.up * 2, transform.forward * dir.magnitude * 0.3f, Color.black, 5);
+                DrawArrow.ForGizmo(transform.position + Vector3.up * 2, (dir.magnitude - 5.0f) * dir.normalized, Color.black, 5);
 
-                Vector3 r = Vector3.Normalize(Vector3.Cross(Vector3.up, dir));
-
-                Vector3 optimalStart = transform.position + r * optimalCrossSecion;
-                Vector3 optimalEnd = child.transform.position + r * child.optimalCrossSecion;
-                Vector3 optimalDir = optimalEnd - optimalStart;
-
-                int driftDir = GetDriftDirectionToTarget(child);
-
-                Color color;
-                if (driftDir == 1)
-                {
-                    color = Color.red;
-                }
-
-                else if (driftDir == -1) 
-                {
-                     color = Color.blue;
-                }
-
-                else
-                {
-                    color = Color.green;
-                }
-
-                DrawArrow.ForGizmo(optimalStart + Vector3.up * 2, optimalDir, color, 5);
+                float dist = childDist.Count > i ? childDist[i] : 0;
+                DrawHelpers.drawString(((int)dist).ToString(), (transform.position + Vector3.up * 3) + dir.magnitude * transform.forward * 0.15f, 0, 0, 34);
             }
         }
 
@@ -74,10 +57,9 @@ public class AI_Route_Node : MonoBehaviour
     {
         Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
 
-        AIController controller = vehicle.GetComponent<AIController>();
-        if (controller)
+        if (vehicle && !vehicle.isPlayer)
         {
-            controller.OnEnterNewRouteNode(this);
+            vehicle.GetComponent<AIController>().routePlanning.OnEnterNewRouteNode(this);
         }
     }
 
@@ -135,9 +117,11 @@ public class AI_Route_Node_Editor : Editor
     {
         AI_Route_Node node = target as AI_Route_Node;
 
-        Object obj = PrefabUtility.InstantiatePrefab(node.GetPrefabDefinition());
+        UnityEngine.Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(node);
+        UnityEngine.Object obj = PrefabUtility.InstantiatePrefab(prefab);
+        GameObject gameObj = PrefabUtility.GetNearestPrefabInstanceRoot(obj);
 
-        AI_Route_Node newNode = obj.GetComponent<AI_Route_Node>();
+        AI_Route_Node newNode = gameObj.GetComponent<AI_Route_Node>();
         newNode.transform.parent = node.transform.root;
 
         newNode.transform.SetPositionAndRotation(node.transform.position + node.transform.forward * 50, node.transform.rotation);

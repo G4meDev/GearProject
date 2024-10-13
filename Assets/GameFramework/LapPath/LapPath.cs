@@ -1,20 +1,86 @@
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 
+[ExecuteInEditMode]
 public class LapPath : MonoBehaviour
 {
-    [HideInInspector]
     public float maxNodeIndex = -1;
+
+    public List<float> distanceList;
+
+    public bool dirty = false;
+
+
+    public float GetFullLapDistance()
+    {
+        return distanceList[distanceList.Count - 1];
+    }
+
+    public void RegenData()
+    {
+        distanceList.Clear();
+
+        LapPath_Node node = null;
+
+        LapPath_Node[] nodes = GetComponentsInChildren<LapPath_Node>();
+        foreach (LapPath_Node child in nodes)
+        {
+            if (child.isStart == true)
+            {
+                node = child;
+                node.Dist = 0;
+                node.nodeIndex = 0;
+                break;
+            }
+        }
+
+        //@TODO: add multi path support
+
+        distanceList.Add(0);
+
+        while(true)
+        {
+            LapPath_Node child = node.children[0];
+
+            child.Dist = node.Dist + Vector3.Distance(node.transform.position, child.transform.position);
+            distanceList.Add(child.Dist);
+
+            if(child.isStart)
+            {
+                maxNodeIndex = node.nodeIndex;
+                child.Dist = 0;
+
+                break;
+            }
+
+            child.nodeIndex = node.nodeIndex + 1;
+            node = child;
+        }
+
+
+        foreach (LapPath_Node child in nodes)
+        {
+            EditorUtility.SetDirty(child);
+        }
+
+    }
 
     private void Start()
     {
-        LapPath_Node[] nodes = GetComponentsInChildren<LapPath_Node>();
 
-        foreach (var node in nodes)
+    }
+
+    private void Update()
+    {
+#if UNITY_EDITOR
+        if (dirty == true)
         {
-            maxNodeIndex = Mathf.Max(maxNodeIndex, node.nodeIndex);
+            dirty = false;
+
+            RegenData();
         }
+#endif
     }
 }
 

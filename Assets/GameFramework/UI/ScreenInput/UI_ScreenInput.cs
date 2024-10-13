@@ -8,7 +8,6 @@ public class ScreenInputData
     public float hInput = 0.0f;
     public float vInput = 0.0f;
 
-    public bool pressedJump = false;
     public bool holdingJump = false;
 }
 
@@ -44,7 +43,7 @@ public class UI_ScreenInput : MonoBehaviour
         itemButton.OnRelease = DeactivateAll;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         data.hInput = steerButton.steerValue;
 
@@ -71,9 +70,6 @@ public class UI_ScreenInput : MonoBehaviour
         }
 
         data.vInput = (throttleActive ? 1 : 0) + (reverseActive ? -1 : 0);
-
-        
-        data.pressedJump = jumpButton.entered && !data.holdingJump;
 
         data.holdingJump = (jumpButton.pressed | jumpButton.entered) && !throttleButton.entered && !reverseButton.entered;
 

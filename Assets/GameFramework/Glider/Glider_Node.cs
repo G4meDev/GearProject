@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
 
 public class Glider_Node : MonoBehaviour
 {
@@ -75,9 +74,11 @@ public class Glider_Node_Editor : Editor
         
         Glider_Node node = target as Glider_Node;
 
-        Object obj = PrefabUtility.InstantiatePrefab(node.GetPrefabDefinition());
+        Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(node);
+        Object obj = PrefabUtility.InstantiatePrefab(prefab);
+        GameObject gameObj = PrefabUtility.GetNearestPrefabInstanceRoot(obj);
 
-        Glider_Node newNode = obj.GetComponent<Glider_Node>();
+        Glider_Node newNode = gameObj.GetComponent<Glider_Node>();
         newNode.transform.parent = node.transform.root;
 
         newNode.transform.SetPositionAndRotation(node.transform.position + node.transform.forward * 50, node.transform.rotation);

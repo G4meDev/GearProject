@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.UI;
+
+// @TODO: Develop jump
 
 public enum VehicleAeroState
 {
@@ -33,6 +36,7 @@ public class Vehicle : MonoBehaviour
     public float counterForceStr = 0.03f;
 
     public float maxSpeed = 20.0f;
+    public float maxSpeedReverse = -10.0f;
     public float accel = 20.0f;
 
     public float rayDist = 1.0f;
@@ -59,9 +63,7 @@ public class Vehicle : MonoBehaviour
 
     public float coyoteTime = 0.1f;
 
-    public float jumpDelayTime = 0.1f;
-
-    public float jumpResetTime = 0.4f;
+    public float jumpDuration = 0.1f;
 
     public float lowJumpTime = 0.6f;
     public SpeedModifierData lowJumpSpeedModifier;
@@ -73,7 +75,7 @@ public class Vehicle : MonoBehaviour
     public SpeedModifierData highJumpSpeedModifier;
 
     [HideInInspector]
-    float lastjumpTime = 0;
+    public float jumpStartTime = 0;
 
     [HideInInspector]
     public float vInput;
@@ -81,8 +83,6 @@ public class Vehicle : MonoBehaviour
     [HideInInspector]
     public float hInput;
 
-    [HideInInspector]
-    public bool pressedJump;
     [HideInInspector]
     public bool holdingJump;
 
@@ -96,18 +96,18 @@ public class Vehicle : MonoBehaviour
     private Vector3 contactSmoothNormal;
 
     [HideInInspector]
-    private float steerValue;
+    public float steerValue;
 
     [HideInInspector]
     private float maxSpeedWithModifier;
 
     [HideInInspector]
-    VehicleAeroState aeroState = VehicleAeroState.OnGround;
+    public VehicleAeroState aeroState = VehicleAeroState.OnGround;
 
     [HideInInspector]
     public float airborneTime = 0.0f;
 
-    public float minDriftSpeed = 30.0f;
+    public float minDriftSpeed = 20.0f;
     public float driftMinAngle = 15.0f;
     public float driftMaxAngle = 60.0f;
 
@@ -121,8 +121,6 @@ public class Vehicle : MonoBehaviour
 
     public SpeedModifierData thirdDirftSpeedModifier;
 
-    [HideInInspector]
-    public bool drifting = false;
 
     [HideInInspector]
     public float driftStartTime = 0.0f;
@@ -134,13 +132,10 @@ public class Vehicle : MonoBehaviour
     public float driftYaw = 0.0f;
 
     [HideInInspector]
-    private bool rightDrift = false;
+    private float driftDir = 0;
 
     [HideInInspector]
     private float lastDriftEndTime = 0.0f;
-
-    //TODO: Delete
-    public PullPath pullPath;
 
     public Camera_Orient_Node orientNode;
 
@@ -149,16 +144,16 @@ public class Vehicle : MonoBehaviour
     public Glider_Node gliderNode;
 
     public LapPath_Node lapPathNode;
-    public float lapPathIndex = -1;
+    public float distanceFromStart = -1;
     public int currentLap = 1;
-
-    private Vector3 lastRight;
-    private Vector3 lastPos;
 
     public float distanceFromFirstPlace = -1;
 
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
+
+    //@TODO: delete 
+    public float targetSpeed = 30;
 
     public void SetThrottleInput(float input)
     {
@@ -216,7 +211,7 @@ public class Vehicle : MonoBehaviour
     {
         if (lapPathNode)
         {
-            lapPathIndex = lapPathNode.GetIndexAtWorldPosition(vehicleProxy.transform.position);
+            distanceFromStart = lapPathNode.GetDistanceFromStart(this);
         }
     }
 
@@ -273,7 +268,12 @@ public class Vehicle : MonoBehaviour
 
     private bool CanJump()
     {
-        return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote) && Time.time > lastjumpTime + jumpResetTime;
+        return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote);
+    }
+
+    public bool isDrifting()
+    {
+        return driftDir != 0;
     }
 
     private bool CanDrift()
@@ -283,12 +283,11 @@ public class Vehicle : MonoBehaviour
 
     public void StartDrift()
     {
-        drifting = true;
+        driftDir = Mathf.Sign(hInput);
+        
         driftStartTime = Time.time;
         driftCounter = 0;
         driftYaw = 0.0f;
-
-        rightDrift = hInput > 0.0f;
     }
 
     private void StepDrift()
@@ -325,7 +324,7 @@ public class Vehicle : MonoBehaviour
 
             float a = (hInput + 1) / 2;
 
-            driftYaw = rightDrift ? Mathf.Lerp(driftMinAngle , driftMaxAngle, a) : -Mathf.Lerp(driftMinAngle, driftMaxAngle, 1 - a);
+            driftYaw = driftDir > 0 ? Mathf.Lerp(driftMinAngle , driftMaxAngle, a) : -Mathf.Lerp(driftMinAngle, driftMaxAngle, 1 - a);
             driftYaw *= Time.fixedDeltaTime;
 
             vehicleBox.transform.Rotate(Vector3.up, driftYaw, Space.Self);
@@ -334,7 +333,7 @@ public class Vehicle : MonoBehaviour
 
     public void EndDrift()
     {
-        drifting = false;
+        driftDir = 0;
 
         lastDriftEndTime = Time.time;
     }
@@ -343,11 +342,11 @@ public class Vehicle : MonoBehaviour
     {
         if (CanJump())
         {
-            vehicleProxy.AddForce(jumpStr * contactSmoothNormal, ForceMode.Acceleration);
+            //vehicleProxy.AddForce(jumpStr * contactSmoothNormal, ForceMode.Acceleration);
 
             aeroState = VehicleAeroState.Jumping;
 
-            lastjumpTime = Time.time;
+            jumpStartTime = Time.time;
         }
     }
 
@@ -368,10 +367,10 @@ public class Vehicle : MonoBehaviour
             ApplySpeedModifier(ref lowJumpSpeedModifier);
         }
 
-        if (CanDrift())
-        {
-            StartDrift();
-        }
+//         if (CanDrift())
+//         {
+//             StartDrift();
+//         }
 
     }
 
@@ -430,8 +429,7 @@ public class Vehicle : MonoBehaviour
         {
             if (aeroState == VehicleAeroState.Jumping)
             {
-                // add delay to let ray get out of surface (ray is longer than vehicle proxy radius)
-                if (Time.time > lastjumpTime + jumpDelayTime)
+                if (Time.time > jumpStartTime + jumpDuration)
                 {
                     aeroState = VehicleAeroState.OnGround;
                     lastTimeOnGround = Time.time;
@@ -491,7 +489,9 @@ public class Vehicle : MonoBehaviour
         LayerMask layerMask = LayerMask.GetMask("Default");
         bHit = Physics.Raycast(ray, out hit, rayDist, layerMask);
 
-        contactSmoothNormal = bHit ? MeshHelpers.GetSmoothNormalFromHit(ref hit) : -gravityDir;
+        // @TODO: find faster way
+        //contactSmoothNormal = bHit ? MeshHelpers.GetSmoothNormalFromHit(ref hit) : -gravityDir;
+        contactSmoothNormal = bHit ? hit.normal : -gravityDir;
     }
 
     private void Gravity()
@@ -515,6 +515,8 @@ public class Vehicle : MonoBehaviour
 
     private void ApplySteer()
     {
+
+
         if(gliderNode)
         {
             vehicleProxy.AddForce(100 * hInput * vehicleBox.transform.right, ForceMode.Acceleration);
@@ -523,7 +525,7 @@ public class Vehicle : MonoBehaviour
         }
 
         // applying vehicle yaw to the box
-        if (!drifting)
+        if (!isDrifting() && aeroState == VehicleAeroState.OnGround)
         {
             steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
@@ -564,18 +566,24 @@ public class Vehicle : MonoBehaviour
 
         else
         {
+            gameObject.AddComponent<AIRoutePlanning>();
             gameObject.AddComponent<AIController>();
         }
     }
 
     private void Update()
     {
-        distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
+        //distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
     }
 
     private void FixedUpdate()
     {
         UpdateLapPathIndex();
+
+        if(isPlayer)
+        {
+            Debug.Log(distanceFromStart);
+        }
 
         Gravity();
 
@@ -591,9 +599,13 @@ public class Vehicle : MonoBehaviour
 
         //Gravity();
 
-        if (drifting)
+        if (isDrifting())
         {
             StepDrift();
+        }
+        else if (CanDrift())
+        {
+            StartDrift();
         }
 
         //forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
@@ -605,7 +617,7 @@ public class Vehicle : MonoBehaviour
 
         maxSpeedWithModifier = GetMaxSpeedWithModifiers();
 
-        airborneTime = aeroState == VehicleAeroState.Jumping ? Time.time - lastjumpTime : 0.0f;
+        airborneTime = aeroState == VehicleAeroState.Jumping ? Time.time - jumpStartTime : 0.0f;
 
         UpdateAeroState();
 
@@ -629,11 +641,25 @@ public class Vehicle : MonoBehaviour
                 IncreaseSpeedTo(maxSpeedWithModifier);
             }
 
-            float enginePower = Mathf.Abs(forwardSpeed) < maxSpeedWithModifier ? accel : 0;
+            float enginePower;
+
+            if (vInput > 0)
+            {
+                enginePower = forwardSpeed < maxSpeedWithModifier ? accel : 0;
+            }
+
+            else
+            {
+                enginePower = forwardSpeed > maxSpeedReverse ? accel : 0;
+            }
+
+
             enginePower *= vInput;
 
-
-            vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
+            if(aeroState == VehicleAeroState.OnGround)
+            {
+                vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
+            }
 
             float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
             float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : slipingSpeed / vehicleProxy.velocity.magnitude;
@@ -644,38 +670,13 @@ public class Vehicle : MonoBehaviour
                 //float t = drifting ? 0 : Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime);
                 //float t = drifting ? driftTraction : traction;
 
-                float t = drifting ? driftTraction : Mathf.Lerp(driftTraction, GetContactSurfaceLateralFriction(), Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime));
+                float t = isDrifting() ? driftTraction : Mathf.Lerp(driftTraction, GetContactSurfaceLateralFriction(), Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime));
 
                 vehicleProxy.AddForce(-slipingSpeed * t * vehicleBox.transform.right, ForceMode.VelocityChange);
             }
 
         }
 
-
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
-
-        if (pressedJump)
-        {
-            OnStartJump();
-        }
-
-        Vector3 origin;
-        VectorHelpers.LineLineIntersection(out origin, vehicleBox.transform.position, vehicleBox.transform.right,
-            lastPos, lastRight);
-
-        //DrawHelpers.DrawSphere(origin, 5, Color.black);
-        //Debug.Log(Vector3.Distance(origin, lastPos));
-
-        lastPos = vehicleBox.transform.position;
-        lastRight = vehicleBox.transform.right;
-
-//         if (bHit && pullPath && forwardSpeed < maxSpeedWithModifier)
-//         {
-//             Vector3 tan = pullPath.GetForceAtPosition(vehicleProxy.transform.position);
-// 
-//             Debug.DrawLine(vehicleProxy.transform.position + Vector3.up * 2, vehicleProxy.transform.position + (Vector3.up * 2) + Vector3.Normalize(tan), Color.black);
-// 
-//             vehicleProxy.AddForce(tan, ForceMode.Acceleration);
-//         }
     }
 }

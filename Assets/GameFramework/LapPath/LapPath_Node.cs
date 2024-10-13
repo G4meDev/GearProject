@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
+using System;
 
 public enum LapPathCheckPoint
 {
@@ -16,6 +16,8 @@ public class LapPath_Node : MonoBehaviour
 
     public List<LapPath_Node> children;
     public List<LapPath_Node> parents;
+
+    public float Dist = -1;
 
     public GameObject spawnPoint;
 
@@ -34,50 +36,89 @@ public class LapPath_Node : MonoBehaviour
         return lapPath.maxNodeIndex;
     }
 
-    public float GetIndexAtWorldPosition(Vector3 worldPos)
+    public float GetIndexAtWorldPosition(Vehicle vehicle)
     {
-        float bestIndex = 0;
+        Vector3 worldPos = vehicle.vehicleProxy.transform.position;
+
         float minDist = float.MaxValue;
+        LapPath_Node minStart = null;
+        LapPath_Node minEnd = null;
+        float min_t = 0;
 
-        Vector3 toPos;
-        Vector3 d;
-        float dot;
-
-        foreach(LapPath_Node node in children)
+        foreach (LapPath_Node node in children)
         {
-            d = node.transform.position - transform.position;
-            toPos = worldPos - transform.position;
-            dot = Vector3.Dot(d.normalized, toPos);
-            dot = Mathf.Clamp01(dot);
+            Vector3 startToPos = worldPos - transform.position;
+            Vector3 startToEnd = node.transform.position - transform.position;
 
-            float dist = Vector3.Distance(transform.position + d.normalized * dot, worldPos);
+            float dot = Vector3.Dot(startToEnd.normalized, startToPos);
+            dot = Mathf.Clamp(dot, 0, startToEnd.magnitude);
+            float dist = Vector3.Distance(worldPos, transform.position + startToEnd.normalized * dot);
 
             if (dist < minDist)
             {
                 minDist = dist;
 
-                bestIndex = Mathf.LerpUnclamped(nodeIndex, node.isStart ? nodeIndex + 1 : node.nodeIndex, dot / d.magnitude);
+                minStart = this;
+                minEnd = node;
+
+                min_t = dot / startToEnd.magnitude;
             }
         }
 
         foreach (LapPath_Node node in parents)
         {
-            d = node.transform.position - transform.position;
-            toPos = worldPos - transform.position;
-            dot = Vector3.Dot(d.normalized, toPos);
-            dot = Mathf.Clamp01(dot);
+            Vector3 startToPos = worldPos - node.transform.position;
+            Vector3 startToEnd = transform.position - node.transform.position;
 
-            float dist = Vector3.Distance(transform.position + d.normalized * dot, worldPos);
+            float dot = Vector3.Dot(startToEnd.normalized, startToPos);
+            dot = Mathf.Clamp(dot, 0, startToEnd.magnitude);
+            float dist = Vector3.Distance(worldPos, node.transform.position + startToEnd.normalized * dot);
 
             if (dist < minDist)
             {
                 minDist = dist;
 
-                bestIndex = Mathf.LerpUnclamped(nodeIndex, isStart ? nodeIndex - 1 : node.nodeIndex, dot / d.magnitude);
+                minStart = node;
+                minEnd = this;
+
+                min_t = dot / startToEnd.magnitude;
             }
         }
 
-        return bestIndex;
+        float startIndex = minStart.nodeIndex;
+        float endIndex;
+        if(minEnd.isStart)
+        {
+            if(isStart)
+            {
+                return 0;
+            }
+            else
+            {
+                endIndex = startIndex + 1;
+            }
+        }
+
+        else
+        {
+            endIndex = minEnd.nodeIndex;
+        }
+
+        return Mathf.Lerp(startIndex, endIndex, min_t);
+    }
+
+    public float GetDistanceFromStart(Vehicle vehicle)
+    {
+        float index = GetIndexAtWorldPosition(vehicle);
+
+        int startIndex = (int)Mathf.Floor(index);
+        int endIndex = startIndex + 1;
+
+        float fraction = index - startIndex;
+
+        float a = Mathf.Lerp(lapPath.distanceList[startIndex], lapPath.distanceList[endIndex], fraction);
+
+        return a + (vehicle.currentLap-1) * lapPath.GetFullLapDistance();
     }
 
     Vector3 GetBoxCorner(Vector3 localPos)
@@ -207,9 +248,11 @@ public class LapPath_Node_Editor : Editor
     {
         LapPath_Node node = target as LapPath_Node;
 
-        Object obj = PrefabUtility.InstantiatePrefab(node.GetPrefabDefinition());
-
-        LapPath_Node newNode = obj.GetComponent<LapPath_Node>();
+        UnityEngine.Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(node);
+        UnityEngine.Object obj = PrefabUtility.InstantiatePrefab(prefab);
+        GameObject gameObj = PrefabUtility.GetNearestPrefabInstanceRoot(obj);
+        
+        LapPath_Node newNode = gameObj.GetComponent<LapPath_Node>();
         newNode.transform.parent = node.transform.root;
 
         newNode.transform.SetPositionAndRotation(node.transform.position + node.transform.forward * 50, node.transform.rotation);

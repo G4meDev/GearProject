@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 9025799685701753928}
   - component: {fileID: 3141247383436506203}
   - component: {fileID: 4923472787938132788}
-  - component: {fileID: 3334896312046485113}
   m_Layer: 9
   m_Name: VehicleBox
   m_TagString: Untagged
@@ -26,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188936559622972655}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 2.14}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5592306509037148780}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3141247383436506203
 MeshFilter:
@@ -84,19 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3334896312046485113
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 188936559622972655}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1.0000005, y: 1, z: 1.0000005}
-  m_Center: {x: 0.00015258796, y: 0, z: 0.00012207037}
 --- !u!1 &3985926892625339986
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,6 +107,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3985926892625339986}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -130,7 +117,6 @@ Transform:
   - {fileID: 9025799685701753928}
   - {fileID: 2082113745696784758}
   m_Father: {fileID: 0}
-  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3947225319184177958
 MonoBehaviour:
@@ -150,10 +136,12 @@ MonoBehaviour:
   vehicleProxy: {fileID: 3017573830326654721}
   vehicleBox: {fileID: 188936559622972655}
   vehicleMesh: {fileID: 1706573743033637836}
+  position: -1
   boostIndicator: {fileID: 7829255249813983696}
   gravityStr: 40
   counterForceStr: 0.03
   maxSpeed: 45
+  maxSpeedReverse: -10
   accel: 35
   rayDist: 1.2
   speedModifierIntensity: 0
@@ -168,14 +156,14 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: Infinity
-      outSlope: 7
+      outSlope: 4.5
       tangentMode: 71
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 10
-      value: 70
+      value: 45
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -184,7 +172,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 25
-      value: 70
+      value: 45
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -198,8 +186,7 @@ MonoBehaviour:
   jumpStr: 300
   forwardSpeed: 0
   coyoteTime: 0.1
-  jumpDelayTime: 0.1
-  jumpResetTime: 0.4
+  jumpDuration: 0.2
   lowJumpTime: 0.6
   lowJumpSpeedModifier: {fileID: 11400000, guid: 33d4059ff8d7b6449a9beae85ecdaffd,
     type: 2}
@@ -209,11 +196,14 @@ MonoBehaviour:
   highJumpTime: 1.4
   highJumpSpeedModifier: {fileID: 11400000, guid: fa92da64d99c80f439232841f38af8d1,
     type: 2}
+  jumpStartTime: 0
   vInput: 0
   hInput: 0
-  pressedJump: 0
   holdingJump: 0
+  steerValue: 0
+  aeroState: 0
   airborneTime: 0
+  minDriftSpeed: 20
   driftMinAngle: 10
   driftMaxAngle: 60
   driftTimer: 1.5
@@ -224,15 +214,17 @@ MonoBehaviour:
     type: 2}
   thirdDirftSpeedModifier: {fileID: 11400000, guid: 8c0ee0fbe56ab43429dcbb951c4433ca,
     type: 2}
-  drifting: 0
   driftStartTime: 0
   driftCounter: 0
   driftYaw: 0
-  pullPath: {fileID: 0}
   orientNode: {fileID: 0}
   antiGravityNode: {fileID: 0}
   gliderNode: {fileID: 0}
   lapPathNode: {fileID: 0}
+  lapPathIndex: -1
+  currentLap: 1
+  distanceFromFirstPlace: -1
+  targetSpeed: 30
 --- !u!1 &5586777812053100585
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,13 +252,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5586777812053100585}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5592306509037148780}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6868143323054761205
 MeshFilter:
@@ -326,9 +318,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5586777812053100585}
   m_Material: {fileID: 13400000, guid: a785e97462745cd4f85b57c4db2256b5, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.50000036
   m_Center: {x: 0.00015258795, y: 0, z: 0.0002441408}
 --- !u!54 &3017573830326654721
@@ -338,10 +338,21 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5586777812053100585}
-  serializedVersion: 2
+  serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -372,13 +383,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7417783819118272802}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: -1.1179875}
   m_LocalScale: {x: 0.71446955, y: 0.14204895, z: 0.27523}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2082113745696784758}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8133420888647663228
 MeshFilter:
@@ -435,7 +446,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
+    serializedVersion: 3
     m_TransformParent: {fileID: 5592306509037148780}
     m_Modifications:
     - target: {fileID: -9132303519979467339, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
@@ -574,11 +585,17 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4172925285372180049}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 529201441974272446}
   m_SourcePrefab: {fileID: 100100000, guid: cf3fec9ad018ba84eb10d45abccc1a5e, type: 3}
 --- !u!1 &1706573743033637836 stripped
 GameObject:
