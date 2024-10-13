@@ -580,11 +580,6 @@ public class Vehicle : MonoBehaviour
 
         distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
 
-        if (isPlayer)
-        {
-            Debug.Log(distanceFromStart);
-        }
-
         Gravity();
 
         UpdateSpeedModifiers();

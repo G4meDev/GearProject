@@ -105,7 +105,7 @@ public class HEU_RoadSplineImporter : MonoBehaviour
 
         ParsedData = JsonUtility.FromJson<Rootobject>(arg);
 
-        splineComp.Spline.EditType = SplineType.Linear;
+        splineComp.Spline.SetTangentMode(TangentMode.Linear);
         splineComp.Spline.Clear();
 
         Positions.Clear();
