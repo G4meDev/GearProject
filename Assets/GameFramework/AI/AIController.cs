@@ -17,14 +17,14 @@ public class AIController : MonoBehaviour
     public Controller_PID steerPID_Projection_2;
     public Controller_PID steerPID_Projection_3;
 
-    public float steer_p = 0.15f;
+    public float steer_p = 0.25f;
     public float steer_i = 0.01f;
     public float steer_d = 0.1f;
 
     public float crossTrackWeight = 1.0f;
-    public float projection_1_Weight = 0.4f;
-    public float projection_2_Weight = 0.3f;
-    public float projection_3_Weight = 0.2f;
+    public float projection_1_Weight = 0.8f;
+    public float projection_2_Weight = 0.6f;
+    public float projection_3_Weight = 0.25f;
 
     //------------------------------------------------------------
 
@@ -133,10 +133,10 @@ public class AIController : MonoBehaviour
             Color color = UnityEngine.Random.ColorHSV();
             UnityEngine.Random.state = state;
 
-//             DrawHelpers.DrawSphere(crossTrackPos, 3, color);
-//             DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
-//             DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
-//             DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
+            DrawHelpers.DrawSphere(crossTrackPos, 3, color);
+            DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
+            DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
+            DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
             // 
             //             DrawHelpers.DrawSphere(crossTrackLocal, 3, color);
             //             DrawHelpers.DrawSphere(p_1_Local, 3, color);
