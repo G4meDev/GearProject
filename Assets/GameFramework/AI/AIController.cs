@@ -215,17 +215,16 @@ public class AIController : MonoBehaviour
 
         if (vehicle.aeroState == VehicleAeroState.Gliding)
         {
-            vehicle.vInput = 0;
-            vehicle.hInput = 0;
+            vehicle.SetThrottleInput(0);
+            vehicle.SetSteerInput(0);
         }
 
         else
         {
-            vehicle.vInput = 1;
+            vehicle.SetThrottleInput(1);
 
             float steer = steerPID.Step(p_1_Local.x, Time.fixedDeltaTime);
-
-            vehicle.hInput = steer;
+            vehicle.SetSteerInput(steer);
         }
 
 
