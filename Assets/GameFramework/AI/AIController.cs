@@ -12,11 +12,19 @@ public class AIController : MonoBehaviour
 
     //------------------------------------------------------------
 
-    public Controller_PID steerPID;
+    public Controller_PID steerPID_CrossTrack;
+    public Controller_PID steerPID_Projection_1;
+    public Controller_PID steerPID_Projection_2;
+    public Controller_PID steerPID_Projection_3;
 
     public float steer_p = 0.15f;
     public float steer_i = 0.01f;
     public float steer_d = 0.1f;
+
+    public float crossTrackWeight = 1.0f;
+    public float projection_1_Weight = 0.4f;
+    public float projection_2_Weight = 0.3f;
+    public float projection_3_Weight = 0.2f;
 
     //------------------------------------------------------------
 
@@ -125,10 +133,10 @@ public class AIController : MonoBehaviour
             Color color = UnityEngine.Random.ColorHSV();
             UnityEngine.Random.state = state;
 
-            DrawHelpers.DrawSphere(crossTrackPos, 3, color);
-            DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
-            DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
-            DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
+//             DrawHelpers.DrawSphere(crossTrackPos, 3, color);
+//             DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
+//             DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
+//             DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
             // 
             //             DrawHelpers.DrawSphere(crossTrackLocal, 3, color);
             //             DrawHelpers.DrawSphere(p_1_Local, 3, color);
@@ -142,7 +150,11 @@ public class AIController : MonoBehaviour
 
     public void OnKilled()
     {
-        steerPID.LimitIntegral(0);
+        steerPID_CrossTrack.LimitIntegral(0);
+        steerPID_Projection_1.LimitIntegral(0);
+        steerPID_Projection_2.LimitIntegral(0);
+        steerPID_Projection_3.LimitIntegral(0);
+
         driftPID.LimitIntegral(0);
         throttlePID.LimitIntegral(0);
     }
@@ -152,7 +164,11 @@ public class AIController : MonoBehaviour
         vehicle = GetComponent<Vehicle>();
         routePlanning = GetComponent<AIRoutePlanning>();
 
-        steerPID = gameObject.AddComponent<Controller_PID>();
+        steerPID_CrossTrack = gameObject.AddComponent<Controller_PID>();
+        steerPID_Projection_1 = gameObject.AddComponent<Controller_PID>();
+        steerPID_Projection_2 = gameObject.AddComponent <Controller_PID>();
+        steerPID_Projection_3 = gameObject.AddComponent<Controller_PID>();
+
         throttlePID = gameObject.AddComponent<Controller_PID>();
         driftPID = gameObject.AddComponent<Controller_PID>();
 
@@ -160,7 +176,11 @@ public class AIController : MonoBehaviour
 
         //SceneManager.RegisterAI(this);
 
-        steerPID.Init(steer_p, steer_i, steer_d);
+        steerPID_CrossTrack.Init(steer_p, steer_i, steer_d);
+        steerPID_Projection_1.Init(steer_p, steer_i, steer_d);
+        steerPID_Projection_2.Init(steer_p, steer_i, steer_d);
+        steerPID_Projection_3.Init(steer_p, steer_i, steer_d);
+
         driftPID.Init(drift_p, drift_i, drift_d);
         throttlePID.Init(throttle_p, throttle_i, throttle_d);
     }
@@ -168,6 +188,11 @@ public class AIController : MonoBehaviour
     void FixedUpdate()
     {
         UpdateRoute();
+
+        //steerPID_CrossTrack.LimitIntegral(1);
+        steerPID_Projection_1.LimitIntegral(2);
+        steerPID_Projection_1.LimitIntegral(4);
+        steerPID_Projection_1.LimitIntegral(10);
 
         if (vehicle.aeroState == VehicleAeroState.Gliding)
         {
@@ -181,8 +206,15 @@ public class AIController : MonoBehaviour
             float throttle = throttlePID.Step(throttleError, Time.fixedDeltaTime);
             vehicle.SetThrottleInput(throttle);
 
-            float steerError = p_1_Local.x;
-            float steer = steerPID.Step(steerError, Time.fixedDeltaTime);
+
+            float steer_CrossTrack = steerPID_CrossTrack.Step(crossTrackLocal.x, Time.fixedDeltaTime);
+            float steer_Projetcion_1 = steerPID_Projection_1.Step(p_1_Local.x, Time.fixedDeltaTime);
+            float steer_Projetcion_2 = steerPID_Projection_2.Step(p_2_Local.x, Time.fixedDeltaTime);
+            float steer_Projetcion_3 = steerPID_Projection_3.Step(p_3_Local.x, Time.fixedDeltaTime);
+
+            float steer = (steer_CrossTrack * crossTrackWeight) + (steer_Projetcion_1 * projection_1_Weight) +
+                (steer_Projetcion_2 * projection_2_Weight) + (steer_Projetcion_3 * projection_3_Weight);
+
             vehicle.SetSteerInput(steer);
         }
 
