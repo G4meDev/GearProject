@@ -196,12 +196,12 @@ public class Vehicle : Agent
     private float localDivide = AI_Params.projection_3_dist * 1.5f;
     private float scaleDivide = 60.0f;
 
+    private float driftLastPressTime = float.MinValue;
+    private float driftPressDuration = 0.5f;
+
     EnvironmentParameters envParams;
 
     Vector2 localSpeed2D;
-    int trainingSteps = 2500;
-    int currentTraningSteps = 0;
-
 
     public override void Initialize()
     {
@@ -211,9 +211,10 @@ public class Vehicle : Agent
 
     public void SetEnvironemntParameters()
     {
-        targetSpeed = envParams.GetWithDefault("speed", 30.0f);
-        maxSpeed = targetSpeed;
-        trainingSteps = (int)envParams.GetWithDefault("trainingsteps", 2500.0f);
+        if(SceneManager.trainingSession)
+        {
+            //targetSpeed = envParams.GetWithDefault("speed", 30.0f);
+        }
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -222,12 +223,12 @@ public class Vehicle : Agent
         sensor.AddObservation(targetSpeed / maxPossibleSpeed);
         sensor.AddObservation(steerValue / 90);
         sensor.AddObservation((int)driftDir);
-        sensor.AddObservation(isDrifting() ? Mathf.Clamp01((Time.time - driftStartTime) / 6) : 0);
+        sensor.AddObservation(isDrifting() ? Mathf.Clamp01((Time.time - driftStartTime) / (3 * driftTimer)) : 0);
         sensor.AddObservation(driftYaw / driftMaxAngle);
 
 
-        sensor.AddObservation(crossTrackLocal / localDivide);
-        sensor.AddObservation(crossTrackScale / scaleDivide);
+//         sensor.AddObservation(crossTrackLocal / localDivide);
+//         sensor.AddObservation(crossTrackScale / scaleDivide);
 
         sensor.AddObservation(p_1_Local / localDivide);
         sensor.AddObservation(p_1_Scale / scaleDivide);
@@ -236,8 +237,8 @@ public class Vehicle : Agent
         sensor.AddObservation(p_2_Scale / scaleDivide);
 
 
-        sensor.AddObservation(p_3_Local / localDivide);
-        sensor.AddObservation(p_3_Scale / scaleDivide);
+//         sensor.AddObservation(p_3_Local / localDivide);
+//         sensor.AddObservation(p_3_Scale / scaleDivide);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -245,8 +246,14 @@ public class Vehicle : Agent
         hInput = actions.ContinuousActions[0];
         vInput = actions.ContinuousActions[1];
 
+        bool a = actions.DiscreteActions[0] == 1;
 
-        holdingJump = actions.DiscreteActions[0] == 1;
+        if (a)
+        {
+            driftLastPressTime = Time.time;
+        }
+
+        holdingJump = Time.time < driftLastPressTime + driftPressDuration; 
 
         if (routePlanning.projectionData != null && crossTrackLocal.magnitude > crossTrackScale / 2)
         {
@@ -266,11 +273,11 @@ public class Vehicle : Agent
 
         speedReward = forwardSpeed / maxPossibleSpeed;
 
-        float con = -.001f;
+        float con = -.05f;
 
-        float reward = speedReward * changedDist; 
+        float reward = speedReward; 
 
-        reward -= con;
+        reward = changedDist - con;
 
         if(isPlayer)
         {
@@ -314,7 +321,6 @@ public class Vehicle : Agent
         vehicleMesh.transform.SetPositionAndRotation(startPos, startRot);
 
         SetEnvironemntParameters();
-        currentTraningSteps = 0;
     }
 
     private void UpdateRoute()
@@ -471,7 +477,7 @@ public class Vehicle : Agent
         {
             lapPathNode = node;
 
-            //SetReward(speedReward);
+            //SetReward(1);
         }
     }
 
@@ -485,7 +491,7 @@ public class Vehicle : Agent
 
     public void OnKilled()
     {
-        SetReward(-1);
+        SetReward(-5);
 
         EndEpisode();
 
@@ -854,12 +860,7 @@ public class Vehicle : Agent
 
     private void FixedUpdate()
     {
-        currentTraningSteps += 1;
-        if (currentTraningSteps > trainingSteps)
-        {
-            //EndEpisode();
-        }
-
+        maxSpeed = targetSpeed;
 
         Vector3 localSpeed = vehicleBox.transform.InverseTransformPointUnscaled(vehicleProxy.transform.position + vehicleProxy.velocity);
         localSpeed2D = new Vector2(localSpeed.x, localSpeed.z);

@@ -35,6 +35,9 @@ public class SceneManager : MonoBehaviour
     public int lap_Count = 3;
     public static int lapCount;
 
+    public bool training_Session = false;
+    public static bool trainingSession;
+
     // -------------------------------------------------
 
     public static UI_ScreenInput GetScreenInput() { return screenInput; }
@@ -107,6 +110,7 @@ public class SceneManager : MonoBehaviour
 #endif
 
         lapCount = lap_Count;
+        trainingSession = training_Session;
 
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();
