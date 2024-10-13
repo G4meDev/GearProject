@@ -16,6 +16,8 @@ public class LapPath_Node : MonoBehaviour
     public List<LapPath_Node> children;
     public List<LapPath_Node> parents;
 
+    public float Dist = -1;
+
     public GameObject spawnPoint;
 
     public LapPathCheckPoint checkpoint;
