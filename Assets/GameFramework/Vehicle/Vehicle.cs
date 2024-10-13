@@ -144,7 +144,7 @@ public class Vehicle : MonoBehaviour
     public Glider_Node gliderNode;
 
     public LapPath_Node lapPathNode;
-    public float lapPathIndex = -1;
+    public float distanceFromStart = -1;
     public int currentLap = 1;
 
     public float distanceFromFirstPlace = -1;
@@ -204,8 +204,6 @@ public class Vehicle : MonoBehaviour
         else if (lapPathNode.checkpoint == node.checkpoint || lapPathNode.checkpoint + 1 == node.checkpoint)
         {
             lapPathNode = node;
-
-            //SetReward(1);
         }
     }
 
@@ -213,7 +211,7 @@ public class Vehicle : MonoBehaviour
     {
         if (lapPathNode)
         {
-            lapPathIndex = lapPathNode.GetIndexAtWorldPosition(vehicleProxy.transform.position);
+            distanceFromStart = lapPathNode.GetDistanceFromStart(this);
         }
     }
 
@@ -581,6 +579,11 @@ public class Vehicle : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateLapPathIndex();
+
+        if(isPlayer)
+        {
+            Debug.Log(distanceFromStart);
+        }
 
         Gravity();
 

@@ -179,7 +179,7 @@ public class AIController : MonoBehaviour
 
         vehicle.killDelegate = OnKilled;
 
-        //SceneManager.RegisterAI(this);
+        SceneManager.RegisterAI(this);
 
         steerPID_CrossTrack.Init(steer_p, steer_i, steer_d);
         steerPID_Projection_1.Init(steer_p, steer_i, steer_d);
@@ -194,7 +194,7 @@ public class AIController : MonoBehaviour
     {
         UpdateRoute();
 
-        //steerPID_CrossTrack.LimitIntegral(1);
+        steerPID_CrossTrack.LimitIntegral(1);
         steerPID_Projection_1.LimitIntegral(2);
         steerPID_Projection_1.LimitIntegral(4);
         steerPID_Projection_1.LimitIntegral(10);

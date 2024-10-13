@@ -78,12 +78,7 @@ public class SceneManager : MonoBehaviour
     {
         public int Compare(Vehicle x, Vehicle y)
         {
-            if(x.currentLap == y.currentLap)
-            {
-                return x.lapPathIndex > y.lapPathIndex ? -1 : 1;
-            }
-
-            return x.currentLap > y.currentLap ? -1 : 1;
+            return x.distanceFromStart > y.distanceFromStart ? -1 : 1;
         }
     }
 
@@ -100,7 +95,7 @@ public class SceneManager : MonoBehaviour
     public static float GetDistanceFromFirstPlace(Vehicle vehicle)
     {
         return ((allVehicles[0].currentLap - vehicle.currentLap) * vehicle.lapPathNode.GetMaxNodeIndex())
-            + allVehicles[0].lapPathIndex - vehicle.lapPathIndex;
+            + allVehicles[0].distanceFromStart - vehicle.distanceFromStart;
     }
 
     void Start()

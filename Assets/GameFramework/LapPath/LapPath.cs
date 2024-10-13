@@ -12,6 +12,11 @@ public class LapPath : MonoBehaviour
     public bool dirty = false;
 
 
+    public float GetFullLapDistance()
+    {
+        return distanceList[distanceList.Count - 1];
+    }
+
     public void RegenData()
     {
         distanceList.Clear();
@@ -32,6 +37,8 @@ public class LapPath : MonoBehaviour
 
         //@TODO: add multi path support
 
+        distanceList.Add(0);
+
         while(true)
         {
             LapPath_Node child = node.children[0];
@@ -42,6 +49,7 @@ public class LapPath : MonoBehaviour
             if(child.isStart)
             {
                 maxNodeIndex = node.nodeIndex;
+                child.Dist = 0;
 
                 break;
             }
