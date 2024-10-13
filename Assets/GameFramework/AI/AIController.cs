@@ -18,13 +18,6 @@ public class AIController : MonoBehaviour
     public float steer_i = 0.01f;
     public float steer_d = 0.1f;
 
-    private float steer_p_active;
-    private float steer_i_active;
-    private float steer_d_active;
-
-    private float steer_wind_start;
-    private float steer_wind_duration;
-
     //------------------------------------------------------------
 
     public Controller_PID driftPID;
@@ -152,35 +145,7 @@ public class AIController : MonoBehaviour
         steerPID.LimitIntegral(0);
         driftPID.LimitIntegral(0);
         throttlePID.LimitIntegral(0);
-
-        Start_Steer_Wind(10.0f);
     }
-
-    void Start_Steer_Wind(float duration)
-    {
-        steer_wind_start = Time.time;
-        steer_wind_duration = duration;
-    }
-
-    void Wind_Steer()
-    {
-        float alpha = (Time.time - steer_wind_start) / steer_wind_duration;
-        if (alpha > 1.0f)
-        {
-            steer_p_active = steer_p;
-            steer_i_active = steer_i;
-            steer_d_active = steer_d;
-        }
-        else
-        {
-            steer_p_active = Mathf.Lerp(0, steer_p, alpha);
-            steer_i_active = Mathf.Lerp(0, steer_i, alpha);
-            steer_d_active = Mathf.Lerp(0, steer_d, alpha);
-        }
-
-        steerPID.Init(steer_p_active, steer_i_active, steer_d_active);
-    }
-
 
     void Start()
     {
@@ -195,17 +160,8 @@ public class AIController : MonoBehaviour
 
         //SceneManager.RegisterAI(this);
 
-        steer_p_active = steer_p;
-        steer_i_active = steer_i;
-        steer_d_active = steer_d;
-
-        steerPID.Init(steer_p_active, steer_i_active, steer_d_active);
-
-        Start_Steer_Wind(20.0f);
-
-
+        steerPID.Init(steer_p, steer_i, steer_d);
         driftPID.Init(drift_p, drift_i, drift_d);
-
         throttlePID.Init(throttle_p, throttle_i, throttle_d);
     }
 
@@ -221,9 +177,12 @@ public class AIController : MonoBehaviour
 
         else
         {
-            vehicle.SetThrottleInput(1);
+            float throttleError = vehicle.targetSpeed - vehicle.forwardSpeed;
+            float throttle = throttlePID.Step(throttleError, Time.fixedDeltaTime);
+            vehicle.SetThrottleInput(throttle);
 
-            float steer = steerPID.Step(p_1_Local.x, Time.fixedDeltaTime);
+            float steerError = p_1_Local.x;
+            float steer = steerPID.Step(steerError, Time.fixedDeltaTime);
             vehicle.SetSteerInput(steer);
         }
 

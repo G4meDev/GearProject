@@ -152,6 +152,8 @@ public class Vehicle : MonoBehaviour
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
 
+    //@TODO: delete 
+    public float targetSpeed = 30;
 
     public void SetThrottleInput(float input)
     {
