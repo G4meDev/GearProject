@@ -94,8 +94,7 @@ public class SceneManager : MonoBehaviour
 
     public static float GetDistanceFromFirstPlace(Vehicle vehicle)
     {
-        return ((allVehicles[0].currentLap - vehicle.currentLap) * vehicle.lapPathNode.GetMaxNodeIndex())
-            + allVehicles[0].distanceFromStart - vehicle.distanceFromStart;
+        return allVehicles[0].distanceFromStart - vehicle.distanceFromStart;
     }
 
     void Start()

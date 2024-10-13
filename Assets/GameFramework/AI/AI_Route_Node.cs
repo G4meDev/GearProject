@@ -17,12 +17,6 @@ public class AI_Route_Node : MonoBehaviour
         return i != -1 ? childDist[i] : 30;
     }
 
-    public int GetDriftDirectionToTarget(AI_Route_Node node)
-    {
-        float a = Vector3.Dot(transform.right, node.transform.forward);
-        return Mathf.Abs(a) > AI_Params.maxDriftableTurnAlpha ? (int)Mathf.Sign(a) : 0;
-    }
-
     private void OnDrawGizmos()
     {
         for(int i = 0; i < children.Count; ++i)

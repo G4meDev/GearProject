@@ -10,6 +10,8 @@ public class AIController : MonoBehaviour
 
     public float targetTrackError = 0.0f;
 
+    public float targetSpeed = 30;
+
     //------------------------------------------------------------
 
     public Controller_PID steerPID_CrossTrack;
@@ -59,17 +61,11 @@ public class AIController : MonoBehaviour
 
     private float changedDist = 0.0f;
 
-    private float localDivide = AI_Params.projection_3_dist * 1.5f;
-    private float scaleDivide = 60.0f;
-
-    private float driftLastPressTime = float.MinValue;
-    private float driftPressDuration = 0.5f;
-
-    Vector2 localSpeed2D;
-
     public void UpdateTargetPosition (int pos)
     {
         targetPos = pos;
+
+        position_params = AI_Params.GetPositionParams(targetPos);
     }
 
     private void UpdateRoute()
@@ -190,9 +186,26 @@ public class AIController : MonoBehaviour
         throttlePID.Init(throttle_p, throttle_i, throttle_d);
     }
 
+    public bool IsRubberBanding()
+    {
+        return vehicle.distanceFromFirstPlace > position_params.rubberBadingDist;
+    }
+
+    public void UpdateTargetSpeed()
+    {
+        targetSpeed = targetPos < vehicle.position ? position_params.maxSpeed : position_params.minSpeed;
+
+        if (IsRubberBanding())
+        {
+            targetSpeed += AI_Params.rbSpeedIncrease;
+        }
+    }
+
     void FixedUpdate()
     {
         UpdateRoute();
+
+        UpdateTargetSpeed();
 
         steerPID_CrossTrack.LimitIntegral(1);
         steerPID_Projection_1.LimitIntegral(2);
@@ -207,7 +220,7 @@ public class AIController : MonoBehaviour
 
         else
         {
-            float throttleError = vehicle.targetSpeed - vehicle.forwardSpeed;
+            float throttleError = targetSpeed - vehicle.forwardSpeed;
             float throttle = throttlePID.Step(throttleError, Time.fixedDeltaTime);
             vehicle.SetThrottleInput(throttle);
 

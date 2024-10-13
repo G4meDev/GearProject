@@ -152,8 +152,6 @@ public class Vehicle : MonoBehaviour
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
 
-    //@TODO: delete 
-    public float targetSpeed = 30;
 
     public void SetThrottleInput(float input)
     {
@@ -573,14 +571,16 @@ public class Vehicle : MonoBehaviour
 
     private void Update()
     {
-        //distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
+        
     }
 
     private void FixedUpdate()
     {
         UpdateLapPathIndex();
 
-        if(isPlayer)
+        distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
+
+        if (isPlayer)
         {
             Debug.Log(distanceFromStart);
         }
