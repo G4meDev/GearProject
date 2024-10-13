@@ -1,15 +1,6 @@
-using Google.Protobuf.WellKnownTypes;
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Burst.CompilerServices;
-using Unity.Mathematics;
-using Unity.MLAgents;
-using Unity.MLAgents.Actuators;
-using Unity.MLAgents.Sensors;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.UI;
 
 // @TODO: Develop jump
@@ -23,7 +14,7 @@ public enum VehicleAeroState
     Gliding
 }
 
-public class Vehicle : Agent
+public class Vehicle : MonoBehaviour
 {
     public bool isPlayer = true;
 
@@ -199,129 +190,7 @@ public class Vehicle : Agent
     private float driftLastPressTime = float.MinValue;
     private float driftPressDuration = 0.5f;
 
-    EnvironmentParameters envParams;
-
     Vector2 localSpeed2D;
-
-    public override void Initialize()
-    {
-        envParams = Academy.Instance.EnvironmentParameters;
-        SetEnvironemntParameters();
-    }
-
-    public void SetEnvironemntParameters()
-    {
-        if(SceneManager.trainingSession)
-        {
-            //targetSpeed = envParams.GetWithDefault("speed", 30.0f);
-        }
-    }
-
-    public override void CollectObservations(VectorSensor sensor)
-    {
-        sensor.AddObservation(localSpeed2D / maxPossibleSpeed);
-        sensor.AddObservation(targetSpeed / maxPossibleSpeed);
-        sensor.AddObservation(steerValue / 90);
-        sensor.AddObservation((int)driftDir);
-        sensor.AddObservation(isDrifting() ? Mathf.Clamp01((Time.time - driftStartTime) / (3 * driftTimer)) : 0);
-        sensor.AddObservation(driftYaw / driftMaxAngle);
-
-
-//         sensor.AddObservation(crossTrackLocal / localDivide);
-//         sensor.AddObservation(crossTrackScale / scaleDivide);
-
-        sensor.AddObservation(p_1_Local / localDivide);
-        sensor.AddObservation(p_1_Scale / scaleDivide);
-
-        sensor.AddObservation(p_2_Local / localDivide);
-        sensor.AddObservation(p_2_Scale / scaleDivide);
-
-
-//         sensor.AddObservation(p_3_Local / localDivide);
-//         sensor.AddObservation(p_3_Scale / scaleDivide);
-    }
-
-    public override void OnActionReceived(ActionBuffers actions)
-    {
-        hInput = actions.ContinuousActions[0];
-        vInput = actions.ContinuousActions[1];
-
-        bool a = actions.DiscreteActions[0] == 1;
-
-        if (a)
-        {
-            driftLastPressTime = Time.time;
-        }
-
-        holdingJump = Time.time < driftLastPressTime + driftPressDuration; 
-
-        if (routePlanning.projectionData != null && crossTrackLocal.magnitude > crossTrackScale / 2)
-        {
-            OnKilled();
-        }
-
-        float speedReward;
-        if (forwardSpeed < targetSpeed)
-        {
-            speedReward = Mathf.InverseLerp(0, targetSpeed, forwardSpeed);
-        }
-
-        else
-        {
-            speedReward = Mathf.InverseLerp(targetSpeed * 2, targetSpeed, forwardSpeed);
-        }
-
-        speedReward = forwardSpeed / maxPossibleSpeed;
-
-        float con = -.05f;
-
-        float reward = speedReward; 
-
-        reward = changedDist - con;
-
-        if(isPlayer)
-        {
-            Debug.Log(reward + "    " + forwardSpeed + "    " + targetSpeed);
-        }
-
-        rewardImage.material.SetFloat("_reward", reward);
-
-        SetReward(reward);
-    }
-
-    public override void Heuristic(in ActionBuffers actionsOut)
-    {
-        var a = actionsOut.ContinuousActions;
-        var b = actionsOut.DiscreteActions;
-
-        PlayerInput i = GetComponent<PlayerInput>();
-
-        a[0] = i.hInput;
-        a[1] = i.vInput;
-
-        b[0] = i.holdingJump ? 1 : 0;
-    }
-
-    public override void OnEpisodeBegin()
-    {
-        vehicleProxy.velocity = Vector3.zero;
-        vehicleProxy.angularVelocity = Vector3.zero;
-
-        lapPathIndex = 0;
-        currentLap = 1;
-
-        EndDrift();
-        
-        speedModifierIntensity = 0.0f;
-        speedModifierReserveTime = 0.0f;
-
-
-        vehicleProxy.MovePosition(startPos);
-        vehicleBox.transform.SetPositionAndRotation(startPos, startRot);
-        vehicleMesh.transform.SetPositionAndRotation(startPos, startRot);
-
-        SetEnvironemntParameters();
-    }
 
     private void UpdateRoute()
     {
@@ -435,16 +304,11 @@ public class Vehicle : Agent
     public void EndRace()
     {
         Debug.Log(name + "    End Race!");
-
-        //SetReward(1);
-        //EndEpisode();
     }
 
     public void IncreaseLap()
     {
         currentLap++;
-
-        EndEpisode();
 
         if (currentLap > SceneManager.lapCount)
         {
@@ -491,29 +355,25 @@ public class Vehicle : Agent
 
     public void OnKilled()
     {
-        SetReward(-5);
+        vehicleProxy.velocity = Vector3.zero;
+        vehicleProxy.angularVelocity = Vector3.zero;
 
-        EndEpisode();
+        EndDrift();
 
-//         vehicleProxy.velocity = Vector3.zero;
-//         vehicleProxy.angularVelocity = Vector3.zero;
-// 
-//         EndDrift();
-// 
-//         speedModifierIntensity = 0.0f;
-//         speedModifierReserveTime = 0.0f;
-// 
-//         Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
-//         LayerMask layerMask = LayerMask.GetMask("Default");
-//         bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
-// 
-//         Vector3 targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
-// 
-//         vehicleProxy.MovePosition(targetPos);
-//         vehicleBox.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
-//         vehicleMesh.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
-// 
-//         killDelegate?.Invoke();
+        speedModifierIntensity = 0.0f;
+        speedModifierReserveTime = 0.0f;
+
+        Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
+        LayerMask layerMask = LayerMask.GetMask("Default");
+        bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
+
+        Vector3 targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
+
+        vehicleProxy.MovePosition(targetPos);
+        vehicleBox.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
+        vehicleMesh.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
+
+        killDelegate?.Invoke();
     }
 
     public void StartGliding(Glider_Node node)
@@ -846,7 +706,7 @@ public class Vehicle : Agent
 
         else
         {
-            //gameObject.AddComponent<AIController>();
+            gameObject.AddComponent<AIController>();
         }
 
         startPos = transform.position;
@@ -964,17 +824,5 @@ public class Vehicle : Agent
 
 
         UpdateRoute();
-        //RequestDecision();
-
-        if (aeroState != VehicleAeroState.Gliding)
-        {
-            RequestDecision();
-        }
-        else
-        {
-            hInput = 0;
-            vInput = 0;
-        }
-
     }
 }

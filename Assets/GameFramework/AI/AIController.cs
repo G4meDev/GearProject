@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AController : MonoBehaviour
+public class AIController : MonoBehaviour
 {
     public Vehicle vehicle;
 
@@ -247,6 +247,11 @@ public class AController : MonoBehaviour
 
     void Update()
     {
+        vehicle.vInput = 1;
+        return;
+
+
+
         bool rubberBanding = position_params.rubberBadingDist < vehicle.distanceFromFirstPlace;
 
         Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange, out Vector3 tan);
