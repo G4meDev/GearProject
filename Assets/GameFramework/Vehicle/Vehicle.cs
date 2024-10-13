@@ -152,144 +152,6 @@ public class Vehicle : MonoBehaviour
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
 
-    public float maxPossibleSpeed = 55.0f;
-
-    // ------------------------------------------------------------------
-    [NonSerialized]
-    public AIRoutePlanning routePlanning;
-
-    public Image rewardImage;
-
-    public AI_Route_Node aiRouteNode_Current;
-    public AI_Route_Node aiRouteNode_Target;
-
-    public LinkedList<AI_Route_Node> aiRoutePath = new();
-
-    Vector3 startPos = Vector3.zero;
-    Quaternion startRot = Quaternion.identity;
-
-    public float targetSpeed = 30.0f;
-
-    private Vector2 crossTrackLocal = Vector2.zero;
-    private float crossTrackScale = 20.0f;
-
-    private Vector2 p_1_Local = Vector2.zero;
-    private float p_1_Scale = 20.0f;
-
-    private Vector2 p_2_Local = Vector2.zero;
-    private float p_2_Scale = 20.0f;
-
-    private Vector2 p_3_Local = Vector2.zero;
-    private float p_3_Scale = 20.0f;
-
-    private float changedDist = 0.0f;
-
-    private float localDivide = AI_Params.projection_3_dist * 1.5f;
-    private float scaleDivide = 60.0f;
-
-    private float driftLastPressTime = float.MinValue;
-    private float driftPressDuration = 0.5f;
-
-    Vector2 localSpeed2D;
-
-    private void UpdateRoute()
-    {
-        Vector3 temp;
-
-        if (routePlanning.projectionData != null)
-        {
-            Vector3 crossTrackPos = Vector3.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.position,
-                routePlanning.projectionData.crossTrackProjection.child.transform.position,
-                routePlanning.projectionData.crossTrackProjection.t);
-
-            temp = vehicleBox.transform.InverseTransformPointUnscaled(crossTrackPos);
-            crossTrackLocal = new Vector2(temp.x, temp.z);
-
-            crossTrackScale = Mathf.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.lossyScale.x,
-                routePlanning.projectionData.crossTrackProjection.child.transform.lossyScale.x,
-                routePlanning.projectionData.crossTrackProjection.t);
-
-            // -------------------------------------------------------------------------------------------------------------------------------------------
-
-            Vector3 projection_1_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_1.parent.transform.position,
-                routePlanning.projectionData.Projection_1.child.transform.position,
-                routePlanning.projectionData.Projection_1.t);
-
-            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_1_Pos);
-            p_1_Local = new Vector2(temp.x, temp.z);
-
-            p_1_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_1.parent.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_1.child.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_1.t);
-
-            // -------------------------------------------------------------------------------------------------------------------------------------------
-
-            Vector3 projection_2_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_2.parent.transform.position,
-                routePlanning.projectionData.Projection_2.child.transform.position,
-                routePlanning.projectionData.Projection_2.t);
-
-            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_2_Pos);
-            p_2_Local = new Vector2(temp.x, temp.z);
-
-            p_2_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_2.parent.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_2.child.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_2.t);
-
-            // -------------------------------------------------------------------------------------------------------------------------------------------
-
-            Vector3 projection_3_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_3.parent.transform.position,
-                routePlanning.projectionData.Projection_3.child.transform.position,
-                routePlanning.projectionData.Projection_3.t);
-
-            temp = vehicleBox.transform.InverseTransformPointUnscaled(projection_3_Pos);
-            p_3_Local = new Vector2(temp.x, temp.z);
-
-            p_3_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_3.parent.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_3.child.transform.lossyScale.x,
-                routePlanning.projectionData.Projection_3.t);
-
-
-            changedDist = routePlanning.projectionData.changedDist;
-
-#if UNITY_EDITOR
-
-            UnityEngine.Random.State state = UnityEngine.Random.state;
-            UnityEngine.Random.InitState(name.GetHashCode());
-            Color color = UnityEngine.Random.ColorHSV();
-            UnityEngine.Random.state = state;
-
-            DrawHelpers.DrawSphere(crossTrackPos, 3, color);
-            DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
-            DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
-            DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
-// 
-//             DrawHelpers.DrawSphere(crossTrackLocal, 3, color);
-//             DrawHelpers.DrawSphere(p_1_Local, 3, color);
-//             DrawHelpers.DrawSphere(p_2_Local, 3, color);
-//             DrawHelpers.DrawSphere(p_3_Local, 3, color);
-
-#endif
-        }
-
-        else
-        {
-            crossTrackLocal = Vector2.zero;
-            crossTrackScale = 20.0f;
-
-            p_1_Local = Vector2.zero;
-            p_1_Scale = 20.0f;
-
-            p_2_Local = Vector2.zero;
-            p_2_Scale = 20.0f;
-
-            p_3_Local = Vector2.zero;
-            p_3_Scale = 20.0f;
-
-            changedDist = 0.0f;
-        }
-    }
-
-    // ------------------------------------------------------------------
 
     public void SetThrottleInput(float input)
     {
@@ -688,8 +550,6 @@ public class Vehicle : MonoBehaviour
 
     void Start()
     {
-        routePlanning = GetComponent<AIRoutePlanning>();
-
         if(isPlayer)
         {
             if(cameraPrefab)
@@ -709,9 +569,6 @@ public class Vehicle : MonoBehaviour
             gameObject.AddComponent<AIRoutePlanning>();
             gameObject.AddComponent<AIController>();
         }
-
-        startPos = transform.position;
-        startRot = transform.rotation;
     }
 
     private void Update()
@@ -721,12 +578,6 @@ public class Vehicle : MonoBehaviour
 
     private void FixedUpdate()
     {
-        maxSpeed = targetSpeed;
-
-        Vector3 localSpeed = vehicleBox.transform.InverseTransformPointUnscaled(vehicleProxy.transform.position + vehicleProxy.velocity);
-        localSpeed2D = new Vector2(localSpeed.x, localSpeed.z);
-
-
         UpdateLapPathIndex();
 
         Gravity();
@@ -822,8 +673,5 @@ public class Vehicle : MonoBehaviour
         }
 
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
-
-
-        //UpdateRoute();
     }
 }
