@@ -706,6 +706,7 @@ public class Vehicle : MonoBehaviour
 
         else
         {
+            gameObject.AddComponent<AIRoutePlanning>();
             gameObject.AddComponent<AIController>();
         }
 
@@ -823,6 +824,6 @@ public class Vehicle : MonoBehaviour
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
 
 
-        UpdateRoute();
+        //UpdateRoute();
     }
 }

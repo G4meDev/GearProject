@@ -3,13 +3,10 @@ using UnityEngine;
 public class AIController : MonoBehaviour
 {
     public Vehicle vehicle;
+    public AIRoutePlanning routePlanning;
 
     public int targetPos = -1;
     public AI_Position_Params position_params;
-
-    public AI_Route_Node aiRouteNode_Current;
-    public AI_Route_Node aiRouteNode_Target;
-
 
     public float targetTrackError = 0.0f;
 
@@ -46,152 +43,117 @@ public class AIController : MonoBehaviour
 
     //------------------------------------------------------------
 
-    private bool driftable = false;
-    private int driftDir = 0;
+
+    private Vector2 crossTrackLocal = Vector2.zero;
+    private float crossTrackScale = 20.0f;
+
+    private Vector2 p_1_Local = Vector2.zero;
+    private float p_1_Scale = 20.0f;
+
+    private Vector2 p_2_Local = Vector2.zero;
+    private float p_2_Scale = 20.0f;
+
+    private Vector2 p_3_Local = Vector2.zero;
+    private float p_3_Scale = 20.0f;
+
+    private float changedDist = 0.0f;
+
+    private float localDivide = AI_Params.projection_3_dist * 1.5f;
+    private float scaleDivide = 60.0f;
+
+    private float driftLastPressTime = float.MinValue;
+    private float driftPressDuration = 0.5f;
+
+    Vector2 localSpeed2D;
+
+    private void UpdateRoute()
+    {
+        Vector3 temp;
+
+        if (routePlanning.projectionData != null)
+        {
+            Vector3 crossTrackPos = Vector3.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.position,
+                routePlanning.projectionData.crossTrackProjection.child.transform.position,
+                routePlanning.projectionData.crossTrackProjection.t);
+
+            temp = vehicle.vehicleBox.transform.InverseTransformPointUnscaled(crossTrackPos);
+            crossTrackLocal = new Vector2(temp.x, temp.z);
+
+            crossTrackScale = Mathf.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.lossyScale.x,
+                routePlanning.projectionData.crossTrackProjection.child.transform.lossyScale.x,
+                routePlanning.projectionData.crossTrackProjection.t);
+
+            // -------------------------------------------------------------------------------------------------------------------------------------------
+
+            Vector3 projection_1_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_1.parent.transform.position,
+                routePlanning.projectionData.Projection_1.child.transform.position,
+                routePlanning.projectionData.Projection_1.t);
+
+            temp = vehicle.vehicleBox.transform.InverseTransformPointUnscaled(projection_1_Pos);
+            p_1_Local = new Vector2(temp.x, temp.z);
+
+            p_1_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_1.parent.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_1.child.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_1.t);
+
+            // -------------------------------------------------------------------------------------------------------------------------------------------
+
+            Vector3 projection_2_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_2.parent.transform.position,
+                routePlanning.projectionData.Projection_2.child.transform.position,
+                routePlanning.projectionData.Projection_2.t);
+
+            temp = vehicle.vehicleBox.transform.InverseTransformPointUnscaled(projection_2_Pos);
+            p_2_Local = new Vector2(temp.x, temp.z);
+
+            p_2_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_2.parent.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_2.child.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_2.t);
+
+            // -------------------------------------------------------------------------------------------------------------------------------------------
+
+            Vector3 projection_3_Pos = Vector3.Lerp(routePlanning.projectionData.Projection_3.parent.transform.position,
+                routePlanning.projectionData.Projection_3.child.transform.position,
+                routePlanning.projectionData.Projection_3.t);
+
+            temp = vehicle.vehicleBox.transform.InverseTransformPointUnscaled(projection_3_Pos);
+            p_3_Local = new Vector2(temp.x, temp.z);
+
+            p_3_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_3.parent.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_3.child.transform.lossyScale.x,
+                routePlanning.projectionData.Projection_3.t);
+
+
+            changedDist = routePlanning.projectionData.changedDist;
+
+#if UNITY_EDITOR
+
+            UnityEngine.Random.State state = UnityEngine.Random.state;
+            UnityEngine.Random.InitState(name.GetHashCode());
+            Color color = UnityEngine.Random.ColorHSV();
+            UnityEngine.Random.state = state;
+
+            DrawHelpers.DrawSphere(crossTrackPos, 3, color);
+            DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
+            DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
+            DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
+            // 
+            //             DrawHelpers.DrawSphere(crossTrackLocal, 3, color);
+            //             DrawHelpers.DrawSphere(p_1_Local, 3, color);
+            //             DrawHelpers.DrawSphere(p_2_Local, 3, color);
+            //             DrawHelpers.DrawSphere(p_3_Local, 3, color);
+
+#endif
+        }
+    }
+
 
     public void OnKilled()
     {
-        driftable = false;
-        driftDir = 0;
-        vehicle.holdingJump = false;
-
         steerPID.LimitIntegral(0);
         driftPID.LimitIntegral(0);
         throttlePID.LimitIntegral(0);
 
         Start_Steer_Wind(10.0f);
-    }
-
-    public void UpdateTargetPosition(int newPos)
-    {
-        targetPos = newPos;
-
-        position_params = AI_Params.GetPositionParams(targetPos);
-    }
-
-
-    public void OnEnterNewRouteNode(AI_Route_Node node)
-    {
-        AI_Route_Node prevNode = aiRouteNode_Current;
-
-        aiRouteNode_Current = node;
-
-        UpdateTargetNode();
-
-        if (vehicle && !vehicle.isDrifting())
-        {
-            driftDir = aiRouteNode_Current.GetDriftDirectionToTarget(aiRouteNode_Target);
-            if (driftDir != 0)
-                driftable = true;
-        }
-
-        // moving in drift node with diffrent dir
-        else if (vehicle && vehicle.isDrifting())
-        {
-            int dir = aiRouteNode_Current.GetDriftDirectionToTarget(aiRouteNode_Target);
-
-            if (dir != 0 && dir != driftDir)
-            {
-                driftDir = dir;
-                //vehicle.dr = false;
-                vehicle.holdingJump = false;
-                driftable = true;
-            }
-        }
-
-    }
-
-    public void TryDrifting()
-    {
-        //         if(vehicle.forwardSpeed > vehicle.minDriftSpeed)
-        //         {
-        //             Debug.Log(vehicle.name + "   try drifting!");
-        // 
-        //             bWantsToDrift = true;
-        //         }
-    }
-
-    public void UpdateTargetNode()
-    {
-        if (aiRouteNode_Current.children.Count > 0)
-        {
-            //aiRouteNode_Target = aiRouteNode_Current.children[0];
-
-            //             float targetScale = aiRouteNode_Target.transform.lossyScale.x / 8;
-            //             targetTrackError = Random.Range(-targetScale, targetScale);
-        }
-
-        else
-        {
-            aiRouteNode_Target = null;
-        }
-    }
-
-    public Vector3 GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange, out Vector3 tan)
-    {
-        optimalTrackError = 0.0f;
-        trackErrorRange = 0.0f;
-        tan = Vector3.zero;
-
-        if (aiRouteNode_Current && aiRouteNode_Target)
-        {
-            Vector3 d = aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position;
-            Vector3 toPos = vehicle.vehicleProxy.transform.position - aiRouteNode_Current.transform.position;
-
-            float dot = Vector3.Dot(d.normalized, toPos);
-
-            // passed target without hitting collision
-            if (dot > d.magnitude)
-            {
-                OnEnterNewRouteNode(aiRouteNode_Target);
-
-                return GetNearestWorldPosition(out optimalTrackError, out trackErrorRange, out tan);
-            }
-
-            // should check for parent nodes
-            else if (dot < 0)
-            {
-                AI_Route_Node bestParent = null;
-                float min_dist = float.MaxValue;
-
-                foreach (AI_Route_Node parent in aiRouteNode_Current.parents)
-                {
-                    float dist = Vector3.Distance(vehicle.vehicleProxy.transform.position, parent.transform.position);
-
-                    if (dist < min_dist)
-                    {
-                        min_dist = dist;
-                        bestParent = parent;
-                    }
-                }
-
-
-
-                d = aiRouteNode_Current.transform.position - bestParent.transform.position;
-                toPos = vehicle.vehicleProxy.transform.position - bestParent.transform.position;
-
-                dot = Vector3.Dot(d.normalized, toPos);
-                dot = Mathf.Clamp(dot, 0, d.magnitude);
-
-                float a = dot / d.magnitude;
-                trackErrorRange = Mathf.Lerp(bestParent.transform.lossyScale.x, aiRouteNode_Current.transform.lossyScale.x, a);
-                tan = Vector3.Lerp(bestParent.transform.forward, aiRouteNode_Current.transform.forward, a);
-
-                return bestParent.transform.position + dot * d.normalized;
-            }
-
-            else
-            {
-                float a = dot / d.magnitude;
-
-                trackErrorRange = Mathf.Lerp(aiRouteNode_Current.transform.lossyScale.x, aiRouteNode_Target.transform.lossyScale.x, a);
-                tan = Vector3.Lerp(aiRouteNode_Current.transform.forward, aiRouteNode_Target.transform.forward, a);
-
-                return aiRouteNode_Current.transform.position + dot * d.normalized;
-            }
-        }
-
-        return Vector3.zero;
     }
 
     void Start_Steer_Wind(float duration)
@@ -223,6 +185,8 @@ public class AIController : MonoBehaviour
     void Start()
     {
         vehicle = GetComponent<Vehicle>();
+        routePlanning = GetComponent<AIRoutePlanning>();
+
         steerPID = gameObject.AddComponent<Controller_PID>();
         throttlePID = gameObject.AddComponent<Controller_PID>();
         driftPID = gameObject.AddComponent<Controller_PID>();
@@ -245,140 +209,25 @@ public class AIController : MonoBehaviour
         throttlePID.Init(throttle_p, throttle_i, throttle_d);
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        vehicle.vInput = 1;
-        return;
+        UpdateRoute();
 
-
-
-        bool rubberBanding = position_params.rubberBadingDist < vehicle.distanceFromFirstPlace;
-
-        Vector3 nearestpos = GetNearestWorldPosition(out float optimalTrackError, out float trackErrorRange, out Vector3 tan);
-        float dist = Vector3.Distance(nearestpos, vehicle.vehicleProxy.transform.position);
-
-        Vector3 right = Vector3.Cross(Vector3.up, aiRouteNode_Target.transform.position - aiRouteNode_Current.transform.position);
-        dist = Vector3.Dot(right, vehicle.vehicleProxy.transform.position - nearestpos) > 0 ? dist : -dist;
-
-        float samplePos = Time.time / 5.0f;
-        float noise = Mathf.PerlinNoise(name.GetHashCode(), samplePos);
-
-        trackErrorRange /= 1;
-        targetTrackError = Mathf.Lerp(-trackErrorRange, trackErrorRange, noise);
-
-        float optChance = rubberBanding ? Mathf.Clamp01(position_params.optimalPathChance + AI_Params.rbOptimalPathChanceIncrease) : position_params.optimalPathChance;
-        targetTrackError = Mathf.Lerp(targetTrackError, optimalTrackError, optChance);
-
-        float steerError = targetTrackError - dist;
-
-
-        float distanceFromRoadEdge = trackErrorRange / 2 - Mathf.Abs(dist);
-
-        if (distanceFromRoadEdge < AI_Params.driftHaltDistanceToRoadEdge && vehicle.isDrifting())
+        if (vehicle.aeroState == VehicleAeroState.Gliding)
         {
-            // end drifting
-
-            //Debug.Log("end drift!");
-
-            vehicle.EndDrift();
-            vehicle.holdingJump = false;
-        }
-
-
-        // -------------------------------------------------------------------------------------
-
-        float steer = 0;
-
-        Debug.DrawRay(vehicle.vehicleProxy.transform.position + Vector3.up * 5, tan * 5, Color.blue);
-        Debug.DrawRay(vehicle.vehicleProxy.transform.position + Vector3.up * 5, vehicle.vehicleProxy.velocity.normalized * 5, Color.red);
-
-        if (vehicle.isDrifting())
-        {
-            Vector3 veloDir = vehicle.vehicleProxy.velocity.normalized;
-
-            float dot = Vector3.Dot(tan, veloDir);
-            //@TODO: bake data
-            Vector3 nodeRight = Vector3.Cross(Vector3.up, tan);
-            float sign = Mathf.Sign(Vector3.Dot(veloDir, nodeRight));
-
-            dot = 1 - dot;
-
-            if (dot > AI_Params.maxDriftHaltAngleAlpha)
-            {
-                //Debug.Log("end drift!");
-
-                vehicle.EndDrift();
-                vehicle.holdingJump = false;
-            }
-            else
-            {
-                dot *= sign;
-                //Debug.Log(dot);
-
-                steer = driftPID.Step(-dot, Time.deltaTime);
-            }
+            vehicle.vInput = 0;
+            vehicle.hInput = 0;
         }
 
         else
         {
-            Wind_Steer();
+            vehicle.vInput = 1;
 
-            steer = steerPID.Step(steerError, Time.deltaTime);
-            steerPID.LimitIntegral(5);
+            float steer = steerPID.Step(p_1_Local.x, Time.fixedDeltaTime);
+
+            vehicle.hInput = steer;
         }
 
-        // -------------------------------------------------------------------------------------
-
-        float a;
-        if (vehicle.position > targetPos)
-        {
-            a = 1;
-        }
-        else if (vehicle.position < targetPos)
-        {
-            a = 0;
-        }
-        else
-        {
-            a = 0.5f;
-        }
-
-        float targetSpeed = Mathf.Lerp(position_params.minSpeed, position_params.maxSpeed, a);
-        targetSpeed = rubberBanding ? targetSpeed + AI_Params.rbSpeedIncrease : targetSpeed;
-
-        float throttleError = targetSpeed - vehicle.forwardSpeed;
-
-        float throttleValue = Mathf.Clamp01(throttlePID.Step(throttleError, Time.deltaTime));
-        throttlePID.LimitIntegral(2);
-
-        // -------------------------------------------------------------------------------------
-
-        //bool bShouldDrift = targetSpeed > vehicle.GetMaxSpeedWithModifiers();
-
-        if (vehicle.isDrifting())
-        {
-            //Debug.Log(steer);
-        }
-
-        if (vehicle)
-        {
-            vehicle.SetThrottleInput(throttleValue);
-            vehicle.SetSteerInput(steer);
-
-            if (driftable && !vehicle.isDrifting() && vehicle.forwardSpeed > vehicle.minDriftSpeed)
-            {
-                vehicle.SetSteerInput(driftDir);
-
-                vehicle.StartDrift();
-                vehicle.holdingJump = true;
-                driftPID.LimitIntegral(0);
-            }
-            else
-            {
-                driftable = false;
-            }
-
-        }
 
     }
 
