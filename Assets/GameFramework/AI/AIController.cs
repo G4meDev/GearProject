@@ -67,6 +67,11 @@ public class AIController : MonoBehaviour
 
     Vector2 localSpeed2D;
 
+    public void UpdateTargetPosition (int pos)
+    {
+        targetPos = pos;
+    }
+
     private void UpdateRoute()
     {
         Vector3 temp;
@@ -133,10 +138,10 @@ public class AIController : MonoBehaviour
             Color color = UnityEngine.Random.ColorHSV();
             UnityEngine.Random.state = state;
 
-            DrawHelpers.DrawSphere(crossTrackPos, 3, color);
-            DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
-            DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
-            DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
+//             DrawHelpers.DrawSphere(crossTrackPos, 3, color);
+//             DrawHelpers.DrawSphere(projection_1_Pos, 3, color);
+//             DrawHelpers.DrawSphere(projection_2_Pos, 3, color);
+//             DrawHelpers.DrawSphere(projection_3_Pos, 3, color);
             // 
             //             DrawHelpers.DrawSphere(crossTrackLocal, 3, color);
             //             DrawHelpers.DrawSphere(p_1_Local, 3, color);
