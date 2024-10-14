@@ -156,14 +156,14 @@ MonoBehaviour:
       time: 0
       value: 0
       inSlope: Infinity
-      outSlope: 4.5
+      outSlope: 6
       tangentMode: 71
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 10
-      value: 45
+      value: 60
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -172,7 +172,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 25
-      value: 45
+      value: 60
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -221,10 +221,9 @@ MonoBehaviour:
   antiGravityNode: {fileID: 0}
   gliderNode: {fileID: 0}
   lapPathNode: {fileID: 0}
-  lapPathIndex: -1
+  distanceFromStart: -1
   currentLap: 1
   distanceFromFirstPlace: -1
-  targetSpeed: 30
 --- !u!1 &5586777812053100585
 GameObject:
   m_ObjectHideFlags: 0

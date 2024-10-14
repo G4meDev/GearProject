@@ -1,4 +1,6 @@
+using Cinemachine;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class AIController : MonoBehaviour
 {
@@ -8,7 +10,7 @@ public class AIController : MonoBehaviour
     public int targetPos = -1;
     public AI_Position_Params position_params;
 
-    public float targetTrackError = 0.0f;
+    public float crossTrackOffset = 0.0f;
 
     public float targetSpeed = 30;
 
@@ -23,10 +25,10 @@ public class AIController : MonoBehaviour
     public float steer_i = 0.01f;
     public float steer_d = 0.1f;
 
-    public float crossTrackWeight = 1.0f;
-    public float projection_1_Weight = 0.8f;
-    public float projection_2_Weight = 0.6f;
-    public float projection_3_Weight = 0.25f;
+    public float crossTrackWeight = 0.8f;
+    public float projection_1_Weight = 0.55f;
+    public float projection_2_Weight = 0.3f;
+    public float projection_3_Weight = 0.05f;
 
     //------------------------------------------------------------
 
@@ -224,8 +226,14 @@ public class AIController : MonoBehaviour
             float throttle = throttlePID.Step(throttleError, Time.fixedDeltaTime);
             vehicle.SetThrottleInput(throttle);
 
+            float perlinFrequency = Time.time / 10;
+            float noise = Mathf.PerlinNoise(targetPos * 7 + 15, perlinFrequency);
+            float offset = (noise - 0.5f) * crossTrackScale * 2.15f;
+            crossTrackOffset = Mathf.Lerp(crossTrackLocal.x, offset, 0.1f * Time.fixedDeltaTime);
+            crossTrackOffset = offset;
 
-            float steer_CrossTrack = steerPID_CrossTrack.Step(crossTrackLocal.x, Time.fixedDeltaTime);
+            float steer_CrossTrack = steerPID_CrossTrack.Step(crossTrackLocal.x - crossTrackOffset, Time.fixedDeltaTime);
+
             float steer_Projetcion_1 = steerPID_Projection_1.Step(p_1_Local.x, Time.fixedDeltaTime);
             float steer_Projetcion_2 = steerPID_Projection_2.Step(p_2_Local.x, Time.fixedDeltaTime);
             float steer_Projetcion_3 = steerPID_Projection_3.Step(p_3_Local.x, Time.fixedDeltaTime);
