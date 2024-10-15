@@ -204,7 +204,7 @@ MonoBehaviour:
   aeroState: 0
   airborneTime: 0
   minDriftSpeed: 20
-  driftMinAngle: 10
+  driftMinAngle: 20
   driftMaxAngle: 60
   driftTimer: 1.5
   driftTractionRestTime: 2
