@@ -56,7 +56,7 @@
                 "m_Node": {
                     "m_Id": "404047346cdf40e69319a0b97fa4906a"
                 },
-                "m_SlotId": 0
+                "m_SlotId": 4
             },
             "m_InputSlot": {
                 "m_Node": {
@@ -378,7 +378,7 @@
         "y": 0.0
     },
     "m_Labels": [],
-    "m_Channel": 2
+    "m_Channel": 0
 }
 
 {
@@ -432,7 +432,7 @@
         "y": 0.0
     },
     "m_Labels": [],
-    "m_Channel": 2
+    "m_Channel": 0
 }
 
 {
@@ -852,7 +852,7 @@
         "y": 0.0
     },
     "m_Labels": [],
-    "m_Channel": 0
+    "m_Channel": 2
 }
 
 {
