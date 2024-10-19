@@ -3,7 +3,17 @@ guid: b29e658ee4a164b4796123e4bd1eefee
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: base
+    second: {fileID: 2100000, guid: 20ffdf0e0ef7c604a9c6e838c61fad51, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lod1
+    second: {fileID: 2100000, guid: d625f8736e477c34ba8d00675162ba0d, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -34,7 +44,9 @@ ModelImporter:
     clipAnimations: []
     isReadable: 0
   meshes:
-    lODScreenPercentages: []
+    lODScreenPercentages:
+    - 0.25
+    - 0.01
     globalScale: 1
     meshCompression: 0
     addColliders: 0
