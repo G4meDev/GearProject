@@ -488,8 +488,8 @@ public class Vehicle : MonoBehaviour
         bHit = Physics.Raycast(ray, out hit, rayDist, layerMask);
 
         // @TODO: find faster way
-        contactSmoothNormal = bHit ? MeshHelpers.GetSmoothNormalFromHit(ref hit) : -gravityDir;
-        //contactSmoothNormal = bHit ? hit.normal : -gravityDir;
+        //contactSmoothNormal = bHit ? MeshHelpers.GetSmoothNormalFromHit(ref hit) : -gravityDir;
+        contactSmoothNormal = bHit ? hit.normal : -gravityDir;
     }
 
     private void Gravity()
