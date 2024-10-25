@@ -16,12 +16,20 @@ public class VehicleCamera : MonoBehaviour
     {
         if (vehicle)
         {
-            target.transform.position = vehicle.vehicleBox.transform.position;
+            //target.transform.position = vehicle.vehicleBox.transform.position;
 
-            Vector3 cameraUp = vehicle.orientNode ? vehicle.orientNode.GetCameraUpVector(vehicle.vehicleBox.transform.position) : Vector3.up;
-            Vector3 forward = Vector3.Cross(vehicle.vehicleBox.transform.right, cameraUp);
+            Vector3 cameraUp = Vector3.up;
+            Vector3 cameraForward = Vector3.forward;
+            Vector3 cameraPos = Vector3.zero;
 
-            target.transform.rotation = Quaternion.LookRotation(forward, cameraUp);
+            if(vehicle.orientNode)
+            {
+                vehicle.orientNode.GetCameraVectors(vehicle.vehicleBox.transform.position, out cameraForward, out cameraUp, out cameraPos);
+            }
+
+            target.transform.position = cameraPos;
+
+            target.transform.rotation = Quaternion.LookRotation(cameraForward, cameraUp);
         }
     }
 }

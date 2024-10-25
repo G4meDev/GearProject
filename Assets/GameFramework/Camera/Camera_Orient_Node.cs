@@ -12,8 +12,12 @@ public class Camera_Orient_Node : MonoBehaviour
         vehicle.orientNode = this;
     }
 
-    public Vector3 GetCameraUpVector(Vector3 worldPos)
+    public void GetCameraVectors(Vector3 worldPos, out Vector3 forwardVector, out Vector3 upVector, out Vector3 cameraPos)
     {
+        forwardVector = Vector3.forward;
+        upVector = Vector3.up;
+        cameraPos = Vector3.zero;
+
         float min_dist = float.MaxValue;
         Camera_Orient_Node nearest = null;
 
@@ -30,8 +34,9 @@ public class Camera_Orient_Node : MonoBehaviour
             nearest_pos = node.transform.position;
             nodeToNearest = nearest_pos - transform.position;
             dot = Vector3.Dot(nodeToNearest.normalized, nodeToTarget) / nodeToNearest.magnitude;
+            dot = Mathf.Clamp01(dot);
 
-            if(dot >= 0 && dot <= 1 && nodeToTarget.magnitude < min_dist)
+            if(nodeToTarget.magnitude < min_dist)
             {
                 a = dot;
                 min_dist = nodeToTarget.magnitude;
@@ -41,10 +46,14 @@ public class Camera_Orient_Node : MonoBehaviour
 
         if (nearest)
         {
-            return Vector3.Lerp(transform.up, nearest.transform.up, a);
+            forwardVector = Vector3.Lerp(transform.forward, nearest.transform.forward, a);
+            upVector = Vector3.Lerp(transform.up, nearest.transform.up, a);
+            cameraPos = Vector3.Lerp(transform.position, nearest.transform.position, a);
+
+            return;
         }
 
-        return transform.up;
+        return;
     }
 
     public void OnNeighboursChanged()
