@@ -36,7 +36,7 @@ public class Camera_Orient_Node : MonoBehaviour
             dot = Vector3.Dot(nodeToNearest.normalized, nodeToTarget) / nodeToNearest.magnitude;
             dot = Mathf.Clamp01(dot);
 
-            if(nodeToTarget.magnitude < min_dist)
+            if(Vector3.Distance(worldPos, transform.position + dot * nodeToNearest.normalized) < min_dist)
             {
                 a = dot;
                 min_dist = nodeToTarget.magnitude;
