@@ -2,34 +2,31 @@ using UnityEngine;
 
 public class VehicleCamera : MonoBehaviour
 {
-    public new Camera camera;
+    public new UnityEngine.Camera camera;
     public GameObject target;
 
     private Vehicle vehicle;
 
+    private CameraRail cameraRail;
+
     void Start()
     {
         vehicle = transform.root.GetComponentInChildren<Vehicle>();
+
+        cameraRail = GameObject.FindObjectOfType<CameraRail>();
     }
     
     void FixedUpdate()
     {
-        if (vehicle)
+        if (cameraRail)
         {
-            //target.transform.position = vehicle.vehicleBox.transform.position;
-
-            Vector3 cameraUp = Vector3.up;
-            Vector3 cameraForward = Vector3.forward;
-            Vector3 cameraPos = Vector3.zero;
-
-            if(vehicle.orientNode)
-            {
-                vehicle.orientNode.GetCameraVectors(vehicle.vehicleBox.transform.position, out cameraForward, out cameraUp, out cameraPos);
-            }
+            cameraRail.GetCameraVectors(vehicle.vehicleBox.transform.position, out Vector3 cameraForward, out Vector3 cameraUp, out Vector3 cameraPos);
 
             target.transform.position = cameraPos;
-
             target.transform.rotation = Quaternion.LookRotation(cameraForward, cameraUp);
+
+            Debug.Log(cameraPos);
         }
+
     }
 }

@@ -18,9 +18,13 @@ public class PlayerInput : MonoBehaviour
         
         vehicle.holdingJump = UnityEngine.Input.GetButton("Jump");
 
-        vehicle.hInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Horizontal") + screenInput.data.hInput, -1, 1);
-        vehicle.vInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Vertical") + screenInput.data.vInput, -1, 1);
-        vehicle.holdingJump |= screenInput.data.holdingJump;
+//         vehicle.hInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Horizontal") + screenInput.data.hInput, -1, 1);
+//         vehicle.vInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Vertical") + screenInput.data.vInput, -1, 1);
+//         vehicle.holdingJump |= screenInput.data.holdingJump;
+
+
+        vehicle.hInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Horizontal"), -1, 1);
+        vehicle.vInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Vertical"), -1, 1);
 
 #else
 

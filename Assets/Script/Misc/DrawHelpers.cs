@@ -179,7 +179,7 @@ public static class DrawHelpers
 
     static Vector3 TransformByPixel(Vector3 position, Vector3 translateBy)
     {
-        Camera cam = UnityEditor.SceneView.currentDrawingSceneView.camera;
+        UnityEngine.Camera cam = UnityEditor.SceneView.currentDrawingSceneView.camera;
         if (cam)
             return cam.ScreenToWorldPoint(cam.WorldToScreenPoint(position) + translateBy);
         else

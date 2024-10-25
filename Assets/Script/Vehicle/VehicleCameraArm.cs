@@ -62,7 +62,7 @@ public class VehicleCameraArm : MonoBehaviour
     {
         if (Application.isPlaying) 
         {
-            camComp.fieldOfView = FOV + (MovementComp.forwardSpeed * MovementComp.forwardSpeed * FOVChangeStr);
+            //camComp.fieldofview = FOV + (MovementComp.forwardSpeed * MovementComp.forwardSpeed * FOVChangeStr);
 
             updateTransforms();
             
