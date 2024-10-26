@@ -1,3 +1,4 @@
+using Cinemachine;
 using UnityEngine;
 
 public class VehicleCamera : MonoBehaviour
@@ -12,7 +13,6 @@ public class VehicleCamera : MonoBehaviour
     void Start()
     {
         vehicle = transform.root.GetComponentInChildren<Vehicle>();
-
         cameraRail = GameObject.FindObjectOfType<CameraRail>();
     }
     
@@ -20,12 +20,12 @@ public class VehicleCamera : MonoBehaviour
     {
         if (cameraRail)
         {
-            cameraRail.GetCameraVectors(vehicle.vehicleBox.transform.position, out Vector3 cameraForward, out Vector3 cameraUp, out Vector3 cameraPos);
+            cameraRail.GetCameraVectors(vehicle.vehicleProxy.position, out Vector3 cameraForward, out Vector3 cameraUp, out Vector3 cameraPos);
 
             target.transform.position = cameraPos;
             target.transform.rotation = Quaternion.LookRotation(cameraForward, cameraUp);
 
-            Debug.Log(cameraPos);
+            DrawHelpers.DrawSphere(cameraPos, 2, Color.black);
         }
 
     }

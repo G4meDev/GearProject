@@ -99,9 +99,9 @@ public class SceneManager : MonoBehaviour
 
     void Start()
     {
-#if UNITY_ANDROID && !UNITY_EDITOR
+//#if UNITY_ANDROID && !UNITY_EDITOR
         Application.targetFrameRate = 60;
-#endif
+//#endif
 
         lapCount = lap_Count;
         trainingSession = training_Session;
