@@ -59,7 +59,7 @@ public class IPScanner : MonoBehaviour
 
             timer += Time.deltaTime;
 
-            if (timer >= 5)
+            if (timer >= 20)
             {
                 allDone = true;
                 Debug.Log("Timeout");

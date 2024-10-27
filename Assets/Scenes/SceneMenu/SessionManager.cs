@@ -1,7 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +13,24 @@ public class SessionManager : NetworkBehaviour
 {
     public NetState netState;
 
+    public MainMenu mainMenu;
+
+    private void Awake()
+    {
+        IpButton.onClicked += StartJoin;
+    }
+
+    private void OnDestroy()
+    {
+        IpButton.onClicked -= StartJoin;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void MainMenuToGameLevelRpc()
+    {
+        mainMenu.CloseMenu();
+    }
+
     private void OnLevelLoadFinished(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
     {
         if (IsServer)
@@ -21,6 +38,8 @@ public class SessionManager : NetworkBehaviour
             Debug.Log("Server Loaded");
 
             SceneManager.Get().PrepareRace();
+
+            MainMenuToGameLevelRpc();
         }
     }
 
@@ -38,7 +57,7 @@ public class SessionManager : NetworkBehaviour
     public void Start()
     {
         NetworkManager.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
-        
+
     }
 
 
@@ -46,6 +65,9 @@ public class SessionManager : NetworkBehaviour
     public void StartHost()
     {
         netState = NetState.Host;
+
+        string localIp = NetworkUtilities.GetLocalIPv4();
+        NetworkManager.GetComponent<UnityTransport>().SetConnectionData(localIp, 7777);
 
         NetworkManager.StartHost();
         NetworkManager.SceneManager.OnLoadEventCompleted += OnLevelLoadFinished;
@@ -59,12 +81,14 @@ public class SessionManager : NetworkBehaviour
         }
     }
 
-    public void StartJoin()
+    public void StartJoin(string ip)
     {
         netState = NetState.Client;
 
-        GetComponent<IPScanner>().Scan();
+        Debug.Log("join" + ip);
 
-        //NetworkManager.StartClient();
+        NetworkManager.GetComponent<UnityTransport>().SetConnectionData(ip, 7777);
+
+        NetworkManager.StartClient();
     }
 }

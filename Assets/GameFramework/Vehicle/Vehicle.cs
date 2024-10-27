@@ -386,7 +386,7 @@ public class Vehicle : NetworkBehaviour
             if (cameraPrefab)
             {
                 GameObject obj = Instantiate(cameraPrefab);
-                obj.transform.parent = this.transform;
+                obj.transform.parent = transform;
                 obj.transform.position = transform.position;
             }
 
