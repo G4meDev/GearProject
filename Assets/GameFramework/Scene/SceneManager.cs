@@ -4,52 +4,63 @@ using UnityEngine;
 
 public class SceneManager : NetworkBehaviour
 {
-    public NetworkManager networkManager;
+    private static SceneManager instance;
 
     // TODO: player spawning
-    public static Vehicle playerVehicle;
+    public Vehicle playerVehicle;
 
-    public static List<AIController> aiControllers = new List<AIController>();
+    public List<AIController> aiControllers = new List<AIController>();
 
-    public static List<Vehicle> allVehicles = new List<Vehicle>();
+    public List<Vehicle> allVehicles = new List<Vehicle>();
 
 
     public GameObject screenInputPrefab;
-    private static UI_ScreenInput screenInput;
+    public UI_ScreenInput screenInput;
 
     public GameObject lapCounterPrefab;
-    private static UI_LapCounter lapCounter;
+    public UI_LapCounter lapCounter;
 
     public GameObject positionPrefab;
-    private static UI_Position position;
+    public UI_Position position;
 
     public GameObject debugDataPrefab;
-    private static UI_DebugData debugData;
+    public UI_DebugData debugData;
 
-    public int lap_Count = 3;
-    public static int lapCount;
-
-    public bool training_Session = false;
-    public static bool trainingSession;
+    public int lapCount = 3;
 
     public List<GameObject> spawns;
 
-    public static bool raceStarted = false;
+    public bool raceStarted = false;
 
-    // -------------------------------------------------
-
-    public static UI_ScreenInput GetScreenInput() { return screenInput; }
-
-    public static UI_LapCounter GetLapCounter() { return lapCounter; }
-
-    public static UI_Position GetPosition() { return position; }
-
-    public static UI_DebugData GetDebugData() { return debugData; }
+    public GameObject vehiclePrefab;
 
     // ----------------------------------------
 
+    public static SceneManager Get()
+    {
+        if (instance == null)
+            instance = GameObject.FindObjectOfType<SceneManager>();
+        return instance;
+    }
 
-    public static void OnPlayerChanged(Vehicle vehicle)
+    public void PrepareRace()
+    {
+        if (IsServer)
+        {
+            raceStarted = false;
+
+            for (int i = 0; i < NetworkManager.ConnectedClients.Count; i++)
+            {
+                GameObject vehicle = GameObject.Instantiate(vehiclePrefab, spawns[i].transform.position, spawns[i].transform.rotation);
+                NetPlayer netPlayer = NetworkManager.ConnectedClients[(ulong)i].PlayerObject.GetComponent<NetPlayer>();
+
+                netPlayer.vehicle = vehicle.GetComponent<Vehicle>();
+                netPlayer.vehicle.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.ConnectedClients[(ulong)i].ClientId);
+            }
+        }
+    }
+
+    public void OnPlayerChanged(Vehicle vehicle)
     {
         if(vehicle.IsServer)
         {
@@ -65,7 +76,7 @@ public class SceneManager : NetworkBehaviour
 
     }
 
-    public static void RegisterAI(AIController controller)
+    public void RegisterAI(AIController controller)
     {
         aiControllers.Add(controller);
         allVehicles.Add(controller.vehicle);
@@ -115,15 +126,9 @@ public class SceneManager : NetworkBehaviour
 
     void Start()
     {
-        networkManager = GetComponent<NetworkManager>();
-
-
 //#if UNITY_ANDROID && !UNITY_EDITOR
         Application.targetFrameRate = 60;
 //#endif
-
-        lapCount = lap_Count;
-        trainingSession = training_Session;
 
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();

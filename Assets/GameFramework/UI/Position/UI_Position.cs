@@ -14,9 +14,9 @@ public class UI_Position : MonoBehaviour
 
     void Update()
     {
-        if(SceneManager.playerVehicle)
+        if(SceneManager.Get().playerVehicle)
         {
-            text.text = SceneManager.playerVehicle.position.ToString();
+            text.text = SceneManager.Get().playerVehicle.position.ToString();
         }
     }
 }

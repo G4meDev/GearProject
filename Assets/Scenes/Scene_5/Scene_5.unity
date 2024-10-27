@@ -4349,7 +4349,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &801856792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11782,8 +11782,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1995357779}
-  - component: {fileID: 1995357781}
   - component: {fileID: 1995357780}
+  - component: {fileID: 1995357781}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -11815,24 +11815,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1995357777}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ProtocolType: 0
-  m_MaxPacketQueueSize: 128
-  m_MaxPayloadSize: 6144
-  m_HeartbeatTimeoutMS: 500
-  m_ConnectTimeoutMS: 1000
-  m_MaxConnectAttempts: 60
-  m_DisconnectTimeoutMS: 30000
-  ConnectionData:
-    Address: 127.0.0.1
-    Port: 7777
-    ServerListenAddress: 127.0.0.1
-  DebugSimulator:
-    PacketDelayMS: 0
-    PacketJitterMS: 0
-    PacketDropRate: 0
+  GlobalObjectIdHash: 2226873042
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &1995357781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11842,35 +11836,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 1995357777}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 593a2fe42fa9d37498c96f9a383b6521, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f8d2594618ca1744874e8c224683157, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkConfig:
-    ProtocolVersion: 0
-    NetworkTransport: {fileID: 1995357780}
-    PlayerPrefab: {fileID: 3985926892625339986, guid: 4ff120f3a037bf24e9110970a476079b,
-      type: 3}
-    Prefabs:
-      NetworkPrefabsLists:
-      - {fileID: 11400000, guid: 8590e731024058746be4a7211c94c4e0, type: 2}
-    TickRate: 30
-    ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
-    ConnectionData: 
-    EnableTimeResync: 0
-    TimeResyncInterval: 30
-    EnsureNetworkVariableLengthSafety: 0
-    EnableSceneManagement: 1
-    ForceSamePrefabs: 1
-    RecycleNetworkIds: 1
-    NetworkIdRecycleDelay: 120
-    RpcHashSize: 0
-    LoadSceneTimeOut: 120
-    SpawnTimeout: 10
-    EnableNetworkLogs: 1
-    OldPrefabList: []
-  RunInBackground: 1
-  LogLevel: 1
+  playerVehicle: {fileID: 0}
+  aiControllers: []
+  allVehicles: []
+  screenInputPrefab: {fileID: 9222298944393228262, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
+    type: 3}
+  screenInput: {fileID: 0}
+  lapCounterPrefab: {fileID: 5694973237187414640, guid: eeaa05658bc682046842b6ceb72cb9d7,
+    type: 3}
+  lapCounter: {fileID: 0}
+  positionPrefab: {fileID: 5694973237187414640, guid: d380aa366dffea241bb41d0ed0b52aa9,
+    type: 3}
+  position: {fileID: 0}
+  debugDataPrefab: {fileID: 6508463256144032451, guid: f5f60586a3e79944da7cf54fdf7dae6f,
+    type: 3}
+  debugData: {fileID: 0}
+  lapCount: 3
+  spawns:
+  - {fileID: 457060628}
+  - {fileID: 173751309}
+  raceStarted: 0
+  vehiclePrefab: {fileID: 3985926892625339986, guid: 4ff120f3a037bf24e9110970a476079b,
+    type: 3}
 --- !u!114 &1995755340 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5157293686151263800, guid: 8c7693d458b3a3e4ea52f42e9be16ddd,

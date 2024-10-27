@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Net;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
 
 // @TODO: Develop jump
 
@@ -164,14 +160,14 @@ public class Vehicle : NetworkBehaviour
     {
         currentLap++;
 
-        if (currentLap > SceneManager.lapCount)
+        if (currentLap > SceneManager.Get().lapCount)
         {
             EndRace();
         }
 
         if (isPlayer)
         {
-            SceneManager.GetLapCounter().UpdateLapCounter();
+            SceneManager.Get().lapCounter.UpdateLapCounter();
         }
     }
 
@@ -383,11 +379,11 @@ public class Vehicle : NetworkBehaviour
         vehicleBox.transform.rotation = q;
     }
 
-    void Start()
+    public void Init()
     {
-        if(isPlayer && IsOwner)
+        if (isPlayer && IsOwner)
         {
-            if(cameraPrefab)
+            if (cameraPrefab)
             {
                 GameObject obj = Instantiate(cameraPrefab);
                 obj.transform.parent = this.transform;
@@ -396,7 +392,7 @@ public class Vehicle : NetworkBehaviour
 
             gameObject.AddComponent<PlayerInput>();
 
-            SceneManager.OnPlayerChanged(this);
+            SceneManager.Get().OnPlayerChanged(this);
         }
 
         else
@@ -404,6 +400,11 @@ public class Vehicle : NetworkBehaviour
             gameObject.AddComponent<AIRoutePlanning>();
             gameObject.AddComponent<AIController>();
         }
+    }
+
+    void Start()
+    {
+        Init();
     }
 
     private void Update()

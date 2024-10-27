@@ -25,7 +25,7 @@ public class UI_ScreenInput : MonoBehaviour
 
     public void OnPlayerChanged()
     {
-        canvas.worldCamera = SceneManager.playerVehicle.GetComponentInChildren<VehicleCamera>().camera;
+        canvas.worldCamera = SceneManager.Get().playerVehicle.GetComponentInChildren<VehicleCamera>().camera;
     }
 
     public void DeactivateAll()

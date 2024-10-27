@@ -14,12 +14,12 @@ public class UI_DebugData : MonoBehaviour
 
     void Update()
     {
-        if(SceneManager.playerVehicle)
+        if(SceneManager.Get().playerVehicle)
         {
-            speedText.text = string.Format("Speed : {0:F2}", SceneManager.playerVehicle.forwardSpeed);
+            speedText.text = string.Format("Speed : {0:F2}", SceneManager.Get().playerVehicle.forwardSpeed);
 
-            boostText.text = string.Format("Boost : {0:F2}", SceneManager.playerVehicle.speedModifierIntensity);
-            reserveText.text = string.Format("Reserve : {0:F2}", SceneManager.playerVehicle.speedModifierReserveTime);
+            boostText.text = string.Format("Boost : {0:F2}", SceneManager.Get().playerVehicle.speedModifierIntensity);
+            reserveText.text = string.Format("Reserve : {0:F2}", SceneManager.Get() .playerVehicle.speedModifierReserveTime);
         }
     }
 }

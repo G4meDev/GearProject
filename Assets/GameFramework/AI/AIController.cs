@@ -177,7 +177,7 @@ public class AIController : MonoBehaviour
 
         vehicle.killDelegate = OnKilled;
 
-        SceneManager.RegisterAI(this);
+        SceneManager.Get().RegisterAI(this);
 
         steerPID_CrossTrack.Init(steer_p, steer_i, steer_d);
         steerPID_Projection_1.Init(steer_p, steer_i, steer_d);

@@ -10,12 +10,12 @@ public class UI_DriftMeter : MonoBehaviour
 
     public void OnPlayerChanged()
     {
-        canvas.worldCamera = SceneManager.playerVehicle.GetComponentInChildren<VehicleCamera>().camera;
+        canvas.worldCamera = SceneManager.Get().playerVehicle.GetComponentInChildren<VehicleCamera>().camera;
     }
 
     void Update()
     {
-        if (SceneManager.playerVehicle)
+        if (SceneManager.Get().playerVehicle)
         {
 //             image.material.SetFloat("_Drifting", SceneManager.playerVehicle.isDrifting() ? 1 : 0);
 //             image.material.SetFloat("_StartTime", SceneManager.playerVehicle.driftStartTime);

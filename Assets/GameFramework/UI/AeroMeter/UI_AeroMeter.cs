@@ -10,11 +10,11 @@ public class UI_AeroMeter : MonoBehaviour
     
     public void OnPlayerChanged()
     {
-        image.material.SetFloat("_low", SceneManager.playerVehicle.lowJumpTime);
-        image.material.SetFloat("_mid", SceneManager.playerVehicle.midJumpTime);
-        image.material.SetFloat("_high", SceneManager.playerVehicle.highJumpTime);
+        image.material.SetFloat("_low", SceneManager.Get().playerVehicle.lowJumpTime);
+        image.material.SetFloat("_mid", SceneManager.Get().playerVehicle.midJumpTime);
+        image.material.SetFloat("_high", SceneManager.Get().playerVehicle.highJumpTime);
 
-        canvas.worldCamera = SceneManager.playerVehicle.GetComponentInChildren<VehicleCamera>().camera;
+        canvas.worldCamera = SceneManager.Get().playerVehicle.GetComponentInChildren<VehicleCamera>().camera;
     }
 
     void Start()
@@ -24,9 +24,9 @@ public class UI_AeroMeter : MonoBehaviour
 
     void Update()
     {
-        if (SceneManager.playerVehicle)
+        if (SceneManager.Get().playerVehicle)
         {
-            image.material.SetFloat("_airborneTime", SceneManager.playerVehicle.airborneTime);
+            image.material.SetFloat("_airborneTime", SceneManager.Get().playerVehicle.airborneTime);
         }
     }
 }

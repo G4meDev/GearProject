@@ -18,7 +18,7 @@ public class PlayerInput : MonoBehaviour
             return;
         }
 
-        UI_ScreenInput screenInput = SceneManager.GetScreenInput();
+        UI_ScreenInput screenInput = SceneManager.Get().screenInput;
 
 #if UNITY_EDITOR
         
