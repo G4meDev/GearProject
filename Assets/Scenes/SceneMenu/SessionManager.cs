@@ -59,63 +59,12 @@ public class SessionManager : NetworkBehaviour
         }
     }
 
-    private List<Ping> pingList = new();
-
     public void StartJoin()
     {
         netState = NetState.Client;
 
-        string localIp = NetworkUtilities.GetLocalIPv4();
-        string subnetMask = NetworkUtilities.GetSubnetMask(localIp);
-
-        List<string> ipAdresses = NetworkUtilities.GetIPRange(localIp, subnetMask);
-
-        pingList.Clear();
-
-        foreach (string ip in ipAdresses)
-        {
-            pingList.Add(new Ping(ip));
-        }
-
-        StartCoroutine(CheckPing());
-
+        GetComponent<IPScanner>().Scan();
 
         //NetworkManager.StartClient();
-    }
-
-    public void FoundIp(string ip)
-    {
-        Debug.Log(ip);
-    }
-
-    IEnumerator CheckPing()
-    {
-        bool flag = false;
-
-        while (!flag)
-        {
-            flag = true;
-
-            for(int i = pingList.Count - 1; i >= 0; i--)
-            {
-                Ping ping = pingList[i];
-
-                if(ping.isDone)
-                {
-                    if(ping.time >= 0)
-                    {
-                        FoundIp(ping.ip);
-                        pingList.RemoveAt(i);
-                    }
-                }
-
-                else
-                {
-                    flag = false;
-                }
-            }
-
-            yield return null;
-        }
     }
 }
