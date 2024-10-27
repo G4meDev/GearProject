@@ -19,6 +19,8 @@ public class LapPath : MonoBehaviour
 
     public void RegenData()
     {
+
+#if UNITY_EDITOR
         distanceList.Clear();
 
         LapPath_Node node = null;
@@ -63,6 +65,7 @@ public class LapPath : MonoBehaviour
         {
             EditorUtility.SetDirty(child);
         }
+#endif
 
     }
 
