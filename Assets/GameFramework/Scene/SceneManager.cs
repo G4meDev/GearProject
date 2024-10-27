@@ -23,13 +23,6 @@ public class SceneManager : NetworkBehaviour
     public GameObject positionPrefab;
     private static UI_Position position;
 
-    public GameObject aeroMeterPrefab;
-    private static UI_AeroMeter aeroMeter;
-
-
-    public GameObject driftMeterPrefab;
-    private static UI_DriftMeter driftMeter;
-
     public GameObject debugDataPrefab;
     private static UI_DebugData debugData;
 
@@ -51,10 +44,6 @@ public class SceneManager : NetworkBehaviour
 
     public static UI_Position GetPosition() { return position; }
 
-    public static UI_AeroMeter GetAeroMeter() { return aeroMeter; }
-
-    public static UI_DriftMeter GetDriftMeter() { return driftMeter; }
-
     public static UI_DebugData GetDebugData() { return debugData; }
 
     // ----------------------------------------
@@ -62,13 +51,18 @@ public class SceneManager : NetworkBehaviour
 
     public static void OnPlayerChanged(Vehicle vehicle)
     {
-        playerVehicle = vehicle;
-        allVehicles.Add(vehicle);
+        if(vehicle.IsServer)
+        {
+            playerVehicle = vehicle;
+            allVehicles.Add(vehicle);
+        }
 
-        aeroMeter.OnPlayerChanged();
-        screenInput.OnPlayerChanged();
-        driftMeter.OnPlayerChanged();
-        lapCounter.UpdateLapCounter();
+        if (vehicle.IsOwner)
+        {
+            //screenInput.OnPlayerChanged();
+            //lapCounter.UpdateLapCounter();
+        }
+
     }
 
     public static void RegisterAI(AIController controller)
@@ -134,8 +128,6 @@ public class SceneManager : NetworkBehaviour
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();
         position = Instantiate(positionPrefab).GetComponent<UI_Position>();
-        aeroMeter = Instantiate(aeroMeterPrefab).GetComponent<UI_AeroMeter>();
-        driftMeter = Instantiate(driftMeterPrefab).GetComponent<UI_DriftMeter>();
 
 
 #if UNITY_EDITOR

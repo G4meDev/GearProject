@@ -234,8 +234,6 @@ public class AIController : MonoBehaviour
             (steer_Projetcion_2 * projection_2_Weight) + (steer_Projetcion_3 * projection_3_Weight);
 
         vehicle.SetSteerInputRpc(steer);
-
-
     }
 
 }

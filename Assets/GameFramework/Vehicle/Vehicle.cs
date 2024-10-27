@@ -385,7 +385,7 @@ public class Vehicle : NetworkBehaviour
 
     void Start()
     {
-        if(isPlayer)
+        if(isPlayer && IsOwner)
         {
             if(cameraPrefab)
             {

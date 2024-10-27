@@ -33,7 +33,7 @@ public class VehicleMesh : MonoBehaviour
 
             Quaternion targetRotaton = Quaternion.AngleAxis(vehicle.steerValue * 5.0f, vehicle.vehicleBox.transform.up) * vehicle.vehicleBox.transform.rotation;
 
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotaton, Time.deltaTime * lerpRate);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotaton, Time.deltaTime * lerpRate); 
         }
 
     }
