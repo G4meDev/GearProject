@@ -16,14 +16,14 @@ public class Glider_Node : MonoBehaviour
 
             if (vehicle)
             {
-                vehicle.EndGliding();
+                //vehicle.EndGliding();
             }
         }
 
         else
         {
             Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
-            vehicle.StartGliding(this);
+            //vehicle.StartGliding(this);
         }
     }
 

@@ -214,35 +214,26 @@ public class AIController : MonoBehaviour
         steerPID_Projection_1.LimitIntegral(4);
         steerPID_Projection_1.LimitIntegral(10);
 
-        if (vehicle.aeroState == VehicleAeroState.Gliding)
-        {
-            vehicle.SetThrottleInput(0);
-            vehicle.SetSteerInput(0);
-        }
+        float throttleError = targetSpeed - vehicle.forwardSpeed;
+        float throttle = throttlePID.Step(throttleError, Time.fixedDeltaTime);
+        vehicle.SetThrottleInput(throttle);
 
-        else
-        {
-            float throttleError = targetSpeed - vehicle.forwardSpeed;
-            float throttle = throttlePID.Step(throttleError, Time.fixedDeltaTime);
-            vehicle.SetThrottleInput(throttle);
+        float perlinFrequency = Time.time / 10;
+        float noise = Mathf.PerlinNoise(targetPos * 7 + 15, perlinFrequency);
+        float offset = (noise - 0.5f) * crossTrackScale * 2.15f;
+        crossTrackOffset = Mathf.Lerp(crossTrackLocal.x, offset, 0.1f * Time.fixedDeltaTime);
+        crossTrackOffset = offset;
 
-            float perlinFrequency = Time.time / 10;
-            float noise = Mathf.PerlinNoise(targetPos * 7 + 15, perlinFrequency);
-            float offset = (noise - 0.5f) * crossTrackScale * 2.15f;
-            crossTrackOffset = Mathf.Lerp(crossTrackLocal.x, offset, 0.1f * Time.fixedDeltaTime);
-            crossTrackOffset = offset;
+        float steer_CrossTrack = steerPID_CrossTrack.Step(crossTrackLocal.x - crossTrackOffset, Time.fixedDeltaTime);
 
-            float steer_CrossTrack = steerPID_CrossTrack.Step(crossTrackLocal.x - crossTrackOffset, Time.fixedDeltaTime);
+        float steer_Projetcion_1 = steerPID_Projection_1.Step(p_1_Local.x, Time.fixedDeltaTime);
+        float steer_Projetcion_2 = steerPID_Projection_2.Step(p_2_Local.x, Time.fixedDeltaTime);
+        float steer_Projetcion_3 = steerPID_Projection_3.Step(p_3_Local.x, Time.fixedDeltaTime);
 
-            float steer_Projetcion_1 = steerPID_Projection_1.Step(p_1_Local.x, Time.fixedDeltaTime);
-            float steer_Projetcion_2 = steerPID_Projection_2.Step(p_2_Local.x, Time.fixedDeltaTime);
-            float steer_Projetcion_3 = steerPID_Projection_3.Step(p_3_Local.x, Time.fixedDeltaTime);
+        float steer = (steer_CrossTrack * crossTrackWeight) + (steer_Projetcion_1 * projection_1_Weight) +
+            (steer_Projetcion_2 * projection_2_Weight) + (steer_Projetcion_3 * projection_3_Weight);
 
-            float steer = (steer_CrossTrack * crossTrackWeight) + (steer_Projetcion_1 * projection_1_Weight) +
-                (steer_Projetcion_2 * projection_2_Weight) + (steer_Projetcion_3 * projection_3_Weight);
-
-            vehicle.SetSteerInput(steer);
-        }
+        vehicle.SetSteerInput(steer);
 
 
     }

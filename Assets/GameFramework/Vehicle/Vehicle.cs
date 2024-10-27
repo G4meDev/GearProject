@@ -10,8 +10,7 @@ public enum VehicleAeroState
     OnGround,
     Coyote,
     Jumping,
-    Falling,
-    Gliding
+    Falling
 }
 
 public class Vehicle : MonoBehaviour
@@ -218,8 +217,6 @@ public class Vehicle : MonoBehaviour
         vehicleProxy.velocity = Vector3.zero;
         vehicleProxy.angularVelocity = Vector3.zero;
 
-        EndDrift();
-
         speedModifierIntensity = 0.0f;
         speedModifierReserveTime = 0.0f;
 
@@ -236,34 +233,6 @@ public class Vehicle : MonoBehaviour
         killDelegate?.Invoke();
     }
 
-    public void StartGliding(Glider_Node node)
-    {
-        if (gliderNode == null)
-        {
-            //vehicleProxy.velocity = Vector3.zero;
-
-        }
-        
-        gliderNode = node;
-        aeroState = VehicleAeroState.Gliding;
-    }
-
-    public void EndGliding()
-    {
-        gliderNode = null;
-        aeroState = VehicleAeroState.Falling;
-    }
-
-    private void DoGliding()
-    {
-        Vector3 d = gliderNode.GetDesigeredVelocity(vehicleProxy.transform.position);
-        vehicleProxy.velocity = Vector3.Lerp(vehicleProxy.velocity, d, 0.04f);
-
-        Quaternion targetRotation = Quaternion.LookRotation(Vector3.Normalize(gliderNode.next.transform.position - gliderNode.transform.position), vehicleBox.transform.up);
-
-        vehicleBox.transform.rotation = Quaternion.Slerp(vehicleBox.transform.rotation, targetRotation, 0.04f);
-    }
-
     private bool CanJump()
     {
         return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote);
@@ -277,99 +246,6 @@ public class Vehicle : MonoBehaviour
     private bool CanDrift()
     {
         return holdingJump && Mathf.Abs(hInput) > 0.5f && forwardSpeed > minDriftSpeed;
-    }
-
-    public void StartDrift()
-    {
-        driftDir = Mathf.Sign(hInput);
-        
-        driftStartTime = Time.time;
-        driftCounter = 0;
-        driftYaw = 0.0f;
-    }
-
-    private void StepDrift()
-    {
-        if(!holdingJump)
-        {
-            EndDrift();
-        }
-
-        else
-        {
-            if(Time.time > driftStartTime + driftTimer)
-            {
-                driftCounter++;
-                driftStartTime = Time.time;
-            
-                if (driftCounter == 1)
-                {
-                    ApplySpeedModifier(ref firstDirftSpeedModifier);
-                }
-            
-                else if(driftCounter == 2)
-                {
-                    ApplySpeedModifier(ref secondDirftSpeedModifier);
-                }
-            
-                else if(driftCounter == 3)
-                {
-                    ApplySpeedModifier(ref thirdDirftSpeedModifier);
-            
-                    //EndDrift();
-                }
-            }
-
-            float a = (hInput + 1) / 2;
-
-            driftYaw = driftDir > 0 ? Mathf.Lerp(driftMinAngle , driftMaxAngle, a) : -Mathf.Lerp(driftMinAngle, driftMaxAngle, 1 - a);
-            driftYaw *= Time.fixedDeltaTime;
-
-            vehicleBox.transform.Rotate(Vector3.up, driftYaw, Space.Self);
-        }
-    }
-
-    public void EndDrift()
-    {
-        driftDir = 0;
-
-        lastDriftEndTime = Time.time;
-    }
-
-    private void OnStartJump()
-    {
-        if (CanJump())
-        {
-            //vehicleProxy.AddForce(jumpStr * contactSmoothNormal, ForceMode.Acceleration);
-
-            aeroState = VehicleAeroState.Jumping;
-
-            jumpStartTime = Time.time;
-        }
-    }
-
-    private void OnEndJump()
-    {
-        if (airborneTime > highJumpTime)
-        {
-            ApplySpeedModifier(ref highJumpSpeedModifier);
-        }
-
-        else if (airborneTime > midJumpTime)
-        {
-            ApplySpeedModifier(ref midJumpSpeedModifier);
-        }
-
-        else if (airborneTime > lowJumpTime)
-        {
-            ApplySpeedModifier(ref lowJumpSpeedModifier);
-        }
-
-//         if (CanDrift())
-//         {
-//             StartDrift();
-//         }
-
     }
 
     private float GetContactSurfaceFriction()
@@ -399,9 +275,6 @@ public class Vehicle : MonoBehaviour
 
     void UpdateAeroState()
     {
-        if (aeroState == VehicleAeroState.Gliding)
-            return;
-
         if (!bHit)
         {
             if (aeroState != VehicleAeroState.Jumping)
@@ -431,8 +304,6 @@ public class Vehicle : MonoBehaviour
                 {
                     aeroState = VehicleAeroState.OnGround;
                     lastTimeOnGround = Time.time;
-
-                    OnEndJump();
                 }
             }
 
@@ -513,15 +384,6 @@ public class Vehicle : MonoBehaviour
 
     private void ApplySteer()
     {
-
-
-        if(gliderNode)
-        {
-            vehicleProxy.AddForce(100 * hInput * vehicleBox.transform.right, ForceMode.Acceleration);
-
-            return;
-        }
-
         // applying vehicle yaw to the box
         if (!isDrifting() && aeroState == VehicleAeroState.OnGround)
         {
@@ -594,15 +456,6 @@ public class Vehicle : MonoBehaviour
 
         //Gravity();
 
-        if (isDrifting())
-        {
-            StepDrift();
-        }
-        else if (CanDrift())
-        {
-            StartDrift();
-        }
-
         //forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
         forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? vehicleProxy.velocity.magnitude : -vehicleProxy.velocity.magnitude;
 
@@ -616,17 +469,12 @@ public class Vehicle : MonoBehaviour
 
         UpdateAeroState();
 
-        if(aeroState == VehicleAeroState.Gliding)
-        {
-            DoGliding();
-        }
-
         if (!bHit)
         {
 
 
         }
-        if (bHit && aeroState != VehicleAeroState.Gliding)
+        if (bHit)
         {
 
             // if boosting set speed to max
