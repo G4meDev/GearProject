@@ -20,7 +20,7 @@ public class VehicleCamera : MonoBehaviour
     {
         if (cameraRail)
         {
-            cameraRail.GetCameraVectors(vehicle.vehicleProxy.position, out Vector3 cameraForward, out Vector3 cameraUp, out Vector3 cameraPos);
+            cameraRail.GetCameraVectors(vehicle.vehicleBox.transform.position, out Vector3 cameraForward, out Vector3 cameraUp, out Vector3 cameraPos);
 
             target.transform.position = cameraPos;
             target.transform.rotation = Quaternion.LookRotation(cameraForward, cameraUp);

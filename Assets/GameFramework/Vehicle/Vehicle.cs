@@ -381,6 +381,12 @@ public class Vehicle : NetworkBehaviour
 
     public void Init()
     {
+        if (IsServer && !isPlayer)
+        {
+            gameObject.AddComponent<AIRoutePlanning>();
+            gameObject.AddComponent<AIController>();
+        }
+
         if (isPlayer && IsOwner)
         {
             if (cameraPrefab)
@@ -395,11 +401,6 @@ public class Vehicle : NetworkBehaviour
             SceneManager.Get().OnPlayerChanged(this);
         }
 
-        else
-        {
-            gameObject.AddComponent<AIRoutePlanning>();
-            gameObject.AddComponent<AIController>();
-        }
     }
 
     void Start()
