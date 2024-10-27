@@ -11,9 +11,9 @@ public class IpButton : MonoBehaviour
 
     public void Configure(string inIp)
     {
-        text.text = inIp;
         ip = inIp;
 
+        text.text = inIp;
         GetComponent<Button>().onClick.AddListener(() => onClicked?.Invoke(ip));
     }
 }

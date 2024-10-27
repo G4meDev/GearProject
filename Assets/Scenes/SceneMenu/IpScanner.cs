@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class IPScanner : MonoBehaviour
 {
-    [Header(" Settings ")]
+    public IpButton ipButtonPrefab;
+    public Transform ipButtonsParent;
+
     private List<Ping> pings = new List<Ping>();
     private float timer;
 
@@ -31,6 +33,8 @@ public class IPScanner : MonoBehaviour
 
     IEnumerator CheckPingsCoroutine()
     {
+        List<string> foundIps = new();
+
         bool allDone = false;
 
         while (!allDone)
@@ -69,15 +73,17 @@ public class IPScanner : MonoBehaviour
 
     private void IPFound(string ip)
     {
-//         for (int i = 0; i < ipButtonsParent.childCount; i++)
-//         {
-//             IPButton childButton = ipButtonsParent.GetChild(i).GetComponent<IPButton>();
-// 
-//             if (childButton.IP == ip)
-//                 return;
-//         }
-// 
-//         IPButton button = Instantiate(ipButtonPrefab, ipButtonsParent);
-//         button.Configure(ip);
+        Debug.Log(ip);
+
+        for (int i = 0; i < ipButtonsParent.childCount; i++)
+        {
+            IpButton childButton = ipButtonsParent.GetChild(i).GetComponent<IpButton>();
+
+            if (childButton.ip == ip)
+                return;
+        }
+
+        IpButton button = Instantiate(ipButtonPrefab, ipButtonsParent);
+        button.Configure(ip);
     }
 }
