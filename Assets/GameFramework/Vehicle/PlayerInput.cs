@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 
@@ -12,19 +13,27 @@ public class PlayerInput : MonoBehaviour
 
     void Update()
     {
+        if (!vehicle.IsOwner)
+        {
+            return;
+        }
+
         UI_ScreenInput screenInput = SceneManager.GetScreenInput();
 
 #if UNITY_EDITOR
         
         vehicle.holdingJump = UnityEngine.Input.GetButton("Jump");
 
-//         vehicle.hInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Horizontal") + screenInput.data.hInput, -1, 1);
-//         vehicle.vInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Vertical") + screenInput.data.vInput, -1, 1);
-//         vehicle.holdingJump |= screenInput.data.holdingJump;
+        //         vehicle.hInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Horizontal") + screenInput.data.hInput, -1, 1);
+        //         vehicle.vInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Vertical") + screenInput.data.vInput, -1, 1);
+        //         vehicle.holdingJump |= screenInput.data.holdingJump;
 
 
-        vehicle.hInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Horizontal"), -1, 1);
-        vehicle.vInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Vertical"), -1, 1);
+        //vehicle.hInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Horizontal"), -1, 1);
+        //vehicle.vInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Vertical"), -1, 1);
+
+        vehicle.SetSteerInputRpc(UnityEngine.Input.GetAxis("Horizontal"));
+        vehicle.SetThrottleInputRpc(UnityEngine.Input.GetAxis("Vertical"));
 
 #else
 

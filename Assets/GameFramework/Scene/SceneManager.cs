@@ -1,10 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
-public class SceneManager : MonoBehaviour
+public class SceneManager : NetworkBehaviour
 {
+    public NetworkManager networkManager;
+
     // TODO: player spawning
     public static Vehicle playerVehicle;
 
@@ -37,6 +38,10 @@ public class SceneManager : MonoBehaviour
 
     public bool training_Session = false;
     public static bool trainingSession;
+
+    public List<GameObject> spawns;
+
+    public static bool raceStarted = false;
 
     // -------------------------------------------------
 
@@ -94,11 +99,31 @@ public class SceneManager : MonoBehaviour
 
     public static float GetDistanceFromFirstPlace(Vehicle vehicle)
     {
-        return allVehicles[0].distanceFromStart - vehicle.distanceFromStart;
+        //return allVehicles[0].distanceFromStart - vehicle.distanceFromStart;
+
+        return 1;
+    }
+
+    protected override void OnNetworkPostSpawn()
+    {
+        base.OnNetworkPostSpawn();
+
+
+    }
+
+
+    public void StartRace()
+    {
+
+
+        raceStarted = true;
     }
 
     void Start()
     {
+        networkManager = GetComponent<NetworkManager>();
+
+
 //#if UNITY_ANDROID && !UNITY_EDITOR
         Application.targetFrameRate = 60;
 //#endif
@@ -116,6 +141,9 @@ public class SceneManager : MonoBehaviour
 #if UNITY_EDITOR
         debugData = Instantiate(debugDataPrefab).GetComponent<UI_DebugData>();
 #endif
+
+
+        raceStarted = false;
     }
 
     void Update()

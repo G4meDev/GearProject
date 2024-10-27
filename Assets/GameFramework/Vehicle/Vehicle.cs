@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +15,7 @@ public enum VehicleAeroState
     Falling
 }
 
-public class Vehicle : MonoBehaviour
+public class Vehicle : NetworkBehaviour
 {
     public bool isPlayer = true;
 
@@ -130,17 +132,7 @@ public class Vehicle : MonoBehaviour
     [HideInInspector]
     public float driftYaw = 0.0f;
 
-    [HideInInspector]
-    private float driftDir = 0;
-
-    [HideInInspector]
-    private float lastDriftEndTime = 0.0f;
-
-    public Camera_Orient_Node orientNode;
-
     public AntiGravity_Node antiGravityNode;
-
-    public Glider_Node gliderNode;
 
     public LapPath_Node lapPathNode;
     public float distanceFromStart = -1;
@@ -151,13 +143,14 @@ public class Vehicle : MonoBehaviour
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
 
-
-    public void SetThrottleInput(float input)
+    [Rpc(SendTo.Server)]
+    public void SetThrottleInputRpc(float input)
     {
         vInput = Mathf.Clamp(input, -1, 1);
     }
 
-    public void SetSteerInput(float input)
+    [Rpc(SendTo.Server)]
+    public void SetSteerInputRpc(float input)
     {
         hInput = Mathf.Clamp(input, -1, 1);
     }
@@ -231,21 +224,6 @@ public class Vehicle : MonoBehaviour
         vehicleMesh.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
 
         killDelegate?.Invoke();
-    }
-
-    private bool CanJump()
-    {
-        return (aeroState == VehicleAeroState.OnGround || aeroState == VehicleAeroState.Coyote);
-    }
-
-    public bool isDrifting()
-    {
-        return driftDir != 0;
-    }
-
-    private bool CanDrift()
-    {
-        return holdingJump && Mathf.Abs(hInput) > 0.5f && forwardSpeed > minDriftSpeed;
     }
 
     private float GetContactSurfaceFriction()
@@ -375,9 +353,6 @@ public class Vehicle : MonoBehaviour
             gravityDir = Vector3.down;
         }
 
-        if (gliderNode)
-            return;
-
         // gravity force
         vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
     }
@@ -385,7 +360,7 @@ public class Vehicle : MonoBehaviour
     private void ApplySteer()
     {
         // applying vehicle yaw to the box
-        if (!isDrifting() && aeroState == VehicleAeroState.OnGround)
+        if (aeroState == VehicleAeroState.OnGround)
         {
             steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
             steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
@@ -438,6 +413,11 @@ public class Vehicle : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(!NetworkManager.IsServer)
+        {
+            return;
+        }
+
         UpdateLapPathIndex();
 
         distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
@@ -513,7 +493,7 @@ public class Vehicle : MonoBehaviour
                 //float t = drifting ? 0 : Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime);
                 //float t = drifting ? driftTraction : traction;
 
-                float t = isDrifting() ? driftTraction : Mathf.Lerp(driftTraction, GetContactSurfaceLateralFriction(), Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime));
+                float t = GetContactSurfaceLateralFriction();
 
                 vehicleProxy.AddForce(-slipingSpeed * t * vehicleBox.transform.right, ForceMode.VelocityChange);
             }

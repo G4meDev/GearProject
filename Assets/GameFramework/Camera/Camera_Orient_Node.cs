@@ -9,7 +9,7 @@ public class Camera_Orient_Node : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Vehicle vehicle = other.transform.root.GetComponentInChildren<Vehicle>();
-        vehicle.orientNode = this;
+        //vehicle.orientNode = this;
     }
 
     public void GetCameraVectors(Vector3 worldPos, out Vector3 forwardVector, out Vector3 upVector, out Vector3 cameraPos)
