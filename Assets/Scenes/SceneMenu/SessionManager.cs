@@ -47,9 +47,11 @@ public class SessionManager : NetworkBehaviour
     {
         if(IsServer)
         {
+            mainMenu.RefreshLobbyList();
+
             if(index == 1)
             {
-                NetworkManager.SceneManager.LoadScene("Scene_5", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+                //NetworkManager.SceneManager.LoadScene("Scene_5", UnityEngine.SceneManagement.LoadSceneMode.Additive);
             }
         }
     }
