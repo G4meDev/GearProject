@@ -30,6 +30,11 @@ public class MainMenu : MonoBehaviour
         sessionManager.StartHost();
     }
 
+    public void OnStart()
+    {
+        sessionManager.StartRace();
+    }
+
     public void ClearLobbyList()
     {
         for (int i = 0; i < lobbyView.childCount; i++)

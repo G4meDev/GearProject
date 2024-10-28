@@ -51,9 +51,14 @@ public class SessionManager : NetworkBehaviour
 
             if(index == 1)
             {
-                //NetworkManager.SceneManager.LoadScene("Scene_5", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+                //StartRace();
             }
         }
+    }
+
+    public void StartRace()
+    {
+        NetworkManager.SceneManager.LoadScene("Scene_5", UnityEngine.SceneManagement.LoadSceneMode.Additive);
     }
 
     public void Start()
