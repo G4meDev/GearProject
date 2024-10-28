@@ -49,6 +49,8 @@ public class SceneManager : NetworkBehaviour
         {
             raceStarted = false;
 
+            allVehicles.Clear();
+
             for (int i = 0; i < NetworkManager.ConnectedClients.Count; i++)
             {
                 GameObject vehicle = GameObject.Instantiate(vehiclePrefab, spawns[i].transform.position, spawns[i].transform.rotation);
@@ -56,7 +58,10 @@ public class SceneManager : NetworkBehaviour
 
                 netPlayer.vehicle = vehicle.GetComponent<Vehicle>();
                 netPlayer.vehicle.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.ConnectedClients[(ulong)i].ClientId);
+
+                allVehicles.Add(netPlayer.vehicle);
             }
+
         }
     }
 

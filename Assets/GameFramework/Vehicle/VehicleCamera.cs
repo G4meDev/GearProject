@@ -16,11 +16,11 @@ public class VehicleCamera : MonoBehaviour
         cameraRail = GameObject.FindObjectOfType<CameraRail>();
     }
     
-    void FixedUpdate()
+    void LateUpdate()
     {
         if (cameraRail)
         {
-            cameraRail.GetCameraVectors(vehicle.vehicleBox.transform.position, out Vector3 cameraForward, out Vector3 cameraUp, out Vector3 cameraPos);
+            cameraRail.GetCameraVectors(vehicle.vehicleMesh.transform.position, out Vector3 cameraForward, out Vector3 cameraUp, out Vector3 cameraPos);
 
             target.transform.position = cameraPos;
             target.transform.rotation = Quaternion.LookRotation(cameraForward, cameraUp);

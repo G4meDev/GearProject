@@ -401,6 +401,11 @@ public class Vehicle : NetworkBehaviour
             SceneManager.Get().OnPlayerChanged(this);
         }
 
+        if (!IsServer)
+        {
+            vehicleProxy.gameObject.gameObject.SetActive(false);
+        }
+
     }
 
     void Start()
