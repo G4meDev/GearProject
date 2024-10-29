@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class IpButton : MonoBehaviour
+public class HostButton : MonoBehaviour
 {
     public Text text;
     public string ip;

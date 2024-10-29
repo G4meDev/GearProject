@@ -72,6 +72,7 @@ public class IPScanner : MonoBehaviour
             yield return null;
         }
 
+        mainMenu.HideThrubber();
         Debug.Log("Scan Completed");
     }
 
@@ -81,13 +82,13 @@ public class IPScanner : MonoBehaviour
 
         for (int i = 0; i < mainMenu.hostButtonsParent.childCount; i++)
         {
-            IpButton childButton = mainMenu.hostButtonsParent.GetChild(i).GetComponent<IpButton>();
+            HostButton childButton = mainMenu.hostButtonsParent.GetChild(i).GetComponent<HostButton>();
 
             if (childButton.ip == ip)
                 return;
         }
 
-        IpButton button = Instantiate(mainMenu.hostButtonPrefab, mainMenu.hostButtonsParent);
+        HostButton button = Instantiate(mainMenu.hostButtonPrefab, mainMenu.hostButtonsParent);
         button.Configure(ip);
     }
 }

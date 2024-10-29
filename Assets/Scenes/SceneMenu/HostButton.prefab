@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 1991974332151488901}
   - component: {fileID: 3652285257517264780}
   m_Layer: 5
-  m_Name: ipButton
+  m_Name: HostButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -18,7 +18,7 @@ public class SessionManager : NetworkBehaviour
 
     private void Awake()
     {
-        IpButton.onClicked += StartJoin;
+        HostButton.onClicked += StartJoin;
     }
 
     private void OnDestroy()

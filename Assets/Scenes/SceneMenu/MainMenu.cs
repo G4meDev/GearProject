@@ -19,8 +19,9 @@ public class MainMenu : MonoBehaviour
     public GameObject lobbyLabelPrefab;
     public InputField playerNameInputField;
 
-    public IpButton hostButtonPrefab;
+    public HostButton hostButtonPrefab;
     public Transform hostButtonsParent;
+    public GameObject hostListThrubber;
 
     private SessionManager sessionManager;
 
@@ -94,9 +95,20 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    public void ShowThrubber()
+    {
+        hostListThrubber.SetActive(true);
+    }
+
+    public void HideThrubber()
+    {
+        hostListThrubber.SetActive(false);
+    }
+
     public void OnJoinButton()
     {
         ClearHostList();
+        ShowThrubber();
         GetComponent<IPScanner>().Scan();
         pageSwitcher.SwitchToPage(joinMenuIndex);
     }
