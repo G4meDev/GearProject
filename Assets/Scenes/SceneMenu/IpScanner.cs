@@ -105,6 +105,6 @@ public class IPScanner : MonoBehaviour
         }
 
         HostButton button = Instantiate(mainMenu.hostButtonPrefab, mainMenu.hostButtonsParent);
-        button.Configure(ip);
+        //button.Configure(ip);
     }
 }

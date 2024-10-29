@@ -108,11 +108,12 @@ public class MainMenu : MonoBehaviour
 
     public void OnJoinButton()
     {
-        sessionManager.StartClientBroadcasting();
-
         ClearHostList();
         ShowThrubber();
-        GetComponent<IPScanner>().Scan();
+
+        sessionManager.StartClientBroadcasting();
+
+        //GetComponent<IPScanner>().Scan();
         pageSwitcher.SwitchToPage(joinMenuIndex);
     }
 
@@ -136,9 +137,18 @@ public class MainMenu : MonoBehaviour
         GetComponent<IPScanner>().Scan();
     }
 
-    public void OnServerFound(string serverName, IPAddress address)
+    public void OnServerFound(string serverName, string address)
     {
+        for (int i = 0; i < hostButtonsParent.childCount; i++)
+        {
+            HostButton childButton = hostButtonsParent.GetChild(i).GetComponent<HostButton>();
 
+            if (childButton.ip == address)
+                return;
+        }
+
+        HostButton button = Instantiate(hostButtonPrefab, hostButtonsParent);
+        button.Configure(serverName, address);
     }
 
     public void CloseMenu()

@@ -9,11 +9,11 @@ public class HostButton : MonoBehaviour
 
     public static Action<string> onClicked;
 
-    public void Configure(string inIp)
+    public void Configure(string serverName, string inIp)
     {
         ip = inIp;
 
-        text.text = ip;
+        text.text = serverName;
         GetComponent<Button>().onClick.AddListener(() => onClicked?.Invoke(ip));
     }
 }

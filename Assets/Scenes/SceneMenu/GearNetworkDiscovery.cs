@@ -31,6 +31,6 @@ public class GearNetworkDiscovery : NetworkDiscovery<DiscoveryBroadcastData, Dis
     {
         Debug.Log("response from " + sender.Address + "with name " + response.ServerName);
 
-        mainMenu.OnServerFound(response.ServerName, sender.Address);
+        mainMenu.OnServerFound(response.ServerName, sender.Address.ToString());
     }
 }
