@@ -12,8 +12,9 @@ public enum NetState
 public class SessionManager : NetworkBehaviour
 {
     public NetState netState;
-
     public MainMenu mainMenu;
+
+    public GameObject playerPrefab;
 
     private void Awake()
     {
@@ -43,16 +44,27 @@ public class SessionManager : NetworkBehaviour
         }
     }
 
+    [Rpc(SendTo.ClientsAndHost)]
+    private void RefreshLobbyListRpc()
+    {
+        mainMenu.RefreshLobbyList();
+    }
+
+    [Rpc(SendTo.Server)]
+    private void UpdatePlayerNameRpc(ulong index, string name)
+    {
+        NetworkClient client;
+        NetworkManager.ConnectedClients.TryGetValue(index, out client);
+        client.PlayerObject.GetComponent<NetPlayer>().playerName.Value = name;
+
+        RefreshLobbyListRpc();
+    }
+
     private void NetworkManager_OnClientConnectedCallback(ulong index)
     {
-        if(IsServer)
+        if (NetworkManager.LocalClientId == index)
         {
-            mainMenu.RefreshLobbyList();
-
-            if(index == 1)
-            {
-                //StartRace();
-            }
+            UpdatePlayerNameRpc(index, mainMenu.saveData.playerName);
         }
     }
 
@@ -80,8 +92,6 @@ public class SessionManager : NetworkBehaviour
     public void StartHost()
     {
         netState = NetState.Host;
-
-        
 
         string localIp = NetworkUtilities.GetLocalIPv4();
         NetworkManager.GetComponent<UnityTransport>().SetConnectionData(localIp, 7777);

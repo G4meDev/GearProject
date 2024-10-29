@@ -1193,6 +1193,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   netState: 0
   mainMenu: {fileID: 516570725}
+  playerPrefab: {fileID: 8726833778247208943, guid: 21b45975a56ca3449b56db0da43b596f,
+    type: 3}
 --- !u!114 &395292186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1335,6 +1337,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c0df8d8afa4a9d44a5aacac1aaf12ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveData:
+    playerName: New Player
   pageSwitcher: {fileID: 971693627}
   lobbyView: {fileID: 1272355169}
   camera: {fileID: 1277609306}

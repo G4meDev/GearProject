@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    SaveData saveData;
+    public SaveData saveData;
 
     int mainMenuIndex = 0;
     int joinMenuIndex = 1;
@@ -67,10 +67,12 @@ public class MainMenu : MonoBehaviour
     {
         ClearLobbyList();
 
-        for(int i = 0; i < sessionManager.NetworkManager.ConnectedClients.Count; i++)
+        NetPlayer[] netPlayers = GameObject.FindObjectsByType<NetPlayer>(FindObjectsSortMode.None);
+
+        foreach (NetPlayer netPlayer in netPlayers)
         {
             GameObject gameObject = Instantiate(lobbyLabelPrefab, lobbyView);
-            gameObject.GetComponent<Text>().text = "player " + i;
+            gameObject.GetComponent<Text>().text = netPlayer.playerName.Value.ToString();
         }
     }
 
