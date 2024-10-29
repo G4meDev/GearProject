@@ -19,6 +19,9 @@ public class MainMenu : MonoBehaviour
     public GameObject lobbyLabelPrefab;
     public InputField playerNameInputField;
 
+    public IpButton hostButtonPrefab;
+    public Transform hostButtonsParent;
+
     private SessionManager sessionManager;
 
     private void Start()
@@ -50,6 +53,13 @@ public class MainMenu : MonoBehaviour
         sessionManager.StartHost();
     }
 
+    public void OnHostBackToMenu()
+    {
+        ClearLobbyList();
+        sessionManager.EndHost();
+        pageSwitcher.SwitchToPage(mainMenuIndex);
+    }
+
     public void OnStart()
     {
         sessionManager.StartRace();
@@ -74,6 +84,21 @@ public class MainMenu : MonoBehaviour
             GameObject gameObject = Instantiate(lobbyLabelPrefab, lobbyView);
             gameObject.GetComponent<Text>().text = netPlayer.playerName.Value.ToString();
         }
+    }
+
+    public void ClearHostList()
+    {
+        for (int i = 0; i < hostButtonsParent.childCount; i++)
+        {
+            Destroy(hostButtonsParent.GetChild(i).gameObject);
+        }
+    }
+
+    public void OnJoinButton()
+    {
+        ClearHostList();
+        GetComponent<IPScanner>().Scan();
+        pageSwitcher.SwitchToPage(joinMenuIndex);
     }
 
     public void CloseMenu()

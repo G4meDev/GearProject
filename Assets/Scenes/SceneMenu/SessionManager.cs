@@ -23,7 +23,9 @@ public class SessionManager : NetworkBehaviour
 
     private void OnDestroy()
     {
-        IpButton.onClicked -= StartJoin;
+//         IpButton.onClicked -= StartJoin;
+//         NetworkManager.OnClientConnectedCallback -= NetworkManager_OnClientConnectedCallback;
+//         NetworkManager.ConnectionApprovalCallback -= ApprovalCheck;
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -87,8 +89,6 @@ public class SessionManager : NetworkBehaviour
         NetworkManager.ConnectionApprovalCallback += ApprovalCheck;
     }
 
-
-
     public void StartHost()
     {
         netState = NetState.Host;
@@ -96,15 +96,19 @@ public class SessionManager : NetworkBehaviour
         string localIp = NetworkUtilities.GetLocalIPv4();
         NetworkManager.GetComponent<UnityTransport>().SetConnectionData(localIp, 7777);
 
-        NetworkManager.StartHost();
-        NetworkManager.SceneManager.OnLoadEventCompleted += OnLevelLoadFinished;
+        if(NetworkManager.StartHost())
+        {
+            // this only can get bind after server starts
+            NetworkManager.SceneManager.OnLoadEventCompleted += OnLevelLoadFinished;
+        }
     }
 
     public void EndHost()
     {
-        if (IsServer)
+        if (IsHost)
         {
             NetworkManager.SceneManager.OnLoadEventCompleted -= OnLevelLoadFinished;
+            NetworkManager.Shutdown();
         }
     }
 

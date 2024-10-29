@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class IPScanner : MonoBehaviour
 {
-    public IpButton ipButtonPrefab;
-    public Transform ipButtonsParent;
-
     private List<Ping> pings = new List<Ping>();
     private float timer;
+
+    private MainMenu mainMenu;
+
+    private void Start()
+    {
+        mainMenu = GetComponent<MainMenu>();
+    }
 
     public void Scan()
     {
@@ -75,15 +79,15 @@ public class IPScanner : MonoBehaviour
     {
         Debug.Log(ip);
 
-        for (int i = 0; i < ipButtonsParent.childCount; i++)
+        for (int i = 0; i < mainMenu.hostButtonsParent.childCount; i++)
         {
-            IpButton childButton = ipButtonsParent.GetChild(i).GetComponent<IpButton>();
+            IpButton childButton = mainMenu.hostButtonsParent.GetChild(i).GetComponent<IpButton>();
 
             if (childButton.ip == ip)
                 return;
         }
 
-        IpButton button = Instantiate(ipButtonPrefab, ipButtonsParent);
+        IpButton button = Instantiate(mainMenu.hostButtonPrefab, mainMenu.hostButtonsParent);
         button.Configure(ip);
     }
 }
