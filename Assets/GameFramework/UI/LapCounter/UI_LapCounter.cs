@@ -9,9 +9,9 @@ public class UI_LapCounter : MonoBehaviour
 
     public void UpdateLapCounter()
     {
-        if(SceneManager.Get().playerVehicle)
+        if(SceneManager.Get().localVehicle)
         {
-            text.text = SceneManager.Get().playerVehicle.currentLap.ToString() + "/" + SceneManager.Get().lapCount;
+            text.text = SceneManager.Get().localVehicle.currentLap.ToString() + "/" + SceneManager.Get().lapCount;
         }
     }
 

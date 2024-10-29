@@ -58,7 +58,7 @@ public class SessionManager : NetworkBehaviour
 
     public void StartRace()
     {
-        NetworkManager.SceneManager.LoadScene("Scene_5", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        NetworkManager.SceneManager.LoadScene("Scene_5", LoadSceneMode.Additive);
     }
 
     public void Start()

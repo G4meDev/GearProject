@@ -15,7 +15,7 @@ public class CameraRail : MonoBehaviour
 
     public void GetCameraVectors(Vector3 worldPos, out Vector3 forwardVector, out Vector3 upVector, out Vector3 cameraPos)
     {
-        SplineUtility.GetNearestPoint<Spline>(spline, worldPos, out Unity.Mathematics.float3 nearestPos, out float t, 8 ,4);
+        SplineUtility.GetNearestPoint<Spline>(spline, worldPos, out Unity.Mathematics.float3 nearestPos, out float t, 32 ,12);
         SplineUtility.Evaluate<Spline>(spline, t, out Unity.Mathematics.float3 pos, out Unity.Mathematics.float3 forward, out Unity.Mathematics.float3 up);
         
         cameraPos = new(pos.x, pos.y, pos.z);
@@ -23,7 +23,7 @@ public class CameraRail : MonoBehaviour
         upVector = new(up.x, up.y, up.z);
     }
 
-        void Update()
+    void Update()
     {
         
     }

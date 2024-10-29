@@ -7,7 +7,7 @@ public class SceneManager : NetworkBehaviour
     private static SceneManager instance;
 
     // TODO: player spawning
-    public Vehicle playerVehicle;
+    public Vehicle localVehicle;
 
     public List<AIController> aiControllers = new List<AIController>();
 
@@ -22,9 +22,6 @@ public class SceneManager : NetworkBehaviour
 
     public GameObject positionPrefab;
     public UI_Position position;
-
-    public GameObject debugDataPrefab;
-    public UI_DebugData debugData;
 
     public int lapCount = 3;
 
@@ -67,16 +64,17 @@ public class SceneManager : NetworkBehaviour
 
     public void OnPlayerChanged(Vehicle vehicle)
     {
-        if(vehicle.IsServer)
+        if(vehicle.IsOwner)
         {
-            playerVehicle = vehicle;
-            allVehicles.Add(vehicle);
+            localVehicle = vehicle;
+            screenInput.OnPlayerChanged();
+            lapCounter.UpdateLapCounter();
         }
 
-        if (vehicle.IsOwner)
+        if (vehicle.IsServer)
         {
-            //screenInput.OnPlayerChanged();
-            //lapCounter.UpdateLapCounter();
+
+            allVehicles.Add(vehicle);
         }
 
     }
@@ -138,12 +136,6 @@ public class SceneManager : NetworkBehaviour
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();
         position = Instantiate(positionPrefab).GetComponent<UI_Position>();
-
-
-#if UNITY_EDITOR
-        debugData = Instantiate(debugDataPrefab).GetComponent<UI_DebugData>();
-#endif
-
 
         raceStarted = false;
     }

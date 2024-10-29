@@ -32,8 +32,10 @@ public class VehicleMesh : MonoBehaviour
             Vector3 targetPosition = vehicle.vehicleBox.transform.TransformPoint(localPos);
             Quaternion targetRotaton = Quaternion.AngleAxis(vehicle.steerValue * 5.0f, vehicle.vehicleBox.transform.up) * vehicle.vehicleBox.transform.rotation;
 
-            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * lerpRate);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotaton, Time.deltaTime * lerpRate); 
+            float lerpAlpha = Mathf.Clamp01(Time.deltaTime * lerpRate);
+
+            transform.position = Vector3.Lerp(transform.position, targetPosition, lerpAlpha);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotaton, lerpAlpha); 
         }
 
     }

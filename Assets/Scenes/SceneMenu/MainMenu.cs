@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    SaveData saveData;
+
     int mainMenuIndex = 0;
     int joinMenuIndex = 1;
     int hostMenuIndex = 2;
@@ -14,13 +16,22 @@ public class MainMenu : MonoBehaviour
 
     public Camera camera;
 
-    public GameObject lobbyLabelPrefab; 
+    public GameObject lobbyLabelPrefab;
+    public InputField playerNameInputField;
 
     private SessionManager sessionManager;
 
     private void Start()
     {
-        sessionManager = GameObject.FindObjectOfType<SessionManager>();  
+        sessionManager = GameObject.FindObjectOfType<SessionManager>();
+
+        saveData = SaveData.Load();
+        UpdatePlayerData();
+    }
+
+    private void UpdatePlayerData()
+    {
+        playerNameInputField.SetTextWithoutNotify(saveData.PlayerName);
     }
 
     public void OnHostButton()
