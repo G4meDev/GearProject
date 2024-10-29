@@ -41,8 +41,6 @@ public class MainMenu : MonoBehaviour
         saveData.SetPlayerName(name);
         saveData.Save();
         playerNameInputField.SetTextWithoutNotify(saveData.playerName);
-
-        Debug.Log(name);
     }
 
     public void OnHostButton()
@@ -73,8 +71,6 @@ public class MainMenu : MonoBehaviour
         {
             GameObject gameObject = Instantiate(lobbyLabelPrefab, lobbyView);
             gameObject.GetComponent<Text>().text = "player " + i;
-
-            Debug.Log(i);
         }
     }
 

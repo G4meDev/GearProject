@@ -61,10 +61,18 @@ public class SessionManager : NetworkBehaviour
         NetworkManager.SceneManager.LoadScene("Scene_5", LoadSceneMode.Additive);
     }
 
+
+    private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+    {
+        response.Approved = true;
+        response.CreatePlayerObject = true;
+    }
+
+
     public void Start()
     {
         NetworkManager.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
-
+        NetworkManager.ConnectionApprovalCallback += ApprovalCheck;
     }
 
 
@@ -72,6 +80,8 @@ public class SessionManager : NetworkBehaviour
     public void StartHost()
     {
         netState = NetState.Host;
+
+        
 
         string localIp = NetworkUtilities.GetLocalIPv4();
         NetworkManager.GetComponent<UnityTransport>().SetConnectionData(localIp, 7777);
@@ -91,6 +101,8 @@ public class SessionManager : NetworkBehaviour
     public void StartJoin(string ip)
     {
         netState = NetState.Client;
+
+
 
         Debug.Log("join" + ip);
 
