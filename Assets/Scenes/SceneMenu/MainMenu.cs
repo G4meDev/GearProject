@@ -11,7 +11,7 @@ public class MainMenu : MonoBehaviour
 
     int mainMenuIndex = 0;
     int joinMenuIndex = 1;
-    int hostMenuIndex = 2;
+    int LobbyMenuIndex = 2;
 
     public PageSwitcher pageSwitcher;
     public Transform lobbyView;
@@ -25,6 +25,8 @@ public class MainMenu : MonoBehaviour
     public Transform hostButtonsParent;
     public GameObject hostListThrubber;
 
+    public GameObject startButton;
+
     private SessionManager sessionManager;
 
     private void Start()
@@ -32,6 +34,7 @@ public class MainMenu : MonoBehaviour
         sessionManager = GameObject.FindObjectOfType<SessionManager>();
 
         playerNameInputField.onEndEdit.AddListener(OnPlayerNameSubmit);
+        HostButton.onClicked += OnHostSelected;
 
         saveData = SaveData.Load();
         UpdatePlayerData();
@@ -49,14 +52,20 @@ public class MainMenu : MonoBehaviour
         playerNameInputField.SetTextWithoutNotify(saveData.playerName);
     }
 
+    public void OpenLobbyList(bool asHost)
+    {
+        pageSwitcher.SwitchToPage(LobbyMenuIndex);
+        startButton.SetActive(asHost);
+    }
+
     public void OnHostButton()
     {
         ClearLobbyList();
-        pageSwitcher.SwitchToPage(hostMenuIndex);
+        OpenLobbyList(true);
         sessionManager.StartHost();
     }
 
-    public void OnHostBackToMenu()
+    public void OnLobbyBackToMenu()
     {
         ClearLobbyList();
         sessionManager.EndHost();
@@ -148,6 +157,14 @@ public class MainMenu : MonoBehaviour
 
         HostButton button = Instantiate(hostButtonPrefab, hostButtonsParent);
         button.Configure(serverName, address);
+    }
+
+    public void OnHostSelected(string ip)
+    {
+        if (sessionManager.StartJoin(ip))
+        {
+            OpenLobbyList(false);
+        }
     }
 
     public void CloseMenu()

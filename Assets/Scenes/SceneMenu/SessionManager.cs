@@ -18,7 +18,7 @@ public class SessionManager : NetworkBehaviour
 
     private void Awake()
     {
-        HostButton.onClicked += StartJoin;
+
     }
 
     private void OnDestroy()
@@ -132,20 +132,19 @@ public class SessionManager : NetworkBehaviour
         if (IsHost)
         {
             NetworkManager.SceneManager.OnLoadEventCompleted -= OnLevelLoadFinished;
-            NetworkManager.Shutdown();
         }
+
+        NetworkManager.Shutdown();
     }
 
-    public void StartJoin(string ip)
+    public bool StartJoin(string ip)
     {
         netState = NetState.Client;
-
-
 
         Debug.Log("join" + ip);
 
         NetworkManager.GetComponent<UnityTransport>().SetConnectionData(ip, 7777);
 
-        NetworkManager.StartClient();
+        return NetworkManager.StartClient();
     }
 }
