@@ -7,6 +7,8 @@ public class IPScanner : MonoBehaviour
     private List<Ping> pings = new List<Ping>();
     private float timer;
 
+    public bool Scanning = false;
+
     private MainMenu mainMenu;
 
     private void Start()
@@ -14,13 +16,24 @@ public class IPScanner : MonoBehaviour
         mainMenu = GetComponent<MainMenu>();
     }
 
-    public void Scan()
+    public void StopScanning()
     {
         StopAllCoroutines();
-
-        timer = 0;
+        
+        foreach (var ping in pings)
+        {
+            ping.DestroyPing();
+        }
 
         pings.Clear();
+        Scanning = false;
+    }
+
+    public void Scan()
+    {
+        StopScanning();
+
+        timer = 0;
 
         string localIp = NetworkUtilities.GetLocalIPv4();
         string subnetMask = NetworkUtilities.GetSubnetMask(localIp);
@@ -33,12 +46,12 @@ public class IPScanner : MonoBehaviour
             pings.Add(new Ping(ipAddress));
 
         StartCoroutine(CheckPingsCoroutine());
+
+        Scanning = true;
     }
 
     IEnumerator CheckPingsCoroutine()
     {
-        List<string> foundIps = new();
-
         bool allDone = false;
 
         while (!allDone)
@@ -54,6 +67,7 @@ public class IPScanner : MonoBehaviour
                     if (ping.time >= 0)
                     {
                         IPFound(ping.ip);
+                        pings[i].DestroyPing();
                         pings.RemoveAt(i);
                     }
                 }
@@ -73,6 +87,8 @@ public class IPScanner : MonoBehaviour
         }
 
         mainMenu.HideThrubber();
+        Scanning = false;
+
         Debug.Log("Scan Completed");
     }
 

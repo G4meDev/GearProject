@@ -113,6 +113,26 @@ public class MainMenu : MonoBehaviour
         pageSwitcher.SwitchToPage(joinMenuIndex);
     }
 
+    public void OnJoinBackToMenu()
+    {
+        GetComponent<IPScanner>().StopScanning();
+        ClearHostList();
+        HideThrubber();
+        pageSwitcher.SwitchToPage(mainMenuIndex);
+    }
+
+    public void OnRefreshHostList()
+    {
+        if(GetComponent<IPScanner>().Scanning)
+        {
+            return;
+        }
+
+        ClearHostList();
+        ShowThrubber();
+        GetComponent<IPScanner>().Scan();
+    }
+
     public void CloseMenu()
     {
         pageSwitcher.SwitchToPage(-1);
