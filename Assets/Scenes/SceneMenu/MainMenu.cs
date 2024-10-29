@@ -25,13 +25,24 @@ public class MainMenu : MonoBehaviour
     {
         sessionManager = GameObject.FindObjectOfType<SessionManager>();
 
+        playerNameInputField.onEndEdit.AddListener(OnPlayerNameSubmit);
+
         saveData = SaveData.Load();
         UpdatePlayerData();
     }
 
     private void UpdatePlayerData()
     {
-        playerNameInputField.SetTextWithoutNotify(saveData.PlayerName);
+        playerNameInputField.SetTextWithoutNotify(saveData.playerName);
+    }
+
+    private void OnPlayerNameSubmit(string name)
+    {
+        saveData.SetPlayerName(name);
+        saveData.Save();
+        playerNameInputField.SetTextWithoutNotify(saveData.playerName);
+
+        Debug.Log(name);
     }
 
     public void OnHostButton()

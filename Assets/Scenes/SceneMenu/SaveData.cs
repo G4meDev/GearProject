@@ -1,25 +1,29 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-[Serializable]
-public class SaveData : MonoBehaviour
+public static class SaveDataDefaults
 {
-    public string PlayerName;
+    public static string defaultPlayerName = "New Player";
 
-    private static string dataDirPath = Application.persistentDataPath;
-    private static string dataFileName = "SaveData.sav";
+//    public static string dataDirPath = Application.persistentDataPath;
+    public static string dataFileName = "SaveData.sav";
+}
+
+[Serializable]
+public class SaveData
+{
+    public string playerName;
 
     public SaveData()
     {
-        PlayerName = "New Player";
+        playerName = SaveDataDefaults.defaultPlayerName;
     }
 
     public void Save()
     {
-        string fullPath = Path.Combine(dataDirPath, dataFileName);
+        string dataDirPath = Application.persistentDataPath;
+        string fullPath = Path.Combine(dataDirPath, SaveDataDefaults.dataFileName);
         string dataToStore = JsonUtility.ToJson(this, false);
 
         Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
@@ -35,31 +39,68 @@ public class SaveData : MonoBehaviour
 
     public static SaveData Load()
     {
-        string fullPath = Path.Combine(dataDirPath, dataFileName);
+        string dataDirPath = Application.persistentDataPath;
+        string fullPath = Path.Combine(dataDirPath, SaveDataDefaults.dataFileName);
         string dataToLoad = "";
 
-        SaveData loadedData;
+        SaveData loadedData = null;
 
         if (File.Exists(fullPath))
         {
-            using (FileStream stream = new FileStream(fullPath, FileMode.Open))
+            try
             {
-                using (StreamReader reader = new StreamReader(stream))
+                using (FileStream stream = new FileStream(fullPath, FileMode.Open))
                 {
-                    dataToLoad = reader.ReadToEnd();
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        dataToLoad = reader.ReadToEnd();
+                    }
                 }
+
+                loadedData = JsonUtility.FromJson<SaveData>(dataToLoad);
             }
 
-            loadedData = JsonUtility.FromJson<SaveData>(dataToLoad);
+            catch (Exception e) 
+            {
+                Debug.Log(e);
+            }
         }
 
-        else
+        if (loadedData == null)
         {
             loadedData = new SaveData();
         }
 
-        //validate
+        loadedData.Validate();
 
         return loadedData;
+    }
+
+    public void Validate()
+    {
+        if (playerName.Length < 3 || playerName.Length > 8)
+        {
+            playerName = SaveDataDefaults.defaultPlayerName;
+        }
+    }
+
+    public void SetPlayerName(string name)
+    {
+        if (name.Length < 3)
+        {
+            return;
+        }
+
+        else if (name.Length > 8)
+        {
+            playerName = name.Substring(0, 8);
+            return;
+        }
+
+        else
+        {
+            playerName = name;
+            return;
+        }
     }
 }
