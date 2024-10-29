@@ -89,6 +89,13 @@ public class SessionManager : NetworkBehaviour
         networkDiscovery.StartServer();
     }
 
+    public void EndBroadcasting()
+    {
+        Debug.Log("Stop broadcasting");
+
+        networkDiscovery.StopDiscovery();
+    }
+
     public void StartClientBroadcasting()
     {
         Debug.Log("start broadcasting to servers");

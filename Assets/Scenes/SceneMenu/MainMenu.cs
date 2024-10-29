@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -59,6 +60,7 @@ public class MainMenu : MonoBehaviour
     {
         ClearLobbyList();
         sessionManager.EndHost();
+        sessionManager.EndBroadcasting();
         pageSwitcher.SwitchToPage(mainMenuIndex);
     }
 
@@ -113,28 +115,25 @@ public class MainMenu : MonoBehaviour
 
         sessionManager.StartClientBroadcasting();
 
-        //GetComponent<IPScanner>().Scan();
         pageSwitcher.SwitchToPage(joinMenuIndex);
     }
 
     public void OnJoinBackToMenu()
     {
-        GetComponent<IPScanner>().StopScanning();
         ClearHostList();
         HideThrubber();
+        sessionManager.EndBroadcasting();
+
         pageSwitcher.SwitchToPage(mainMenuIndex);
     }
 
     public void OnRefreshHostList()
     {
-        if(GetComponent<IPScanner>().Scanning)
-        {
-            return;
-        }
-
         ClearHostList();
+        sessionManager.EndBroadcasting();
+        sessionManager.StartClientBroadcasting();
+
         ShowThrubber();
-        GetComponent<IPScanner>().Scan();
     }
 
     public void OnServerFound(string serverName, string address)
