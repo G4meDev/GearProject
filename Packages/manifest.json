@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.community.netcode.extensions": "https://github.com/Unity-Technologies/multiplayer-community-contributions.git?path=/com.community.netcode.extensions",
     "com.unity.animation.rigging": "1.2.1",
     "com.unity.cinemachine": "2.10.1",
     "com.unity.collab-proxy": "2.5.1",

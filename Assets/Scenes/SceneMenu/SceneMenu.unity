@@ -1193,8 +1193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   netState: 0
   mainMenu: {fileID: 516570725}
-  playerPrefab: {fileID: 8726833778247208943, guid: 21b45975a56ca3449b56db0da43b596f,
-    type: 3}
+  networkDiscovery: {fileID: 1649400121}
 --- !u!114 &395292186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3072,6 +3071,7 @@ GameObject:
   - component: {fileID: 1649400120}
   - component: {fileID: 1649400119}
   - component: {fileID: 1649400118}
+  - component: {fileID: 1649400121}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -3159,6 +3159,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1649400121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1649400117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc9d1aa01bc043842acab388ed490a7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Port: 47777
+  m_UniqueApplicationId: 3140483583391154189
 --- !u!1 &1657092669
 GameObject:
   m_ObjectHideFlags: 0

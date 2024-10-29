@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -107,6 +108,8 @@ public class MainMenu : MonoBehaviour
 
     public void OnJoinButton()
     {
+        sessionManager.StartClientBroadcasting();
+
         ClearHostList();
         ShowThrubber();
         GetComponent<IPScanner>().Scan();
@@ -131,6 +134,11 @@ public class MainMenu : MonoBehaviour
         ClearHostList();
         ShowThrubber();
         GetComponent<IPScanner>().Scan();
+    }
+
+    public void OnServerFound(string serverName, IPAddress address)
+    {
+
     }
 
     public void CloseMenu()

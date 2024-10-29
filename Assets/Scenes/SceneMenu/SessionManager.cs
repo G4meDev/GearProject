@@ -14,7 +14,7 @@ public class SessionManager : NetworkBehaviour
     public NetState netState;
     public MainMenu mainMenu;
 
-    public GameObject playerPrefab;
+    public GearNetworkDiscovery networkDiscovery;
 
     private void Awake()
     {
@@ -82,6 +82,21 @@ public class SessionManager : NetworkBehaviour
         response.CreatePlayerObject = true;
     }
 
+    public void StartServerBroadcasting()
+    {
+        Debug.Log("start listening to clients");
+        
+        networkDiscovery.StartServer();
+    }
+
+    public void StartClientBroadcasting()
+    {
+        Debug.Log("start broadcasting to servers");
+        
+        networkDiscovery.StartClient();
+        networkDiscovery.ClientBroadcast(new DiscoveryBroadcastData());
+
+    }
 
     public void Start()
     {
@@ -100,6 +115,8 @@ public class SessionManager : NetworkBehaviour
         {
             // this only can get bind after server starts
             NetworkManager.SceneManager.OnLoadEventCompleted += OnLevelLoadFinished;
+
+            StartServerBroadcasting();
         }
     }
 

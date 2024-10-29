@@ -13,7 +13,7 @@ public class HostButton : MonoBehaviour
     {
         ip = inIp;
 
-        text.text = inIp;
+        text.text = ip;
         GetComponent<Button>().onClick.AddListener(() => onClicked?.Invoke(ip));
     }
 }
