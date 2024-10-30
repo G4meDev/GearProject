@@ -27,6 +27,7 @@ public class SessionManager : NetworkBehaviour
     {
 //         IpButton.onClicked -= StartJoin;
 //         NetworkManager.OnClientConnectedCallback -= NetworkManager_OnClientConnectedCallback;
+//         NetworkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
 //         NetworkManager.ConnectionApprovalCallback -= ApprovalCheck;
     }
 
@@ -49,7 +50,7 @@ public class SessionManager : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    private void RefreshLobbyListRpc()
+    public void RefreshLobbyListRpc()
     {
         mainMenu.RefreshLobbyList();
     }
@@ -64,11 +65,26 @@ public class SessionManager : NetworkBehaviour
         RefreshLobbyListRpc();
     }
 
-    private void NetworkManager_OnClientConnectedCallback(ulong index)
+    private void OnClientConnectedCallback(ulong index)
     {
         if (NetworkManager.LocalClientId == index)
         {
             UpdatePlayerNameRpc(index, mainMenu.saveData.playerName);
+        }
+    }
+
+    private void OnLocalPlayerDissconected()
+    {
+        NetworkManager.Shutdown();
+
+        mainMenu.OnLobbyBackToMenu();
+    }
+
+    private void OnClientDisconnectCallback(ulong index)
+    { 
+        if(NetworkManager.LocalClientId == index)
+        {
+            OnLocalPlayerDissconected();
         }
     }
 
@@ -109,7 +125,8 @@ public class SessionManager : NetworkBehaviour
 
     public void Start()
     {
-        NetworkManager.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+        NetworkManager.OnClientConnectedCallback += OnClientConnectedCallback;
+        NetworkManager.OnClientDisconnectCallback += OnClientDisconnectCallback;
         NetworkManager.ConnectionApprovalCallback += ApprovalCheck;
     }
 
@@ -137,10 +154,10 @@ public class SessionManager : NetworkBehaviour
 
     public void EndHost()
     {
-        if (IsHost)
-        {
-            NetworkManager.SceneManager.OnLoadEventCompleted -= OnLevelLoadFinished;
-        }
+//         if (IsHost)
+//         {
+//             NetworkManager.SceneManager.OnLoadEventCompleted -= OnLevelLoadFinished;
+//         }
 
         NetworkManager.Shutdown();
     }
