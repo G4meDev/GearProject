@@ -36,13 +36,13 @@ public class SessionManager : NetworkBehaviour
 
     private void OnLevelLoadFinished(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
     {
-        if (IsServer)
+        if (IsHost)
         {
             Debug.Log("Server Loaded");
 
-            SceneManager.Get().PrepareRace();
-
             MainMenuToGameLevelRpc();
+
+            SceneManager.Get().PrepareRace();
         }
     }
 

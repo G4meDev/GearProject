@@ -42,21 +42,25 @@ public class SceneManager : NetworkBehaviour
 
     public void PrepareRace()
     {
-        if (IsServer)
+        if (IsHost)
         {
             raceStarted = false;
 
             allVehicles.Clear();
 
-            for (int i = 0; i < NetworkManager.ConnectedClients.Count; i++)
+            int spawnCounter = 0;
+
+            foreach(NetworkClient client in NetworkManager.ConnectedClientsList)
             {
-                GameObject vehicle = GameObject.Instantiate(vehiclePrefab, spawns[i].transform.position, spawns[i].transform.rotation);
-                NetPlayer netPlayer = NetworkManager.ConnectedClients[(ulong)i].PlayerObject.GetComponent<NetPlayer>();
+                NetPlayer netPlayer = client.PlayerObject.GetComponent<NetPlayer>();
 
+                GameObject vehicle = GameObject.Instantiate(vehiclePrefab, spawns[spawnCounter].transform.position, spawns[spawnCounter].transform.rotation);
                 netPlayer.vehicle = vehicle.GetComponent<Vehicle>();
-                netPlayer.vehicle.GetComponent<NetworkObject>().SpawnWithOwnership(NetworkManager.ConnectedClients[(ulong)i].ClientId);
-
+                netPlayer.vehicle.GetComponent<NetworkObject>().SpawnWithOwnership(client.ClientId);
+                
                 allVehicles.Add(netPlayer.vehicle);
+
+                spawnCounter++;
             }
 
         }
