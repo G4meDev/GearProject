@@ -85,6 +85,8 @@ public class SessionManager : NetworkBehaviour
         if(NetworkManager.LocalClientId == index)
         {
             OnLocalPlayerDissconected();
+
+
         }
     }
 

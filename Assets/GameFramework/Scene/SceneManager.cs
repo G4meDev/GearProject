@@ -23,6 +23,8 @@ public class SceneManager : NetworkBehaviour
     public GameObject positionPrefab;
     public UI_Position position;
 
+    public CountDown countDown;
+
     public int lapCount = 3;
 
     public List<GameObject> spawns;
@@ -63,6 +65,7 @@ public class SceneManager : NetworkBehaviour
                 spawnCounter++;
             }
 
+            countDown.StartCountingRpc();
         }
     }
 
@@ -126,9 +129,9 @@ public class SceneManager : NetworkBehaviour
 
     public void StartRace()
     {
-
-
         raceStarted = true;
+
+
     }
 
     void Start()

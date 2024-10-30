@@ -420,7 +420,7 @@ public class Vehicle : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if(!NetworkManager.IsServer)
+        if(!NetworkManager.IsServer || !SceneManager.Get().raceStarted)
         {
             return;
         }
