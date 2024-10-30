@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -85,7 +87,7 @@ public class SessionManager : NetworkBehaviour
     public void StartServerBroadcasting()
     {
         Debug.Log("start listening to clients");
-        
+
         networkDiscovery.StartServer();
     }
 
@@ -111,12 +113,18 @@ public class SessionManager : NetworkBehaviour
         NetworkManager.ConnectionApprovalCallback += ApprovalCheck;
     }
 
+
+
     public void StartHost()
     {
         netState = NetState.Host;
 
         string localIp = NetworkUtilities.GetLocalIPv4();
-        NetworkManager.GetComponent<UnityTransport>().SetConnectionData(localIp, 7777);
+
+        ushort port = (ushort)NetworkUtilities.GetFreePortInRange(7777, 7877);
+        Debug.Log("server starting at " + localIp + ":" + port);
+
+        NetworkManager.GetComponent<UnityTransport>().SetConnectionData(localIp, port);
 
         if(NetworkManager.StartHost())
         {

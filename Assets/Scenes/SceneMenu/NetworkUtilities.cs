@@ -78,4 +78,19 @@ public static class NetworkUtilities
 
         return ipRange;
     }
+
+    public static int GetFreePortInRange(int min, int max)
+    {
+        for (int i = min; i <= max; i++)
+        {
+            bool alreadyInUse = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties()
+                .GetActiveUdpListeners()
+                .Any(p => p.Port == i);
+
+            if (!alreadyInUse)
+                return i;
+        }
+
+        return -1;
+    }
 }
