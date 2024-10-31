@@ -22,7 +22,7 @@ public class Vehicle : NetworkBehaviour
     public GameObject vehicleMesh;
 
     //[HideInInspector]
-    public int position = -1;
+    public int position = 1;
 
     //TODO: Remove
     public MeshRenderer boostIndicator;
@@ -398,19 +398,31 @@ public class Vehicle : NetworkBehaviour
 
             gameObject.AddComponent<PlayerInput>();
 
-            SceneManager.Get().OnPlayerChanged(this);
+            //SceneManager.Get().OnLocalPlayerChanged(this);
         }
 
         if (!IsServer)
         {
-            vehicleProxy.gameObject.gameObject.SetActive(false);
+            vehicleProxy.gameObject.SetActive(false);
         }
 
     }
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
         Init();
+
+        SceneManager.Get().RegisterVehicle(this);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        SceneManager.Get().UnregisterVehicle(this);
+    }
+
+    void Start()
+    {
+        //Init();
     }
 
     private void Update()
@@ -420,14 +432,16 @@ public class Vehicle : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if(!NetworkManager.IsServer || !SceneManager.Get().raceStarted)
+        if (!SceneManager.Get().raceStarted)
+            return;
+
+        UpdateLapPathIndex();
+        distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
+
+        if (!NetworkManager.IsHost)
         {
             return;
         }
-
-        UpdateLapPathIndex();
-
-        distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
 
         Gravity();
 

@@ -38,7 +38,8 @@ public class LapPath_Node : MonoBehaviour
 
     public float GetIndexAtWorldPosition(Vehicle vehicle)
     {
-        Vector3 worldPos = vehicle.vehicleProxy.transform.position;
+        //Vector3 worldPos = vehicle.vehicleProxy.transform.position;
+        Vector3 worldPos = vehicle.vehicleBox.transform.position;
 
         float minDist = float.MaxValue;
         LapPath_Node minStart = null;

@@ -60,8 +60,6 @@ public class SceneManager : NetworkBehaviour
                 netPlayer.vehicle = vehicle.GetComponent<Vehicle>();
                 netPlayer.vehicle.GetComponent<NetworkObject>().SpawnWithOwnership(client.ClientId);
                 
-                allVehicles.Add(netPlayer.vehicle);
-
                 spawnCounter++;
             }
 
@@ -69,21 +67,26 @@ public class SceneManager : NetworkBehaviour
         }
     }
 
-    public void OnPlayerChanged(Vehicle vehicle)
+    public void RegisterVehicle(Vehicle vehicle)
     {
-        if(vehicle.IsOwner)
+        allVehicles.Add(vehicle);
+
+        if (vehicle.IsOwner)
         {
-            localVehicle = vehicle;
-            screenInput.OnPlayerChanged();
-            lapCounter.UpdateLapCounter();
+            OnLocalPlayerChanged(vehicle);
         }
+    }
 
-        if (vehicle.IsServer)
-        {
+    public void UnregisterVehicle(Vehicle vehicle)
+    {
+        allVehicles.Remove(vehicle);
+    }
 
-            allVehicles.Add(vehicle);
-        }
-
+    public void OnLocalPlayerChanged(Vehicle vehicle)
+    {
+        localVehicle = vehicle;
+        screenInput.OnPlayerChanged();
+        lapCounter.UpdateLapCounter();
     }
 
     public void RegisterAI(AIController controller)
@@ -114,9 +117,7 @@ public class SceneManager : NetworkBehaviour
 
     public static float GetDistanceFromFirstPlace(Vehicle vehicle)
     {
-        //return allVehicles[0].distanceFromStart - vehicle.distanceFromStart;
-
-        return 1;
+        return Get().allVehicles[0].distanceFromStart - vehicle.distanceFromStart;
     }
 
     protected override void OnNetworkPostSpawn()
