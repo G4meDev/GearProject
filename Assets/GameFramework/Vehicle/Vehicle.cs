@@ -452,17 +452,14 @@ public class Vehicle : NetworkBehaviour
             }
 
             float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
-            float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : slipingSpeed / vehicleProxy.velocity.magnitude;
+            float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : Mathf.Abs(slipingSpeed) / vehicleProxy.velocity.magnitude;
 
+            //float t = GetContactSurfaceLateralFriction();
 
-            if (Mathf.Abs(slipingSpeedRatio) > 0)
-            {
-                //float t = GetContactSurfaceLateralFriction();
+            float traction = Mathf.Clamp01(tractionCurve.Evaluate(slipingSpeedRatio));
+            Debug.Log("slip:" + slipingSpeedRatio + "    traction:" + traction);
 
-                float t = tractionCurve.Evaluate(slipingSpeedRatio);
-
-                vehicleProxy.AddForce(-slipingSpeed * t * vehicleBox.transform.right, ForceMode.VelocityChange);
-            }
+            vehicleProxy.AddForce(-slipingSpeed * traction * vehicleBox.transform.right, ForceMode.VelocityChange);
 
         }
 
