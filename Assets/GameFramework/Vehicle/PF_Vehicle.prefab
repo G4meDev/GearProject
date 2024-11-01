@@ -695,7 +695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshOffset: {x: 0, y: -0.65, z: 0}
-  lerpRate: 15
+  lerpRate: 40
 --- !u!4 &2082113745696784758 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
