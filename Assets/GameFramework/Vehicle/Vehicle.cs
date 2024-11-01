@@ -21,11 +21,7 @@ public class Vehicle : NetworkBehaviour
     public GameObject vehicleBox;
     public GameObject vehicleMesh;
 
-    //[HideInInspector]
     public int position = 1;
-
-    //TODO: Remove
-    public MeshRenderer boostIndicator;
 
     public float gravityStr = 25.0f;
     private Vector3 gravityDir = Vector3.down;
@@ -43,33 +39,19 @@ public class Vehicle : NetworkBehaviour
 
     public float boostIntensity = 10.0f;
 
-    public float traction = 1.0f;
-    public float driftTraction = 0.0f;
+    public AnimationCurve tractionCurve;
+
     public AnimationCurve steerCurve;
     public float steerVelocityFriction = 2.0f;
 
-    public float jumpStr = 300.0f;
-
     [HideInInspector]
     public float forwardSpeed = 0.0f;
-
-    readonly float maxSpeedModifier = 20.0f;
-
 
     float lastTimeOnGround = 0.0f;
 
     public float coyoteTime = 0.1f;
 
     public float jumpDuration = 0.1f;
-
-    public float lowJumpTime = 0.6f;
-    public SpeedModifierData lowJumpSpeedModifier;
-
-    public float midJumpTime = 1.0f;
-    public SpeedModifierData midJumpSpeedModifier;
-
-    public float highJumpTime = 1.4f;
-    public SpeedModifierData highJumpSpeedModifier;
 
     [HideInInspector]
     public float jumpStartTime = 0;
@@ -79,9 +61,6 @@ public class Vehicle : NetworkBehaviour
 
     [HideInInspector]
     public float hInput;
-
-    [HideInInspector]
-    public bool holdingJump;
 
     [HideInInspector]
     private RaycastHit hit;
@@ -103,30 +82,6 @@ public class Vehicle : NetworkBehaviour
 
     [HideInInspector]
     public float airborneTime = 0.0f;
-
-    public float minDriftSpeed = 20.0f;
-    public float driftMinAngle = 15.0f;
-    public float driftMaxAngle = 60.0f;
-
-    public float driftTimer = 2.0f;
-
-    public float driftTractionRestTime = 2.0f;
-
-    public SpeedModifierData firstDirftSpeedModifier;
-
-    public SpeedModifierData secondDirftSpeedModifier;
-
-    public SpeedModifierData thirdDirftSpeedModifier;
-
-
-    [HideInInspector]
-    public float driftStartTime = 0.0f;
-
-    [HideInInspector]
-    public int driftCounter = 0;
-
-    [HideInInspector]
-    public float driftYaw = 0.0f;
 
     public AntiGravity_Node antiGravityNode;
 
@@ -154,6 +109,11 @@ public class Vehicle : NetworkBehaviour
     public void EndRace()
     {
         Debug.Log(name + "    End Race!");
+
+        if(IsHost)
+        {
+            //NetworkManager.Shutdown();
+        }
     }
 
     public void IncreaseLap()
@@ -397,8 +357,6 @@ public class Vehicle : NetworkBehaviour
             }
 
             gameObject.AddComponent<PlayerInput>();
-
-            //SceneManager.Get().OnLocalPlayerChanged(this);
         }
 
         if (!IsServer)
@@ -445,17 +403,10 @@ public class Vehicle : NetworkBehaviour
 
         UpdateSpeedModifiers();
 
-        float speedModifierAlpha = speedModifierIntensity / maxSpeedModifier;
-        boostIndicator.GetComponent<MeshRenderer>().material.SetFloat("_a", speedModifierAlpha);
-
         vehicleBox.transform.position = vehicleProxy.transform.position;
-
 
         RaycastForContactSurface();
 
-        //Gravity();
-
-        //forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward);
         forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? vehicleProxy.velocity.magnitude : -vehicleProxy.velocity.magnitude;
 
         ApplySteer();
@@ -475,9 +426,6 @@ public class Vehicle : NetworkBehaviour
         }
         if (bHit)
         {
-
-            // if boosting set speed to max
-            //if (maxSpeed < maxSpeedWithModifier)
             if (speedModifierReserveTime > 0)
             {
                 IncreaseSpeedTo(maxSpeedWithModifier);
@@ -509,10 +457,9 @@ public class Vehicle : NetworkBehaviour
 
             if (Mathf.Abs(slipingSpeedRatio) > 0)
             {
-                //float t = drifting ? 0 : Mathf.Clamp01((Time.time - lastDriftEndTime) / driftTractionRestTime);
-                //float t = drifting ? driftTraction : traction;
+                //float t = GetContactSurfaceLateralFriction();
 
-                float t = GetContactSurfaceLateralFriction();
+                float t = tractionCurve.Evaluate(slipingSpeedRatio);
 
                 vehicleProxy.AddForce(-slipingSpeed * t * vehicleBox.transform.right, ForceMode.VelocityChange);
             }

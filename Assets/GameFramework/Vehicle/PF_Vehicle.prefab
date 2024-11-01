@@ -191,7 +191,6 @@ MonoBehaviour:
   vehicleBox: {fileID: 188936559622972655}
   vehicleMesh: {fileID: 1706573743033637836}
   position: -1
-  boostIndicator: {fileID: 7829255249813983696}
   gravityStr: 40
   counterForceStr: 0.03
   maxSpeed: 20
@@ -201,8 +200,30 @@ MonoBehaviour:
   speedModifierIntensity: 0
   speedModifierReserveTime: 0
   boostIntensity: 10
-  traction: 1
-  driftTraction: 0.02
+  tractionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.95
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   steerCurve:
     serializedVersion: 2
     m_Curve:
@@ -237,40 +258,15 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   steerVelocityFriction: 2
-  jumpStr: 300
   forwardSpeed: 0
   coyoteTime: 0.1
   jumpDuration: 0.2
-  lowJumpTime: 0.6
-  lowJumpSpeedModifier: {fileID: 11400000, guid: 33d4059ff8d7b6449a9beae85ecdaffd,
-    type: 2}
-  midJumpTime: 1
-  midJumpSpeedModifier: {fileID: 11400000, guid: f1145087fd540d0419db104abfbe0929,
-    type: 2}
-  highJumpTime: 1.4
-  highJumpSpeedModifier: {fileID: 11400000, guid: fa92da64d99c80f439232841f38af8d1,
-    type: 2}
   jumpStartTime: 0
   vInput: 0
   hInput: 0
-  holdingJump: 0
   steerValue: 0
   aeroState: 0
   airborneTime: 0
-  minDriftSpeed: 20
-  driftMinAngle: 20
-  driftMaxAngle: 60
-  driftTimer: 1.5
-  driftTractionRestTime: 2
-  firstDirftSpeedModifier: {fileID: 11400000, guid: 2ad15429cb59a8a42871ee3d8746cd77,
-    type: 2}
-  secondDirftSpeedModifier: {fileID: 11400000, guid: f490f54fd3867a145a1638eb8b97dc70,
-    type: 2}
-  thirdDirftSpeedModifier: {fileID: 11400000, guid: 8c0ee0fbe56ab43429dcbb951c4433ca,
-    type: 2}
-  driftStartTime: 0
-  driftCounter: 0
-  driftYaw: 0
   antiGravityNode: {fileID: 0}
   lapPathNode: {fileID: 0}
   distanceFromStart: -1
