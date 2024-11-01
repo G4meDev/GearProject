@@ -49,7 +49,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188936559622972655}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -166,7 +166,7 @@ MonoBehaviour:
   GlobalObjectIdHash: 1478349003
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
+  SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
@@ -187,7 +187,7 @@ MonoBehaviour:
   isPlayer: 1
   cameraPrefab: {fileID: 7639040396316183353, guid: b4a35a187d8d354418655de184911f03,
     type: 3}
-  vehicleProxy: {fileID: 3017573830326654721}
+  vehicleProxy: {fileID: 2899090973253632067}
   vehicleBox: {fileID: 188936559622972655}
   vehicleMesh: {fileID: 1706573743033637836}
   position: -1
@@ -284,8 +284,9 @@ GameObject:
   - component: {fileID: 6868143323054761205}
   - component: {fileID: 8110587077606974426}
   - component: {fileID: 7779687994865799492}
-  - component: {fileID: 3017573830326654721}
+  - component: {fileID: 2899090973253632067}
   - component: {fileID: 1414484431055239537}
+  - component: {fileID: 635158807403922536}
   m_Layer: 9
   m_Name: VehicleProxy
   m_TagString: Untagged
@@ -379,7 +380,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.50000036
   m_Center: {x: 0.00015258795, y: 0, z: 0.0002441408}
---- !u!54 &3017573830326654721
+--- !u!54 &2899090973253632067
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -437,6 +438,18 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &635158807403922536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5586777812053100585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7417783819118272802
 GameObject:
   m_ObjectHideFlags: 0

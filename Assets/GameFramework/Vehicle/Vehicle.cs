@@ -361,8 +361,7 @@ public class Vehicle : NetworkBehaviour
 
         if (!IsServer)
         {
-            //vehicleProxy.gameObject.SetActive(false);
-            vehicleProxy.isKinematic = true;
+            //vehicleProxy.isKinematic = true;
         }
 
     }
