@@ -141,6 +141,8 @@ public class SceneManager : NetworkBehaviour
         Application.targetFrameRate = 60;
         //#endif
 
+        //Time.fixedDeltaTime = 1 / 60.0f;
+
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();
         position = Instantiate(positionPrefab).GetComponent<UI_Position>();
