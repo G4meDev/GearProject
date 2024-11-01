@@ -137,11 +137,7 @@ public class SceneManager : NetworkBehaviour
 
     private void Init()
     {
-        //#if UNITY_ANDROID && !UNITY_EDITOR
         Application.targetFrameRate = 60;
-        //#endif
-
-        //Time.fixedDeltaTime = 1 / 60.0f;
 
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();

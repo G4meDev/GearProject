@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -140,7 +138,13 @@ public class SessionManager : NetworkBehaviour
 
         string localIp = NetworkUtilities.GetLocalIPv4();
 
-        ushort port = (ushort)NetworkUtilities.GetFreePortInRange(7777, 7877);
+        ushort port = 7777;
+
+#if UNITY_EDITOR
+        //doesn`t work on android
+        port = (ushort)NetworkUtilities.GetFreePortInRange(7777, 7877);
+#endif
+
         Debug.Log("server starting at " + localIp + ":" + port);
 
         NetworkManager.GetComponent<UnityTransport>().SetConnectionData(localIp, port);
