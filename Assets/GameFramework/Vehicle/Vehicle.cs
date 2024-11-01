@@ -180,7 +180,7 @@ public class Vehicle : NetworkBehaviour
 
         else if (node.isStart)
         {
-            if(lapPathNode.checkpoint == LapPathCheckPoint.checkpoint_3)
+            if (lapPathNode.checkpoint == LapPathCheckPoint.checkpoint_3)
             {
                 lapPathNode = node;
                 IncreaseLap();
@@ -257,7 +257,7 @@ public class Vehicle : NetworkBehaviour
                 {
                     aeroState = VehicleAeroState.Coyote;
                 }
-                else if(aeroState == VehicleAeroState.Coyote)
+                else if (aeroState == VehicleAeroState.Coyote)
                 {
                     aeroState = VehicleAeroState.Falling;
                     StartFalling();
@@ -339,7 +339,7 @@ public class Vehicle : NetworkBehaviour
 
     private void Gravity()
     {
-        if(antiGravityNode)
+        if (antiGravityNode)
         {
             gravityDir = -antiGravityNode.GetUpVector(vehicleProxy.transform.position);
         }
@@ -403,7 +403,8 @@ public class Vehicle : NetworkBehaviour
 
         if (!IsServer)
         {
-            vehicleProxy.gameObject.SetActive(false);
+            //vehicleProxy.gameObject.SetActive(false);
+            vehicleProxy.isKinematic = true;
         }
 
     }
@@ -427,18 +428,15 @@ public class Vehicle : NetworkBehaviour
 
     private void Update()
     {
-        
+
     }
 
     private void FixedUpdate()
     {
-        if (!SceneManager.Get().raceStarted)
-            return;
-
         UpdateLapPathIndex();
         distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
 
-        if (!NetworkManager.IsHost)
+        if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
         {
             return;
         }

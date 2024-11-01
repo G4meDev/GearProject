@@ -27,10 +27,12 @@ public class CountDown : NetworkBehaviour
         counting = false;
         gameObject.SetActive(false);
 
-        if (IsHost)
-        {
-            SceneManager.Get().StartRace();
-        }
+        SceneManager.Get().StartRace();
+
+        //         if (IsHost)
+        //         {
+        //             SceneManager.Get().StartRace();
+        //         }
     }
 
     void Start()

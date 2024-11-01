@@ -135,11 +135,11 @@ public class SceneManager : NetworkBehaviour
 
     }
 
-    void Start()
+    private void Init()
     {
-//#if UNITY_ANDROID && !UNITY_EDITOR
+        //#if UNITY_ANDROID && !UNITY_EDITOR
         Application.targetFrameRate = 60;
-//#endif
+        //#endif
 
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();
@@ -148,8 +148,24 @@ public class SceneManager : NetworkBehaviour
         raceStarted = false;
     }
 
+    void Start()
+    {
+
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        Init();
+    }
+
+
+
     void Update()
     {
-        UpdateVehiclesPosition();
+        if(raceStarted)
+        {
+            UpdateVehiclesPosition();
+        }
+
     }
 }
