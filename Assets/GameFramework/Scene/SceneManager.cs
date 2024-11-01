@@ -35,6 +35,16 @@ public class SceneManager : NetworkBehaviour
 
     // ----------------------------------------
 
+    private void OnGUI()
+    {
+        ulong rtt = NetworkManager.NetworkConfig.NetworkTransport.GetCurrentRtt(NetworkManager.ServerClientId);
+        
+        GUIStyle label2 = new GUIStyle(GUI.skin.label);
+        label2.fontSize = 72;
+
+        GUI.Label(new Rect(5, Screen.height - 450, 300, 150), rtt.ToString(), label2);
+    }
+
     public static SceneManager Get()
     {
         if (instance == null)
