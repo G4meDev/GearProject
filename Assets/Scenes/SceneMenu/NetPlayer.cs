@@ -5,26 +5,35 @@ using UnityEngine;
 public class NetPlayer : NetworkBehaviour
 {
     public NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>();
-
     public Vehicle vehicle;
+
+    SessionManager sessionManager;
 
     public override void OnDestroy()
     {
         if (IsHost)
         {
-            GameObject.FindFirstObjectByType<SessionManager>().RefreshLobbyListRpc();
+            sessionManager.RefreshLobbyListRpc();
         }
     }
 
     public override void OnNetworkSpawn()
     {
+        sessionManager = GameObject.FindFirstObjectByType<SessionManager>();
 
+        playerName.OnValueChanged += OnPlayerNameChanged;
     }
 
     public override void OnNetworkDespawn()
     {
-
+        playerName.OnValueChanged -= OnPlayerNameChanged;
     }
+
+    public void OnPlayerNameChanged(FixedString64Bytes oldName, FixedString64Bytes newName)
+    {
+        sessionManager.RefreshLobbyListRpc();
+    }
+
 
     void Start()
     {
