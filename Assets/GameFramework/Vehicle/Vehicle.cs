@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 // @TODO: Develop jump
@@ -361,9 +362,8 @@ public class Vehicle : NetworkBehaviour
 
         if (!IsServer)
         {
-            //vehicleProxy.isKinematic = true;
-        }
 
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -380,7 +380,7 @@ public class Vehicle : NetworkBehaviour
 
     void Start()
     {
-        //Init();
+
     }
 
     private void Update()
@@ -393,6 +393,8 @@ public class Vehicle : NetworkBehaviour
         UpdateLapPathIndex();
         distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
 
+        vehicleBox.transform.position = vehicleProxy.transform.position;
+
         if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
         {
             return;
@@ -401,8 +403,6 @@ public class Vehicle : NetworkBehaviour
         Gravity();
 
         UpdateSpeedModifiers();
-
-        vehicleBox.transform.position = vehicleProxy.transform.position;
 
         RaycastForContactSurface();
 
