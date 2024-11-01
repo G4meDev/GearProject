@@ -16,7 +16,6 @@ public class UI_ScreenInput : MonoBehaviour
     public UI_SteerButton steerButton;
     public UI_GearButton throttleButton;
     public UI_GearButton reverseButton;
-    public UI_GearButton jumpButton;
     public UI_GearButton itemButton;
 
     public Canvas canvas;
@@ -32,14 +31,12 @@ public class UI_ScreenInput : MonoBehaviour
     {
         throttleButton.OnDeactive();
         reverseButton.OnDeactive();
-        jumpButton.OnDeactive();
     }
 
     void Start()
     {
         throttleButton.OnRelease = DeactivateAll;
         reverseButton.OnRelease = DeactivateAll;
-        jumpButton.OnRelease = DeactivateAll;
         itemButton.OnRelease = DeactivateAll;
     }
 
@@ -70,16 +67,5 @@ public class UI_ScreenInput : MonoBehaviour
         }
 
         data.vInput = (throttleActive ? 1 : 0) + (reverseActive ? -1 : 0);
-
-        data.holdingJump = (jumpButton.pressed | jumpButton.entered) && !throttleButton.entered && !reverseButton.entered;
-
-        if (data.holdingJump)
-        {
-            jumpButton.OnActive();
-        }
-        else
-        {
-            jumpButton.OnDeactive();
-        }
     }
 }
