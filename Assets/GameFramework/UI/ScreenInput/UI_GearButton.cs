@@ -34,7 +34,7 @@ public class UI_GearButton : Button
     {
         base.OnPointerUp(eventData);
 
-        OnRelease();
+        OnRelease?.Invoke();
 
         pressed = false;
         entered = false;

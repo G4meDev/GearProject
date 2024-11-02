@@ -13,7 +13,8 @@ public class ScreenInputData
 
 public class UI_ScreenInput : MonoBehaviour
 {
-    public UI_SteerButton steerButton;
+    public UI_GearButton steerLeftButton;
+    public UI_GearButton steerRightButton;
     public UI_GearButton throttleButton;
     public UI_GearButton reverseButton;
     public UI_GearButton itemButton;
@@ -31,6 +32,11 @@ public class UI_ScreenInput : MonoBehaviour
     {
         throttleButton.OnDeactive();
         reverseButton.OnDeactive();
+
+        steerLeftButton.OnDeactive();
+        steerRightButton.OnDeactive();
+
+        itemButton.OnDeactive();
     }
 
     void Start()
@@ -42,10 +48,31 @@ public class UI_ScreenInput : MonoBehaviour
 
     private void Update()
     {
-        data.hInput = steerButton.steerValue;
+        data.hInput = (steerRightButton.pressed ? 1 : 0) + (steerLeftButton.pressed ? -1 : 0);
+
+        bool steerRightActive = steerRightButton.pressed;
+        bool steerLeftActive = steerLeftButton.pressed;
+
+        if (steerRightActive)
+        {
+            steerRightButton.OnActive();
+        }
+        else
+        {
+            steerRightButton.OnDeactive();
+        }
+
+        if (steerLeftActive)
+        {
+            steerLeftButton.OnActive();
+        }
+        else
+        {
+            steerLeftButton.OnDeactive();
+        }
+
 
         bool throttleActive = (throttleButton.pressed | throttleButton.entered) && !reverseButton.entered;
-
         bool reverseActive = (reverseButton.pressed | reverseButton.entered) && !throttleButton.entered;
 
         if (throttleActive)
@@ -65,6 +92,8 @@ public class UI_ScreenInput : MonoBehaviour
         {
             reverseButton.OnDeactive();
         }
+
+
 
         data.vInput = (throttleActive ? 1 : 0) + (reverseActive ? -1 : 0);
     }
