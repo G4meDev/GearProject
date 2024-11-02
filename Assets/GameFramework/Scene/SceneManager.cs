@@ -147,7 +147,8 @@ public class SceneManager : NetworkBehaviour
 
     private void Init()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 61;
+        //Time.fixedDeltaTime = 1.0f / 30.0f;
 
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();

@@ -393,7 +393,7 @@ public class Vehicle : NetworkBehaviour
         UpdateLapPathIndex();
         distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
 
-        vehicleBox.transform.position = vehicleProxy.transform.position;
+        vehicleBox.transform.position = vehicleProxy.position;
 
         if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
         {
