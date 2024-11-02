@@ -394,6 +394,7 @@ public class Vehicle : NetworkBehaviour
         distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
 
         vehicleBox.transform.position = vehicleProxy.position;
+        Physics.SyncTransforms();
 
         if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
         {
