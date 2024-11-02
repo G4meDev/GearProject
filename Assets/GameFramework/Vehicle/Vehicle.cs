@@ -14,6 +14,10 @@ public enum VehicleAeroState
 
 public class Vehicle : NetworkBehaviour
 {
+    private int frameNumber = 0;
+
+
+
     public bool isPlayer = true;
 
     public GameObject cameraPrefab;
@@ -387,36 +391,18 @@ public class Vehicle : NetworkBehaviour
     {
 
     }
-
-    private void FixedUpdate()
+    
+    public void StepVehicleMovement()
     {
-        UpdateLapPathIndex();
-        distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
-
-        vehicleBox.transform.position = vehicleProxy.position;
-        Physics.SyncTransforms();
-
-        if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
-        {
-            return;
-        }
-
-        Gravity();
-
-        UpdateSpeedModifiers();
-
-        RaycastForContactSurface();
-
         forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? vehicleProxy.velocity.magnitude : -vehicleProxy.velocity.magnitude;
-
-        ApplySteer();
-
-        AlignWithContactSurface();
-
+        
+        Gravity();
+        UpdateSpeedModifiers();
         maxSpeedWithModifier = GetMaxSpeedWithModifiers();
-
-        airborneTime = aeroState == VehicleAeroState.Jumping ? Time.time - jumpStartTime : 0.0f;
-
+        
+        RaycastForContactSurface();
+        ApplySteer();
+        AlignWithContactSurface();
         UpdateAeroState();
 
         if (!bHit)
@@ -446,7 +432,7 @@ public class Vehicle : NetworkBehaviour
 
             enginePower *= vInput;
 
-            if(aeroState == VehicleAeroState.OnGround)
+            if (aeroState == VehicleAeroState.OnGround)
             {
                 vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
             }
@@ -464,5 +450,21 @@ public class Vehicle : NetworkBehaviour
         }
 
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
+    }
+
+    private void FixedUpdate()
+    {
+        UpdateLapPathIndex();
+        distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
+
+        vehicleBox.transform.position = vehicleProxy.position;
+        Physics.SyncTransforms();
+
+        if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
+        {
+            return;
+        }
+
+        StepVehicleMovement();
     }
 }
