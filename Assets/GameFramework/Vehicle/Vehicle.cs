@@ -2,6 +2,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Windows;
 
 // @TODO: Develop jump
 
@@ -15,6 +16,13 @@ public enum VehicleAeroState
 
 public class VehicleState : INetworkSerializable
 {
+    public Vector3 vehicleProxy_Position;
+    public Quaternion vehicleProxy_Rotation;
+    public Vector3 vehicleProxy_Velocity;
+    public Vector3 vehicleProxy_AngularVelocity;
+
+    public Quaternion vehicleBox_Rotation;
+
     public VehicleState(Vector3 proxy_pos, Quaternion proxy_rot, Vector3 proxy_velo, Vector3 proxy_angularVelo, Quaternion box_rot)
     {
         vehicleProxy_Position = proxy_pos;
@@ -30,13 +38,6 @@ public class VehicleState : INetworkSerializable
 
     }
 
-    public Vector3 vehicleProxy_Position;
-    public Quaternion vehicleProxy_Rotation;
-    public Vector3 vehicleProxy_Velocity;
-    public Vector3 vehicleProxy_AngularVelocity;
-
-    public Quaternion vehicleBox_Rotation;
-
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref vehicleProxy_Position);
@@ -50,6 +51,9 @@ public class VehicleState : INetworkSerializable
 
 public class VehicleInput : INetworkSerializable
 {
+    public float hInput;
+    public float vInput;
+ 
     public VehicleInput(float h, float v)
     {
         hInput = h;
@@ -61,9 +65,6 @@ public class VehicleInput : INetworkSerializable
 
     }
 
-    public float hInput;
-    public float vInput;
-
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref hInput);
@@ -73,23 +74,19 @@ public class VehicleInput : INetworkSerializable
 
 public class VehicleTimeStamp
 {
-    public VehicleTimeStamp() : this(0, new VehicleInput(), new VehicleState())
+    public VehicleInput vehicleInput;
+    public VehicleState vehicleState;
+
+    public VehicleTimeStamp() : this(new VehicleInput(), new VehicleState())
     {
 
     }
 
-    public VehicleTimeStamp(int frameNum, VehicleInput input, VehicleState state)
+    public VehicleTimeStamp(VehicleInput input, VehicleState state)
     {
-        frameNumber = frameNum;
-
         vehicleInput = input;
         vehicleState = state;
     }
-
-    public int frameNumber;
-
-    public VehicleInput vehicleInput;
-    public VehicleState vehicleState;
 }
 
 public class Vehicle : NetworkBehaviour
@@ -297,6 +294,9 @@ public class Vehicle : NetworkBehaviour
 
     void UpdateAeroState()
     {
+        aeroState = VehicleAeroState.OnGround;
+        return;
+
         if (!bHit)
         {
             if (aeroState != VehicleAeroState.Jumping)
@@ -563,6 +563,8 @@ public class Vehicle : NetworkBehaviour
         vehicleProxy.velocity = state.vehicleProxy_Velocity;
         vehicleProxy.angularVelocity = state.vehicleProxy_AngularVelocity;
         vehicleBox.rotation = state.vehicleBox_Rotation;
+
+        Physics.SyncTransforms();
     }
 
     public bool Desync = false;
@@ -635,10 +637,18 @@ public class Vehicle : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        //Debug.Log("client_" + OwnerClientId + " updating frame " + currentFrameNumber);
+
+        if (UnityEngine.Input.GetKey(KeyCode.E))
+        {
+            vehicleProxy.position = Vector3.zero;
+        }
+
         VehicleInput currentInput;
         if(IsOwner)
         {
             currentInput = new VehicleInput(hInput, vInput);
+            vehicleTimeStamp.Get(currentFrameNumber).vehicleInput = currentInput;
             UpdateInputRpc(currentFrameNumber, currentInput);
         }
         else
@@ -652,7 +662,6 @@ public class Vehicle : NetworkBehaviour
 
             StepVehicleMovement();
             Physics.Simulate(Time.fixedDeltaTime);
-            Physics.SyncTransforms();
 
             UpdateClientStateRpc(currentFrameNumber, MakeVehicleState());
 
@@ -663,8 +672,6 @@ public class Vehicle : NetworkBehaviour
         {            
             if(Desync)
             {
-                Debug.Log("client_" + OwnerClientId + " desynced.");
-
                 Desync = false;
 
                 UpdateVehicleToState(vehicleTimeStamp.Get(lastSyncedFrameNumber).vehicleState);
@@ -672,10 +679,10 @@ public class Vehicle : NetworkBehaviour
                 for(int i = lastSyncedFrameNumber + 1; i < currentFrameNumber; i++)
                 {
                     VehicleInput input = vehicleTimeStamp.Get(i).vehicleInput;
+
                     UpdateVehicleInput(input);
                     StepVehicleMovement();
                     Physics.Simulate(Time.fixedDeltaTime);
-                    Physics.SyncTransforms();
 
                     vehicleTimeStamp.Get(i).vehicleState = MakeVehicleState();
                 }

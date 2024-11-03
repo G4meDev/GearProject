@@ -19,6 +19,6 @@ public class CircularBuffer<T> where T : new()
     }
 
     public void Add(T item, int index) => buffer[index % bufferSize] = item;
-    public T Get(int index) => buffer[index % bufferSize];
+    public ref T Get(int index) => ref buffer[index % bufferSize];
     public void Clear() => buffer = new T[bufferSize];
 }
