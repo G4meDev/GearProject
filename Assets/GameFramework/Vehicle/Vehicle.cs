@@ -97,7 +97,7 @@ public class VehicleTimeStamp
 
 public class Vehicle : NetworkBehaviour
 {
-    private int clientFrameAheadAmount = 5;
+    private int clientFrameAheadAmount = 7;
 
     private int currentFrameNumber = 0;
     private int lastSyncedFrameNumber = 0;
@@ -565,7 +565,7 @@ public class Vehicle : NetworkBehaviour
 
     public bool Desync = false;
 
-    private float pos_error_treshold = 1;
+    private float pos_error_treshold = 0.5f;
     private float rot_error_treshold = 30.0f;
 
     public bool StatesInSync(VehicleState state1, VehicleState state2)
@@ -600,6 +600,8 @@ public class Vehicle : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void UpdateServerInputRpc(int frameNumber, VehicleInput input)
     {
+        Debug.Log(frameNumber + "    " + currentFrameNumber);
+
         VehicleTimeStamp stamp = new VehicleTimeStamp();
         stamp.frameNumber = frameNumber;
         stamp.vehicleInput = input;
@@ -619,7 +621,7 @@ public class Vehicle : NetworkBehaviour
         {            
             if(!IsOwner)
             {
-                VehicleInput input = vehicleTimeStamp.Get(lastSyncedFrameNumber).vehicleInput;
+                VehicleInput input = vehicleTimeStamp.Get(currentFrameNumber).vehicleInput;
 
                 hInput = input.hInput;
                 vInput = input.vInput;
@@ -628,9 +630,9 @@ public class Vehicle : NetworkBehaviour
             StepVehicleMovement();
             Physics.Simulate(Time.fixedDeltaTime);
 
-            UpdateClientStateRpc(lastSyncedFrameNumber, MakeVehicleState());
+            UpdateClientStateRpc(currentFrameNumber, MakeVehicleState());
 
-            lastSyncedFrameNumber++;
+            currentFrameNumber++;
         }
 
         else
