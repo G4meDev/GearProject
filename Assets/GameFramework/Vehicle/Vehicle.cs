@@ -104,6 +104,8 @@ public class Vehicle : NetworkBehaviour
 
     private CircularBuffer<VehicleTimeStamp> vehicleTimeStamp = new(1024);
 
+    public GameObject serverRepObject;
+
     public bool isPlayer = true;
 
     public GameObject cameraPrefab;
@@ -551,10 +553,48 @@ public class Vehicle : NetworkBehaviour
             );
     }
 
+    public void UpdateVehicleToState(VehicleState state)
+    {
+        vehicleProxy.position = state.vehicleProxy_Position;
+        vehicleProxy.rotation = state.vehicleProxy_Rotation;
+        vehicleProxy.velocity = state.vehicleProxy_Velocity;
+        vehicleProxy.angularVelocity = state.vehicleProxy_AngularVelocity;
+        vehicleBox.transform.position = state.vehicleBox_Position;
+        vehicleBox.transform.rotation = state.vehicleBox_Rotation;
+    }
+
+    public bool Desync = false;
+
+    private float pos_error_treshold = 1;
+    private float rot_error_treshold = 30.0f;
+
+    public bool StatesInSync(VehicleState state1, VehicleState state2)
+    {
+        if((Vector3.Distance(state1.vehicleProxy_Position, state2.vehicleProxy_Position) > pos_error_treshold) ||
+            (Vector3.Distance(state1.vehicleBox_Position, state2.vehicleBox_Position) > pos_error_treshold) ||
+            (Quaternion.Angle(state1.vehicleBox_Rotation, state2.vehicleBox_Rotation) > rot_error_treshold))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     [Rpc(SendTo.NotServer)]
     public void UpdateClientStateRpc(int frameNumber, VehicleState state)
     {
+        serverRepObject.transform.position = state.vehicleBox_Position;
+        serverRepObject.transform.rotation = state.vehicleBox_Rotation;
 
+        bool Synced = StatesInSync(state, vehicleTimeStamp.Get(frameNumber).vehicleState);
+
+        if(!Synced)
+        {
+            Desync = true;
+
+            lastSyncedFrameNumber = frameNumber;
+            vehicleTimeStamp.Get(lastSyncedFrameNumber).vehicleState = state;
+        }
     }
 
     [Rpc(SendTo.Server)]
@@ -586,6 +626,8 @@ public class Vehicle : NetworkBehaviour
             }
 
             StepVehicleMovement();
+            Physics.Simulate(Time.fixedDeltaTime);
+
             UpdateClientStateRpc(lastSyncedFrameNumber, MakeVehicleState());
 
             lastSyncedFrameNumber++;
@@ -593,11 +635,35 @@ public class Vehicle : NetworkBehaviour
 
         else
         {
-            //check for error
+            Debug.Log(Desync);
 
-            VehicleInput vehicleInput = new(hInput, vInput);
-            vehicleTimeStamp.Get(currentFrameNumber).vehicleInput = vehicleInput;
-            UpdateServerInputRpc(currentFrameNumber, vehicleInput);
+            VehicleInput currentInput = new(hInput, vInput);
+            vehicleTimeStamp.Get(currentFrameNumber).vehicleInput = currentInput;
+            UpdateServerInputRpc(currentFrameNumber, currentInput);
+            
+            if(Desync)
+            {
+                Desync = false;
+
+                UpdateVehicleToState(vehicleTimeStamp.Get(lastSyncedFrameNumber).vehicleState);
+                Physics.SyncTransforms();
+
+                for(int i = lastSyncedFrameNumber + 1; i < currentFrameNumber; i++)
+                {
+                    VehicleInput input = vehicleTimeStamp.Get(i).vehicleInput;
+                    UpdateVehicleInput(input);
+                    StepVehicleMovement();
+                    Physics.Simulate(Time.fixedDeltaTime);
+
+                    vehicleTimeStamp.Get(i).vehicleState = MakeVehicleState();
+                }
+            }
+
+            UpdateVehicleInput(currentInput);
+            StepVehicleMovement();
+            Physics.Simulate(Time.fixedDeltaTime);
+
+            vehicleTimeStamp.Get(currentFrameNumber).vehicleState = MakeVehicleState();
 
             currentFrameNumber++;
 
