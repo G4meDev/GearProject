@@ -28,8 +28,8 @@ public class VehicleCamera : MonoBehaviour
             target.transform.position = cameraPos;
             //target.transform.rotation = Quaternion.LookRotation(cameraForward, cameraUp);
 
-            DrawHelpers.DrawSphere(cameraPos, 2, Color.black);
-            DrawArrow.ForDebug(cameraPos + Vector3.up * 2, cameraForward.normalized);
+            //DrawHelpers.DrawSphere(cameraPos, 2, Color.black);
+            //DrawArrow.ForDebug(cameraPos + Vector3.up * 2, cameraForward.normalized);
         }
     }
 }

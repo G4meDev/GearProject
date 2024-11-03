@@ -263,7 +263,7 @@ public class Vehicle : NetworkBehaviour
 
         Vector3 targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
 
-        vehicleProxy.MovePosition(targetPos);
+        vehicleProxy.position = targetPos;
         vehicleBox.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
         vehicleMesh.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
 
@@ -374,7 +374,7 @@ public class Vehicle : NetworkBehaviour
 
     private void RaycastForContactSurface()
     {
-        Ray ray = new(vehicleProxy.transform.position, gravityDir);
+        Ray ray = new(vehicleProxy.position, gravityDir);
 
         // TODO: make track surface and track wall layer
         LayerMask layerMask = LayerMask.GetMask("Default");
@@ -389,7 +389,7 @@ public class Vehicle : NetworkBehaviour
     {
         if (antiGravityNode)
         {
-            gravityDir = -antiGravityNode.GetUpVector(vehicleProxy.transform.position);
+            gravityDir = -antiGravityNode.GetUpVector(vehicleProxy.position);
         }
 
         else
@@ -552,7 +552,7 @@ public class Vehicle : NetworkBehaviour
             vehicleProxy.rotation,
             vehicleProxy.velocity,
             vehicleProxy.angularVelocity,
-            vehicleBox.transform.rotation
+            vehicleBox.rotation
             );
     }
 
@@ -574,9 +574,16 @@ public class Vehicle : NetworkBehaviour
 
     public bool StatesInSync(VehicleState state1, VehicleState state2)
     {
-        if((Vector3.Distance(state1.vehicleProxy_Position, state2.vehicleProxy_Position) > pos_error_treshold) ||
-            (Quaternion.Angle(state1.vehicleBox_Rotation, state2.vehicleBox_Rotation) > rot_error_treshold))
+        float position_Error = Vector3.Distance(state1.vehicleProxy_Position, state2.vehicleProxy_Position);
+        float rotation_Error = Quaternion.Angle(state1.vehicleBox_Rotation, state2.vehicleBox_Rotation);
+
+        DrawHelpers.DrawSphere(state1.vehicleProxy_Position, 1, Color.red);
+        DrawHelpers.DrawSphere(state2.vehicleProxy_Position, 1, Color.blue);
+
+        if ((position_Error > pos_error_treshold) || (rotation_Error > rot_error_treshold))
         {
+            Debug.Log("client_" + OwnerClientId + " desynced with " + position_Error + " position and " + rotation_Error + " rotation error");
+
             return false;
         }
 
@@ -620,7 +627,8 @@ public class Vehicle : NetworkBehaviour
             return vehicleTimeStamp.Get(frame).vehicleInput;
         }
 
-        Debug.Log("cient_" + OwnerClientId + " is starving input. last received input on frame " + lastRecivedInputFrame + " requested input for frame " + frame);
+        if(!IsOwnedByServer)
+            Debug.Log("cient_" + OwnerClientId + " is starving input. last received input on frame " + lastRecivedInputFrame + " requested input for frame " + frame);
 
         return vehicleTimeStamp.Get(lastRecivedInputFrame).vehicleInput;
     }
@@ -644,6 +652,7 @@ public class Vehicle : NetworkBehaviour
 
             StepVehicleMovement();
             Physics.Simulate(Time.fixedDeltaTime);
+            Physics.SyncTransforms();
 
             UpdateClientStateRpc(currentFrameNumber, MakeVehicleState());
 
@@ -666,6 +675,7 @@ public class Vehicle : NetworkBehaviour
                     UpdateVehicleInput(input);
                     StepVehicleMovement();
                     Physics.Simulate(Time.fixedDeltaTime);
+                    Physics.SyncTransforms();
 
                     vehicleTimeStamp.Get(i).vehicleState = MakeVehicleState();
                 }
@@ -678,16 +688,6 @@ public class Vehicle : NetworkBehaviour
             vehicleTimeStamp.Get(currentFrameNumber).vehicleState = MakeVehicleState();
 
             currentFrameNumber++;
-
-//            Physics.simulationMode = SimulationMode.Script;
-
-//             do
-//             {
-//                 Physics.Simulate(Time.fixedDeltaTime);
-// 
-//                 currentFrameNumber++;
-//             }
-//             while (currentFrameNumber < lastSyncedFrameNumber + clientFrameAheadAmount);
         }
 
 
