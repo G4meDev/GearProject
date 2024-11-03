@@ -568,6 +568,8 @@ public class Vehicle : NetworkBehaviour
     private float pos_error_treshold = 0.5f;
     private float rot_error_treshold = 30.0f;
 
+    int lastRecivedInputFrame = 0;
+
     public bool StatesInSync(VehicleState state1, VehicleState state2)
     {
         if((Vector3.Distance(state1.vehicleProxy_Position, state2.vehicleProxy_Position) > pos_error_treshold) ||
@@ -597,16 +599,11 @@ public class Vehicle : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
-    public void UpdateServerInputRpc(int frameNumber, VehicleInput input)
+    [Rpc(SendTo.NotOwner)]
+    public void UpdateInputRpc(int frameNumber, VehicleInput input)
     {
-        Debug.Log(frameNumber + "    " + currentFrameNumber);
-
-        VehicleTimeStamp stamp = new VehicleTimeStamp();
-        stamp.frameNumber = frameNumber;
-        stamp.vehicleInput = input;
-
-        vehicleTimeStamp.Add(stamp, frameNumber);
+        vehicleTimeStamp.Get(frameNumber).vehicleInput = input;
+        lastRecivedInputFrame = frameNumber;
     }
 
     public void UpdateVehicleInput(VehicleInput input)
@@ -615,18 +612,33 @@ public class Vehicle : NetworkBehaviour
         vInput = input.vInput;
     }
 
+    public VehicleInput TryGetRemoteInputForFrame(int frame)
+    {
+        if (frame <= lastRecivedInputFrame)
+        {
+            return vehicleTimeStamp.Get(frame).vehicleInput;
+        }
+
+        Debug.Log("cient_" + OwnerClientId + " is starving input. last received input on frame " + lastRecivedInputFrame + " requested input for frame " + frame);
+        return vehicleTimeStamp.Get(lastRecivedInputFrame).vehicleInput;
+    }
+
     private void FixedUpdate()
     {
+        VehicleInput currentInput;
+        if(IsOwner)
+        {
+            currentInput = new VehicleInput(hInput, vInput);
+            UpdateInputRpc(currentFrameNumber, new(hInput, vInput));
+        }
+        else
+        {
+            currentInput = TryGetRemoteInputForFrame(currentFrameNumber);
+        }
+
+
         if (IsHost)
-        {            
-            if(!IsOwner)
-            {
-                VehicleInput input = vehicleTimeStamp.Get(currentFrameNumber).vehicleInput;
-
-                hInput = input.hInput;
-                vInput = input.vInput;
-            }
-
+        {      
             StepVehicleMovement();
             Physics.Simulate(Time.fixedDeltaTime);
 
@@ -638,10 +650,6 @@ public class Vehicle : NetworkBehaviour
         else
         {
             Debug.Log(Desync);
-
-            VehicleInput currentInput = new(hInput, vInput);
-            vehicleTimeStamp.Get(currentFrameNumber).vehicleInput = currentInput;
-            UpdateServerInputRpc(currentFrameNumber, currentInput);
             
             if(Desync)
             {
