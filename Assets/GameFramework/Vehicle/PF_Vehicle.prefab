@@ -49,7 +49,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188936559622972655}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -186,7 +186,7 @@ MonoBehaviour:
   cameraPrefab: {fileID: 7639040396316183353, guid: b4a35a187d8d354418655de184911f03,
     type: 3}
   vehicleProxy: {fileID: 2899090973253632067}
-  vehicleBox: {fileID: 188936559622972655}
+  vehicleBox: {fileID: 7061795390080564335}
   vehicleMesh: {fileID: 1706573743033637836}
   position: -1
   gravityStr: 40
@@ -404,7 +404,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5586777812053100585}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

@@ -15,18 +15,17 @@ public enum VehicleAeroState
 
 public class VehicleState : INetworkSerializable
 {
-    public VehicleState(Vector3 proxy_pos, Quaternion proxy_rot, Vector3 proxy_velo, Vector3 proxy_angularVelo, Vector3 box_pos, Quaternion box_rot)
+    public VehicleState(Vector3 proxy_pos, Quaternion proxy_rot, Vector3 proxy_velo, Vector3 proxy_angularVelo, Quaternion box_rot)
     {
         vehicleProxy_Position = proxy_pos;
         vehicleProxy_Rotation = proxy_rot;
         vehicleProxy_Velocity = proxy_velo;
         vehicleProxy_AngularVelocity = proxy_angularVelo;
 
-        vehicleBox_Position = box_pos;
         vehicleBox_Rotation = box_rot;
     }
 
-    public VehicleState() : this(Vector3.zero, Quaternion.identity, Vector3.zero, Vector3.zero, Vector3.zero, Quaternion.identity)
+    public VehicleState() : this(Vector3.zero, Quaternion.identity, Vector3.zero, Vector3.zero, Quaternion.identity)
     {
 
     }
@@ -36,7 +35,6 @@ public class VehicleState : INetworkSerializable
     public Vector3 vehicleProxy_Velocity;
     public Vector3 vehicleProxy_AngularVelocity;
 
-    public Vector3 vehicleBox_Position;
     public Quaternion vehicleBox_Rotation;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -46,7 +44,6 @@ public class VehicleState : INetworkSerializable
         serializer.SerializeValue(ref vehicleProxy_Velocity);
         serializer.SerializeValue(ref vehicleProxy_AngularVelocity);
 
-        serializer.SerializeValue(ref vehicleBox_Position);
         serializer.SerializeValue(ref vehicleBox_Rotation);
     }
 }
@@ -111,7 +108,7 @@ public class Vehicle : NetworkBehaviour
     public GameObject cameraPrefab;
 
     public Rigidbody vehicleProxy;
-    public GameObject vehicleBox;
+    public Rigidbody vehicleBox;
     public GameObject vehicleMesh;
 
     public int position = 1;
@@ -417,17 +414,20 @@ public class Vehicle : NetworkBehaviour
             steerValue = 0;
         }
 
-        vehicleBox.transform.Rotate(Vector3.up, steerValue, Space.Self);
+        vehicleBox.rotation = (vehicleBox.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.rotation * Vector3.up));
+
+        //vehicleBox.transform.Rotate(Vector3.up, steerValue, Space.Self);
     }
 
     private void AlignWithContactSurface()
     {
         // if in touch with ground align with surface normal otherwise align with world up 
         Vector3 boxUp = bHit ? contactSmoothNormal : -gravityDir;
-        Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, boxUp));
+        //Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, boxUp));
+        Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.rotation * Vector3.right, boxUp));
         Quaternion q = Quaternion.LookRotation(nForward, boxUp);
 
-        vehicleBox.transform.rotation = q;
+        vehicleBox.rotation = (q);
     }
 
     public void Init()
@@ -480,11 +480,11 @@ public class Vehicle : NetworkBehaviour
     
     public void StepVehicleMovement()
     {
-        vehicleBox.transform.position = vehicleProxy.position;
-        Physics.SyncTransforms();
+        vehicleBox.position = vehicleProxy.position;
 
-        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? vehicleProxy.velocity.magnitude : -vehicleProxy.velocity.magnitude;
-        
+        //forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? vehicleProxy.velocity.magnitude : -vehicleProxy.velocity.magnitude;
+        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.rotation * Vector3.forward) > 0 ? vehicleProxy.velocity.magnitude : -vehicleProxy.velocity.magnitude;
+
         Gravity();
         UpdateSpeedModifiers();
         maxSpeedWithModifier = GetMaxSpeedWithModifiers();
@@ -523,10 +523,12 @@ public class Vehicle : NetworkBehaviour
 
             if (aeroState == VehicleAeroState.OnGround)
             {
-                vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
+                //vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
+                vehicleProxy.AddForce(vehicleBox.rotation * Vector3.forward * enginePower, ForceMode.Acceleration);
             }
 
-            float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
+            //float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
+            float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.rotation * Vector3.right);
             float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : Mathf.Abs(slipingSpeed) / vehicleProxy.velocity.magnitude;
 
             //float t = GetContactSurfaceLateralFriction();
@@ -534,11 +536,13 @@ public class Vehicle : NetworkBehaviour
             float traction = Mathf.Clamp01(tractionCurve.Evaluate(slipingSpeedRatio));
             //Debug.Log("slip:" + slipingSpeedRatio + "    traction:" + traction);
 
-            vehicleProxy.AddForce(-slipingSpeed * traction * vehicleBox.transform.right, ForceMode.VelocityChange);
-
+            //vehicleProxy.AddForce(-slipingSpeed * traction * vehicleBox.transform.right, ForceMode.VelocityChange);
+            vehicleProxy.AddForce(-slipingSpeed * traction * (vehicleBox.rotation * Vector3.right), ForceMode.VelocityChange);
         }
 
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
+
+        Physics.SyncTransforms();
     }
 
     VehicleState MakeVehicleState()
@@ -548,7 +552,6 @@ public class Vehicle : NetworkBehaviour
             vehicleProxy.rotation,
             vehicleProxy.velocity,
             vehicleProxy.angularVelocity,
-            vehicleBox.transform.position,
             vehicleBox.transform.rotation
             );
     }
@@ -559,8 +562,7 @@ public class Vehicle : NetworkBehaviour
         vehicleProxy.rotation = state.vehicleProxy_Rotation;
         vehicleProxy.velocity = state.vehicleProxy_Velocity;
         vehicleProxy.angularVelocity = state.vehicleProxy_AngularVelocity;
-        vehicleBox.transform.position = state.vehicleBox_Position;
-        vehicleBox.transform.rotation = state.vehicleBox_Rotation;
+        vehicleBox.rotation = state.vehicleBox_Rotation;
     }
 
     public bool Desync = false;
@@ -573,7 +575,6 @@ public class Vehicle : NetworkBehaviour
     public bool StatesInSync(VehicleState state1, VehicleState state2)
     {
         if((Vector3.Distance(state1.vehicleProxy_Position, state2.vehicleProxy_Position) > pos_error_treshold) ||
-            (Vector3.Distance(state1.vehicleBox_Position, state2.vehicleBox_Position) > pos_error_treshold) ||
             (Quaternion.Angle(state1.vehicleBox_Rotation, state2.vehicleBox_Rotation) > rot_error_treshold))
         {
             return false;
@@ -585,7 +586,7 @@ public class Vehicle : NetworkBehaviour
     [Rpc(SendTo.NotServer)]
     public void UpdateClientStateRpc(int frameNumber, VehicleState state)
     {
-        serverRepObject.transform.position = state.vehicleBox_Position;
+        serverRepObject.transform.position = state.vehicleProxy_Position;
         serverRepObject.transform.rotation = state.vehicleBox_Rotation;
 
         bool Synced = StatesInSync(state, vehicleTimeStamp.Get(frameNumber).vehicleState);
@@ -620,6 +621,7 @@ public class Vehicle : NetworkBehaviour
         }
 
         Debug.Log("cient_" + OwnerClientId + " is starving input. last received input on frame " + lastRecivedInputFrame + " requested input for frame " + frame);
+
         return vehicleTimeStamp.Get(lastRecivedInputFrame).vehicleInput;
     }
 
@@ -629,16 +631,17 @@ public class Vehicle : NetworkBehaviour
         if(IsOwner)
         {
             currentInput = new VehicleInput(hInput, vInput);
-            UpdateInputRpc(currentFrameNumber, new(hInput, vInput));
+            UpdateInputRpc(currentFrameNumber, currentInput);
         }
         else
         {
             currentInput = TryGetRemoteInputForFrame(currentFrameNumber);
         }
 
-
         if (IsHost)
-        {      
+        {
+            UpdateVehicleInput(currentInput);
+
             StepVehicleMovement();
             Physics.Simulate(Time.fixedDeltaTime);
 
@@ -648,15 +651,14 @@ public class Vehicle : NetworkBehaviour
         }
 
         else
-        {
-            Debug.Log(Desync);
-            
+        {            
             if(Desync)
             {
+                Debug.Log("client_" + OwnerClientId + " desynced.");
+
                 Desync = false;
 
                 UpdateVehicleToState(vehicleTimeStamp.Get(lastSyncedFrameNumber).vehicleState);
-                Physics.SyncTransforms();
 
                 for(int i = lastSyncedFrameNumber + 1; i < currentFrameNumber; i++)
                 {
