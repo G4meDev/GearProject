@@ -216,7 +216,7 @@ public class AIController : MonoBehaviour
 
         float throttleError = targetSpeed - vehicle.forwardSpeed;
         float throttle = throttlePID.Step(throttleError, Time.fixedDeltaTime);
-        vehicle.SetThrottleInputRpc(throttle);
+        //vehicle.SetThrottleInputRpc(throttle);
 
         float perlinFrequency = Time.time / 10;
         float noise = Mathf.PerlinNoise(targetPos * 7 + 15, perlinFrequency);
@@ -233,7 +233,7 @@ public class AIController : MonoBehaviour
         float steer = (steer_CrossTrack * crossTrackWeight) + (steer_Projetcion_1 * projection_1_Weight) +
             (steer_Projetcion_2 * projection_2_Weight) + (steer_Projetcion_3 * projection_3_Weight);
 
-        vehicle.SetSteerInputRpc(steer);
+        //vehicle.SetSteerInputRpc(steer);
     }
 
 }

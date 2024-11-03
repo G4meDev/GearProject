@@ -28,8 +28,11 @@ public class PlayerInput : MonoBehaviour
 //         float steerInput = (UnityEngine.Input.GetAxis("Horizontal"));
 //         float throttleInput = (UnityEngine.Input.GetAxis("Vertical"));
 
-        vehicle.SetSteerInputRpc(steerInput);
-        vehicle.SetThrottleInputRpc(throttleInput);
+//         vehicle.SetSteerInputRpc(steerInput);
+//         vehicle.SetThrottleInputRpc(throttleInput);
+
+        vehicle.hInput = steerInput;
+        vehicle.vInput = throttleInput;
 
 #else
 

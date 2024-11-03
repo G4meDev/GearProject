@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using UnityEditorInternal;
 using UnityEngine;
 
 // @TODO: Develop jump
@@ -12,11 +13,96 @@ public enum VehicleAeroState
     Falling
 }
 
+public class VehicleState : INetworkSerializable
+{
+    public VehicleState(Vector3 proxy_pos, Quaternion proxy_rot, Vector3 proxy_velo, Vector3 proxy_angularVelo, Vector3 box_pos, Quaternion box_rot)
+    {
+        vehicleProxy_Position = proxy_pos;
+        vehicleProxy_Rotation = proxy_rot;
+        vehicleProxy_Velocity = proxy_velo;
+        vehicleProxy_AngularVelocity = proxy_angularVelo;
+
+        vehicleBox_Position = box_pos;
+        vehicleBox_Rotation = box_rot;
+    }
+
+    public VehicleState() : this(Vector3.zero, Quaternion.identity, Vector3.zero, Vector3.zero, Vector3.zero, Quaternion.identity)
+    {
+
+    }
+
+    public Vector3 vehicleProxy_Position;
+    public Quaternion vehicleProxy_Rotation;
+    public Vector3 vehicleProxy_Velocity;
+    public Vector3 vehicleProxy_AngularVelocity;
+
+    public Vector3 vehicleBox_Position;
+    public Quaternion vehicleBox_Rotation;
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref vehicleProxy_Position);
+        serializer.SerializeValue(ref vehicleProxy_Rotation);
+        serializer.SerializeValue(ref vehicleProxy_Velocity);
+        serializer.SerializeValue(ref vehicleProxy_AngularVelocity);
+
+        serializer.SerializeValue(ref vehicleBox_Position);
+        serializer.SerializeValue(ref vehicleBox_Rotation);
+    }
+}
+
+public class VehicleInput : INetworkSerializable
+{
+    public VehicleInput(float h, float v)
+    {
+        hInput = h;
+        vInput = v;
+    }
+
+    public VehicleInput() : this(0, 0)
+    {
+
+    }
+
+    public float hInput;
+    public float vInput;
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref hInput);
+        serializer.SerializeValue(ref vInput);
+    }
+}
+
+public class VehicleTimeStamp
+{
+    public VehicleTimeStamp() : this(0, new VehicleInput(), new VehicleState())
+    {
+
+    }
+
+    public VehicleTimeStamp(int frameNum, VehicleInput input, VehicleState state)
+    {
+        frameNumber = frameNum;
+
+        vehicleInput = input;
+        vehicleState = state;
+    }
+
+    public int frameNumber;
+
+    public VehicleInput vehicleInput;
+    public VehicleState vehicleState;
+}
+
 public class Vehicle : NetworkBehaviour
 {
-    private int frameNumber = 0;
+    private int clientFrameAheadAmount = 5;
 
+    private int currentFrameNumber = 0;
+    private int lastSyncedFrameNumber = 0;
 
+    private CircularBuffer<VehicleTimeStamp> vehicleTimeStamp = new(1024);
 
     public bool isPlayer = true;
 
@@ -61,10 +147,8 @@ public class Vehicle : NetworkBehaviour
     [HideInInspector]
     public float jumpStartTime = 0;
 
-    [HideInInspector]
     public float vInput;
 
-    [HideInInspector]
     public float hInput;
 
     [HideInInspector]
@@ -99,17 +183,17 @@ public class Vehicle : NetworkBehaviour
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
 
-    [Rpc(SendTo.Server)]
-    public void SetThrottleInputRpc(float input)
-    {
-        vInput = Mathf.Clamp(input, -1, 1);
-    }
-
-    [Rpc(SendTo.Server)]
-    public void SetSteerInputRpc(float input)
-    {
-        hInput = Mathf.Clamp(input, -1, 1);
-    }
+//     [Rpc(SendTo.Server)]
+//     public void SetThrottleInputRpc(float input)
+//     {
+//         vInput = Mathf.Clamp(input, -1, 1);
+//     }
+// 
+//     [Rpc(SendTo.Server)]
+//     public void SetSteerInputRpc(float input)
+//     {
+//         hInput = Mathf.Clamp(input, -1, 1);
+//     }
 
     public void EndRace()
     {
@@ -364,9 +448,9 @@ public class Vehicle : NetworkBehaviour
             gameObject.AddComponent<PlayerInput>();
         }
 
-        if (!IsServer)
+        if (!IsHost)
         {
-
+            currentFrameNumber = clientFrameAheadAmount;
         }
     }
 
@@ -394,6 +478,9 @@ public class Vehicle : NetworkBehaviour
     
     public void StepVehicleMovement()
     {
+        vehicleBox.transform.position = vehicleProxy.position;
+        Physics.SyncTransforms();
+
         forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? vehicleProxy.velocity.magnitude : -vehicleProxy.velocity.magnitude;
         
         Gravity();
@@ -443,7 +530,7 @@ public class Vehicle : NetworkBehaviour
             //float t = GetContactSurfaceLateralFriction();
 
             float traction = Mathf.Clamp01(tractionCurve.Evaluate(slipingSpeedRatio));
-            Debug.Log("slip:" + slipingSpeedRatio + "    traction:" + traction);
+            //Debug.Log("slip:" + slipingSpeedRatio + "    traction:" + traction);
 
             vehicleProxy.AddForce(-slipingSpeed * traction * vehicleBox.transform.right, ForceMode.VelocityChange);
 
@@ -452,19 +539,90 @@ public class Vehicle : NetworkBehaviour
         vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
     }
 
+    VehicleState MakeVehicleState()
+    {
+        return new VehicleState(
+            vehicleProxy.position,
+            vehicleProxy.rotation,
+            vehicleProxy.velocity,
+            vehicleProxy.angularVelocity,
+            vehicleBox.transform.position,
+            vehicleBox.transform.rotation
+            );
+    }
+
+    [Rpc(SendTo.NotServer)]
+    public void UpdateClientStateRpc(int frameNumber, VehicleState state)
+    {
+
+    }
+
+    [Rpc(SendTo.Server)]
+    public void UpdateServerInputRpc(int frameNumber, VehicleInput input)
+    {
+        VehicleTimeStamp stamp = new VehicleTimeStamp();
+        stamp.frameNumber = frameNumber;
+        stamp.vehicleInput = input;
+
+        vehicleTimeStamp.Add(stamp, frameNumber);
+    }
+
+    public void UpdateVehicleInput(VehicleInput input)
+    {
+        hInput = input.hInput;
+        vInput = input.vInput;
+    }
+
     private void FixedUpdate()
     {
-        UpdateLapPathIndex();
-        distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
+        if (IsHost)
+        {            
+            if(!IsOwner)
+            {
+                VehicleInput input = vehicleTimeStamp.Get(lastSyncedFrameNumber).vehicleInput;
 
-        vehicleBox.transform.position = vehicleProxy.position;
-        Physics.SyncTransforms();
+                hInput = input.hInput;
+                vInput = input.vInput;
+            }
 
-        if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
-        {
-            return;
+            StepVehicleMovement();
+            UpdateClientStateRpc(lastSyncedFrameNumber, MakeVehicleState());
+
+            lastSyncedFrameNumber++;
         }
 
-        StepVehicleMovement();
+        else
+        {
+            //check for error
+
+            VehicleInput vehicleInput = new(hInput, vInput);
+            vehicleTimeStamp.Get(currentFrameNumber).vehicleInput = vehicleInput;
+            UpdateServerInputRpc(currentFrameNumber, vehicleInput);
+
+            currentFrameNumber++;
+
+//            Physics.simulationMode = SimulationMode.Script;
+
+//             do
+//             {
+//                 Physics.Simulate(Time.fixedDeltaTime);
+// 
+//                 currentFrameNumber++;
+//             }
+//             while (currentFrameNumber < lastSyncedFrameNumber + clientFrameAheadAmount);
+        }
+
+
+
+
+//         UpdateLapPathIndex();
+//         distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
+
+//         if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
+//         {
+//             return;
+//         }
+
+
     }
 }
