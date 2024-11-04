@@ -5,9 +5,9 @@ using UnityEngine;
 public class CircularBuffer<T> where T : new()
 {
     T[] buffer;
-    int bufferSize;
+    uint bufferSize;
 
-    public CircularBuffer(int bufferSize)
+    public CircularBuffer(uint bufferSize)
     {
         this.bufferSize = bufferSize;
         buffer = new T[bufferSize];
@@ -18,7 +18,7 @@ public class CircularBuffer<T> where T : new()
         }
     }
 
-    public void Add(T item, int index) => buffer[index % bufferSize] = item;
-    public ref T Get(int index) => ref buffer[index % bufferSize];
+    public void Add(T item, uint index) => buffer[index % bufferSize] = item;
+    public ref T Get(uint index) => ref buffer[index % bufferSize];
     public void Clear() => buffer = new T[bufferSize];
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class SceneManager : NetworkBehaviour
 {
@@ -32,6 +33,13 @@ public class SceneManager : NetworkBehaviour
     public bool raceStarted = false;
 
     public GameObject vehiclePrefab;
+
+    public bool Desynced = false;
+
+    public uint currentFrame = 0;
+    public uint lastSyncedFrame = 0;
+
+    public uint frameAheadTaget = 5;
 
     // ----------------------------------------
 
@@ -145,8 +153,19 @@ public class SceneManager : NetworkBehaviour
 
     }
 
+    public void MarkDesyncAtFrame(uint frame)
+    {
+        Desynced = true;
+        lastSyncedFrame = frame;
+    }
+
     private void Init()
     {
+        if (!IsHost)
+        {
+            currentFrame = frameAheadTaget;
+        }
+
         Application.targetFrameRate = 61;
         //Time.fixedDeltaTime = 1.0f / 30.0f;
 
@@ -176,5 +195,112 @@ public class SceneManager : NetworkBehaviour
             UpdateVehiclesPosition();
         }
 
+    }
+
+    public void ServerUpdate()
+    {
+        foreach (var vehicle in allVehicles)
+        {
+            VehicleInput currentInput;
+            if (vehicle.IsOwner)
+            {
+                currentInput = new VehicleInput(vehicle.hInput, vehicle.vInput);
+                vehicle.vehicleTimeStamp.Get(currentFrame).vehicleInput = currentInput;
+                vehicle.UpdateInputRpc(currentFrame, currentInput);
+            }
+            else
+            {
+                currentInput = vehicle.TryGetRemoteInputForFrame(currentFrame);
+            }
+
+            vehicle.UpdateVehicleInput(currentInput);
+
+            vehicle.StepVehicleMovement();
+        }
+        
+        Physics.Simulate(Time.fixedDeltaTime);
+
+        foreach (var vehicle in allVehicles)
+        {
+            vehicle.UpdateClientStateRpc(currentFrame, vehicle.MakeVehicleState());
+        }
+
+        currentFrame++;
+    }
+
+    public void RollbackToFrame(uint frame)
+    {
+        foreach(var vehicle in allVehicles)
+        {
+            vehicle.UpdateVehicleToState(vehicle.vehicleTimeStamp.Get(frame).vehicleState);
+        }
+    }
+
+    public void ClientUpdate()
+    {
+        foreach (var vehicle in allVehicles)
+        {
+            if (vehicle.IsOwner)
+            {
+                VehicleInput currentInput = new VehicleInput(vehicle.hInput, vehicle.vInput);
+                vehicle.vehicleTimeStamp.Get(currentFrame).vehicleInput = currentInput;
+                vehicle.UpdateInputRpc(currentFrame, currentInput);
+            }
+        }
+
+        //TODO: ahead update
+
+        if (Desynced)
+        {
+            RollbackToFrame(lastSyncedFrame);
+
+            for (uint i = lastSyncedFrame + 1; i < currentFrame; i++)
+            {
+                foreach (var vehicle in allVehicles)
+                {
+                    VehicleInput input = vehicle.vehicleTimeStamp.Get(i).vehicleInput;
+
+                    vehicle.UpdateVehicleInput(input);
+                    vehicle.StepVehicleMovement();
+                }
+
+                Physics.Simulate(Time.fixedDeltaTime);
+
+                foreach (var vehicle in allVehicles)
+                {
+                    vehicle.vehicleTimeStamp.Get(i).vehicleState = vehicle.MakeVehicleState();
+                }
+            }
+        }
+
+        foreach (var vehicle in allVehicles)
+        {
+            VehicleInput input = vehicle.TryGetRemoteInputForFrame(currentFrame);
+
+            vehicle.UpdateVehicleInput(input);
+            vehicle.StepVehicleMovement();
+        }
+
+        Physics.Simulate(Time.fixedDeltaTime);
+
+        foreach (var vehicle in allVehicles)
+        {
+            vehicle.vehicleTimeStamp.Get(currentFrame).vehicleState = vehicle.MakeVehicleState();
+        }
+
+        currentFrame++;
+    }
+
+    private void FixedUpdate()
+    {
+        if (IsHost)
+        {
+            ServerUpdate();
+        }
+
+        else
+        {
+            ClientUpdate();
+        }
     }
 }

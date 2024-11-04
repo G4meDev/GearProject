@@ -91,12 +91,12 @@ public class VehicleTimeStamp
 
 public class Vehicle : NetworkBehaviour
 {
-    private int clientFrameAheadAmount = 7;
+    private uint clientFrameAheadAmount = 5;
 
-    private int currentFrameNumber = 0;
-    private int lastSyncedFrameNumber = 0;
+    private uint currentFrameNumber = 0;
+    private uint lastSyncedFrameNumber = 0;
 
-    private CircularBuffer<VehicleTimeStamp> vehicleTimeStamp = new(1024);
+    public CircularBuffer<VehicleTimeStamp> vehicleTimeStamp = new(1024);
 
     public GameObject serverRepObject;
 
@@ -545,7 +545,7 @@ public class Vehicle : NetworkBehaviour
         Physics.SyncTransforms();
     }
 
-    VehicleState MakeVehicleState()
+    public VehicleState MakeVehicleState()
     {
         return new VehicleState(
             vehicleProxy.position,
@@ -572,7 +572,7 @@ public class Vehicle : NetworkBehaviour
     private float pos_error_treshold = 0.5f;
     private float rot_error_treshold = 30.0f;
 
-    int lastRecivedInputFrame = 0;
+    uint lastRecivedInputFrame = 0;
 
     public bool StatesInSync(VehicleState state1, VehicleState state2)
     {
@@ -593,7 +593,7 @@ public class Vehicle : NetworkBehaviour
     }
 
     [Rpc(SendTo.NotServer)]
-    public void UpdateClientStateRpc(int frameNumber, VehicleState state)
+    public void UpdateClientStateRpc(uint frameNumber, VehicleState state)
     {
         serverRepObject.transform.position = state.vehicleProxy_Position;
         serverRepObject.transform.rotation = state.vehicleBox_Rotation;
@@ -602,6 +602,7 @@ public class Vehicle : NetworkBehaviour
 
         if(!Synced)
         {
+            SceneManager.Get().MarkDesyncAtFrame(frameNumber);
             Desync = true;
 
             lastSyncedFrameNumber = frameNumber;
@@ -609,8 +610,8 @@ public class Vehicle : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.NotOwner)]
-    public void UpdateInputRpc(int frameNumber, VehicleInput input)
+    [Rpc(SendTo.ClientsAndHost)]
+    public void UpdateInputRpc(uint frameNumber, VehicleInput input)
     {
         vehicleTimeStamp.Get(frameNumber).vehicleInput = input;
         lastRecivedInputFrame = frameNumber;
@@ -622,7 +623,7 @@ public class Vehicle : NetworkBehaviour
         vInput = input.vInput;
     }
 
-    public VehicleInput TryGetRemoteInputForFrame(int frame)
+    public VehicleInput TryGetRemoteInputForFrame(uint frame)
     {
         if (frame <= lastRecivedInputFrame)
         {
@@ -637,12 +638,18 @@ public class Vehicle : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        //Debug.Log("client_" + OwnerClientId + " updating frame " + currentFrameNumber);
-
         if (UnityEngine.Input.GetKey(KeyCode.E))
         {
             vehicleProxy.position = Vector3.zero;
         }
+
+        return;
+
+        if (IsOwnedByServer)
+            return;
+
+        //Debug.Log("client_" + OwnerClientId + " updating frame " + currentFrameNumber);
+
 
         VehicleInput currentInput;
         if(IsOwner)
@@ -669,14 +676,19 @@ public class Vehicle : NetworkBehaviour
         }
 
         else
-        {            
-            if(Desync)
+        {
+            ulong rtt = NetworkManager.NetworkConfig.NetworkTransport.GetCurrentRtt(NetworkManager.ServerClientId);
+            int ahead = 1 + Mathf.CeilToInt(rtt / (1/Time.fixedDeltaTime) * 2);
+
+            Debug.Log(ahead);
+
+            if (Desync)
             {
                 Desync = false;
 
                 UpdateVehicleToState(vehicleTimeStamp.Get(lastSyncedFrameNumber).vehicleState);
 
-                for(int i = lastSyncedFrameNumber + 1; i < currentFrameNumber; i++)
+                for(uint i = lastSyncedFrameNumber + 1; i < currentFrameNumber; i++)
                 {
                     VehicleInput input = vehicleTimeStamp.Get(i).vehicleInput;
 
