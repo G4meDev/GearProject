@@ -36,8 +36,8 @@ public class PlayerInput : MonoBehaviour
 
 #else
 
-        vehicle.SetSteerInputRpc(screenInput.data.hInput);
-        vehicle.SetThrottleInputRpc(screenInput.data.vInput);
+        vehicle.hInput = screenInput.data.hInput;
+        vehicle.vInput = screenInput.data.vInput;
 #endif
     }
 }
