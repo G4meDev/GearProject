@@ -91,12 +91,7 @@ public class VehicleTimeStamp
 
 public class Vehicle : NetworkBehaviour
 {
-    private uint clientFrameAheadAmount = 5;
-
-    private uint currentFrameNumber = 0;
-    private uint lastSyncedFrameNumber = 0;
-
-    public CircularBuffer<VehicleTimeStamp> vehicleTimeStamp = new(1024);
+    public CircularBuffer<VehicleTimeStamp> vehicleTimeStamp = new(128);
 
     public GameObject serverRepObject;
 
@@ -449,11 +444,6 @@ public class Vehicle : NetworkBehaviour
 
             gameObject.AddComponent<PlayerInput>();
         }
-
-        if (!IsHost)
-        {
-            currentFrameNumber = clientFrameAheadAmount;
-        }
     }
 
     public override void OnNetworkSpawn()
@@ -567,8 +557,6 @@ public class Vehicle : NetworkBehaviour
         Physics.SyncTransforms();
     }
 
-    public bool Desync = false;
-
     private float pos_error_treshold = 0.5f;
     private float rot_error_treshold = 30.0f;
 
@@ -603,10 +591,8 @@ public class Vehicle : NetworkBehaviour
         if(!Synced)
         {
             SceneManager.Get().MarkDesyncAtFrame(frameNumber);
-            Desync = true;
 
-            lastSyncedFrameNumber = frameNumber;
-            vehicleTimeStamp.Get(lastSyncedFrameNumber).vehicleState = state;
+            vehicleTimeStamp.Get(frameNumber).vehicleState = state;
         }
     }
 
@@ -642,74 +628,6 @@ public class Vehicle : NetworkBehaviour
         {
             vehicleProxy.position = Vector3.zero;
         }
-
-        return;
-
-        if (IsOwnedByServer)
-            return;
-
-        //Debug.Log("client_" + OwnerClientId + " updating frame " + currentFrameNumber);
-
-
-        VehicleInput currentInput;
-        if(IsOwner)
-        {
-            currentInput = new VehicleInput(hInput, vInput);
-            vehicleTimeStamp.Get(currentFrameNumber).vehicleInput = currentInput;
-            UpdateInputRpc(currentFrameNumber, currentInput);
-        }
-        else
-        {
-            currentInput = TryGetRemoteInputForFrame(currentFrameNumber);
-        }
-
-        if (IsHost)
-        {
-            UpdateVehicleInput(currentInput);
-
-            StepVehicleMovement();
-            Physics.Simulate(Time.fixedDeltaTime);
-
-            UpdateClientStateRpc(currentFrameNumber, MakeVehicleState());
-
-            currentFrameNumber++;
-        }
-
-        else
-        {
-            ulong rtt = NetworkManager.NetworkConfig.NetworkTransport.GetCurrentRtt(NetworkManager.ServerClientId);
-            int ahead = 1 + Mathf.CeilToInt(rtt / (1/Time.fixedDeltaTime) * 2);
-
-            Debug.Log(ahead);
-
-            if (Desync)
-            {
-                Desync = false;
-
-                UpdateVehicleToState(vehicleTimeStamp.Get(lastSyncedFrameNumber).vehicleState);
-
-                for(uint i = lastSyncedFrameNumber + 1; i < currentFrameNumber; i++)
-                {
-                    VehicleInput input = vehicleTimeStamp.Get(i).vehicleInput;
-
-                    UpdateVehicleInput(input);
-                    StepVehicleMovement();
-                    Physics.Simulate(Time.fixedDeltaTime);
-
-                    vehicleTimeStamp.Get(i).vehicleState = MakeVehicleState();
-                }
-            }
-
-            UpdateVehicleInput(currentInput);
-            StepVehicleMovement();
-            Physics.Simulate(Time.fixedDeltaTime);
-
-            vehicleTimeStamp.Get(currentFrameNumber).vehicleState = MakeVehicleState();
-
-            currentFrameNumber++;
-        }
-
-
 
 
 //         UpdateLapPathIndex();

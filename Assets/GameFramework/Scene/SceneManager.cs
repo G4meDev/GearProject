@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Windows;
 
 public class SceneManager : NetworkBehaviour
 {
@@ -161,11 +160,6 @@ public class SceneManager : NetworkBehaviour
 
     private void Init()
     {
-        if (!IsHost)
-        {
-            currentFrame = frameAheadTaget;
-        }
-
         Application.targetFrameRate = 61;
         //Time.fixedDeltaTime = 1.0f / 30.0f;
 
@@ -224,46 +218,45 @@ public class SceneManager : NetworkBehaviour
         }
     }
 
+    public void UpdateFrameAhead()
+    {
+        ulong rtt = NetworkManager.NetworkConfig.NetworkTransport.GetCurrentRtt(NetworkManager.ServerClientId);
+        frameAheadTaget = (uint)(1 + Mathf.CeilToInt(rtt / (1 / Time.fixedDeltaTime) * 2));
+    }
+
     public void ClientUpdate()
     {
-        //TODO: ahead update
+        UpdateFrameAhead();
+
+        uint startFrame = currentFrame;
+        uint endFrame = currentFrame;
 
         if (Desynced)
         {
+            Desynced = false;
             RollbackToFrame(lastSyncedFrame);
 
-            for (uint i = lastSyncedFrame + 1; i < currentFrame; i++)
+            startFrame = lastSyncedFrame + 1;
+            endFrame = startFrame + frameAheadTaget;
+            currentFrame = endFrame;
+        }
+
+        for (uint i = startFrame; i <= endFrame; i++)
+        {
+            foreach (var vehicle in allVehicles)
             {
-                foreach (var vehicle in allVehicles)
-                {
-                    VehicleInput input = vehicle.TryGetRemoteInputForFrame(i);
+                VehicleInput input = vehicle.TryGetRemoteInputForFrame(i);
 
-                    vehicle.UpdateVehicleInput(input);
-                    vehicle.StepVehicleMovement();
-                }
-
-                Physics.Simulate(Time.fixedDeltaTime);
-
-                foreach (var vehicle in allVehicles)
-                {
-                    vehicle.vehicleTimeStamp.Get(i).vehicleState = vehicle.MakeVehicleState();
-                }
+                vehicle.UpdateVehicleInput(input);
+                vehicle.StepVehicleMovement();
             }
-        }
 
-        foreach (var vehicle in allVehicles)
-        {
-            VehicleInput input = vehicle.TryGetRemoteInputForFrame(currentFrame);
+            Physics.Simulate(Time.fixedDeltaTime);
 
-            vehicle.UpdateVehicleInput(input);
-            vehicle.StepVehicleMovement();
-        }
-
-        Physics.Simulate(Time.fixedDeltaTime);
-
-        foreach (var vehicle in allVehicles)
-        {
-            vehicle.vehicleTimeStamp.Get(currentFrame).vehicleState = vehicle.MakeVehicleState();
+            foreach (var vehicle in allVehicles)
+            {
+                vehicle.vehicleTimeStamp.Get(i).vehicleState = vehicle.MakeVehicleState();
+            }
         }
 
         currentFrame++;
