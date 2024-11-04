@@ -145,7 +145,7 @@ public class MainMenu : MonoBehaviour
         ShowThrubber();
     }
 
-    public void OnServerFound(string serverName, string address)
+    public void OnServerFound(string serverName, string address, int port)
     {
         for (int i = 0; i < hostButtonsParent.childCount; i++)
         {
@@ -156,12 +156,12 @@ public class MainMenu : MonoBehaviour
         }
 
         HostButton button = Instantiate(hostButtonPrefab, hostButtonsParent);
-        button.Configure(serverName, address);
+        button.Configure(serverName, address, port);
     }
 
-    public void OnHostSelected(string ip)
+    public void OnHostSelected(string ip, int port)
     {
-        if (sessionManager.StartJoin(ip))
+        if (sessionManager.StartJoin(ip, port))
         {
             OpenLobbyList(false);
         }
