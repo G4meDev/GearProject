@@ -572,7 +572,7 @@ public class Vehicle : NetworkBehaviour
     private float pos_error_treshold = 0.5f;
     private float rot_error_treshold = 30.0f;
 
-    uint lastRecivedInputFrame = 0;
+    public uint lastRecivedInputFrame = 0;
 
     public bool StatesInSync(VehicleState state1, VehicleState state2)
     {
@@ -610,7 +610,7 @@ public class Vehicle : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
+    [Rpc(SendTo.NotOwner)]
     public void UpdateInputRpc(uint frameNumber, VehicleInput input)
     {
         vehicleTimeStamp.Get(frameNumber).vehicleInput = input;

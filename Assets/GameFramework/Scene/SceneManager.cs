@@ -39,7 +39,7 @@ public class SceneManager : NetworkBehaviour
     public uint currentFrame = 0;
     public uint lastSyncedFrame = 0;
 
-    public uint frameAheadTaget = 5;
+    public uint frameAheadTaget = 7;
 
     // ----------------------------------------
 
@@ -201,20 +201,8 @@ public class SceneManager : NetworkBehaviour
     {
         foreach (var vehicle in allVehicles)
         {
-            VehicleInput currentInput;
-            if (vehicle.IsOwner)
-            {
-                currentInput = new VehicleInput(vehicle.hInput, vehicle.vInput);
-                vehicle.vehicleTimeStamp.Get(currentFrame).vehicleInput = currentInput;
-                vehicle.UpdateInputRpc(currentFrame, currentInput);
-            }
-            else
-            {
-                currentInput = vehicle.TryGetRemoteInputForFrame(currentFrame);
-            }
-
+            VehicleInput currentInput = vehicle.TryGetRemoteInputForFrame(currentFrame);
             vehicle.UpdateVehicleInput(currentInput);
-
             vehicle.StepVehicleMovement();
         }
         
@@ -238,16 +226,6 @@ public class SceneManager : NetworkBehaviour
 
     public void ClientUpdate()
     {
-        foreach (var vehicle in allVehicles)
-        {
-            if (vehicle.IsOwner)
-            {
-                VehicleInput currentInput = new VehicleInput(vehicle.hInput, vehicle.vInput);
-                vehicle.vehicleTimeStamp.Get(currentFrame).vehicleInput = currentInput;
-                vehicle.UpdateInputRpc(currentFrame, currentInput);
-            }
-        }
-
         //TODO: ahead update
 
         if (Desynced)
@@ -258,7 +236,7 @@ public class SceneManager : NetworkBehaviour
             {
                 foreach (var vehicle in allVehicles)
                 {
-                    VehicleInput input = vehicle.vehicleTimeStamp.Get(i).vehicleInput;
+                    VehicleInput input = vehicle.TryGetRemoteInputForFrame(i);
 
                     vehicle.UpdateVehicleInput(input);
                     vehicle.StepVehicleMovement();
@@ -293,6 +271,17 @@ public class SceneManager : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        foreach(var vehicle in allVehicles)
+        {
+            if (vehicle.IsOwner)
+            {
+                VehicleInput currentInput = new VehicleInput(vehicle.hInput, vehicle.vInput);
+                vehicle.vehicleTimeStamp.Get(currentFrame).vehicleInput = currentInput;
+                vehicle.lastRecivedInputFrame = currentFrame;
+                vehicle.UpdateInputRpc(currentFrame, currentInput);
+            }
+        }
+
         if (IsHost)
         {
             ServerUpdate();
