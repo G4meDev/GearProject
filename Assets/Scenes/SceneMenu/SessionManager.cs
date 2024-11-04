@@ -168,13 +168,13 @@ public class SessionManager : NetworkBehaviour
         NetworkManager.Shutdown();
     }
 
-    public bool StartJoin(string ip)
+    public bool StartJoin(string ip, int port)
     {
         netState = NetState.Client;
 
         Debug.Log("join" + ip);
 
-        NetworkManager.GetComponent<UnityTransport>().SetConnectionData(ip, 7777);
+        NetworkManager.GetComponent<UnityTransport>().SetConnectionData(ip, (ushort)port);
 
         return NetworkManager.StartClient();
     }
