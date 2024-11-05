@@ -11114,7 +11114,7 @@ MonoBehaviour:
     type: 3}
   position: {fileID: 0}
   countDown: {fileID: 385936638}
-  lapCount: 3
+  lapCount: 1
   spawns:
   - {fileID: 457060628}
   - {fileID: 173751309}

@@ -9,6 +9,17 @@ public class NetPlayer : NetworkBehaviour
 
     SessionManager sessionManager;
 
+    [Rpc(SendTo.NotServer)]
+    public void OnEndedRaceRpc(int position)
+    {
+        if (IsOwner)
+        {
+            Debug.Log("i finished at " + position);
+        }
+
+
+    }
+
     public override void OnDestroy()
     {
         if (IsHost)

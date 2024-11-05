@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -171,25 +172,21 @@ public class Vehicle : NetworkBehaviour
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
 
-//     [Rpc(SendTo.Server)]
-//     public void SetThrottleInputRpc(float input)
-//     {
-//         vInput = Mathf.Clamp(input, -1, 1);
-//     }
-// 
-//     [Rpc(SendTo.Server)]
-//     public void SetSteerInputRpc(float input)
-//     {
-//         hInput = Mathf.Clamp(input, -1, 1);
-//     }
+    NetPlayer GetOwnerNetPlayer()
+    {
+        return NetworkManager.ConnectedClients.GetValueOrDefault(OwnerClientId).PlayerObject.GetComponent<NetPlayer>();
+    }
 
     public void EndRace()
     {
         Debug.Log(name + "    End Race!");
 
-        if(IsHost)
+        if(IsServer)
         {
-            //NetworkManager.Shutdown();
+            NetPlayer netPlayer = GetOwnerNetPlayer();
+            netPlayer.OnEndedRaceRpc(position);
+
+            NetworkObject.Despawn();
         }
     }
 
@@ -613,7 +610,7 @@ public class Vehicle : NetworkBehaviour
             return vehicleTimeStamp.Get(frame).vehicleInput;
         }
 
-        if(!IsOwnedByServer)
+        if(IsServer)
             Debug.Log("cient_" + OwnerClientId + " is starving input. last received input on frame " + lastRecivedInputFrame + " requested input for frame " + frame);
 
         return vehicleTimeStamp.Get(lastRecivedInputFrame).vehicleInput;
