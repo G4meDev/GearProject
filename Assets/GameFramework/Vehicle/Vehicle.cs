@@ -425,8 +425,6 @@ public class Vehicle : NetworkBehaviour
 
         if (isPlayer && IsOwner)
         {
-            SceneManager.Get().vehicleCamera.vehicle = this;
-
             gameObject.AddComponent<PlayerInput>();
         }
     }

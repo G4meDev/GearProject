@@ -108,6 +108,9 @@ public class SceneManager : NetworkBehaviour
     public void OnLocalPlayerChanged(Vehicle vehicle)
     {
         localVehicle = vehicle;
+
+        vehicleCamera.vehicle = vehicle;
+        vehicleCamera.gameObject.SetActive(true);
     }
 
     public void RegisterAI(AIController controller)
@@ -171,6 +174,7 @@ public class SceneManager : NetworkBehaviour
         position = Instantiate(positionPrefab).GetComponent<UI_Position>();
 
         vehicleCamera = Instantiate(vehicleCameraPrefab).GetComponent<VehicleCamera>();
+        vehicleCamera.gameObject.SetActive(false);
         screenInput.OnCameraChanged(vehicleCamera.camera);
     }
 
