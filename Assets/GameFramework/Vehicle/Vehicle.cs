@@ -611,7 +611,7 @@ public class Vehicle : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if(IsHost && Input.GetKey(KeyCode.E))
+        if(IsOwnedByServer && Input.GetKey(KeyCode.E))
         {
             EndRace();
         }

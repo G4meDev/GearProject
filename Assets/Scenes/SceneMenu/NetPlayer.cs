@@ -2,6 +2,12 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
+public enum NetPlayerState
+{
+    Lobby,
+    Spectator
+}
+
 public class NetPlayer : NetworkBehaviour
 {
     public SpectatorView spectatorViewPrefab;
@@ -12,19 +18,17 @@ public class NetPlayer : NetworkBehaviour
 
     SessionManager sessionManager;
 
-    public void GoSpectator()
-    {
-
-    }
+    public NetPlayerState netPlayerState = NetPlayerState.Lobby;
 
     [Rpc(SendTo.ClientsAndHost)]
     public void OnEndedRaceRpc(int position, Vector3 endPos, Quaternion endRot)
     {
-        if (IsOwner)
+        if (IsOwner && netPlayerState != NetPlayerState.Spectator)
         {
             Debug.Log("i finished at " + position);
 
-            GoSpectator();
+            netPlayerState = NetPlayerState.Spectator;
+            SceneManager.Get().GoSpectator();
         }
 
 

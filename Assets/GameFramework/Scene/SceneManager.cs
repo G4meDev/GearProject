@@ -29,6 +29,10 @@ public class SceneManager : NetworkBehaviour
     public VehicleCamera vehicleCamera;
     public VehicleCamera vehicleCameraPrefab;
 
+    [HideInInspector]
+    public SpectatorView spectatorView;
+    public SpectatorView spectatorViewPrefab;
+
     public CountDown countDown;
 
     public int lapCount = 3;
@@ -63,6 +67,12 @@ public class SceneManager : NetworkBehaviour
         if (instance == null)
             instance = GameObject.FindObjectOfType<SceneManager>();
         return instance;
+    }
+
+    public void GoSpectator()
+    {
+        spectatorView = Instantiate(spectatorViewPrefab).GetComponent<SpectatorView>();
+        spectatorView.SetupCamera(vehicleCamera.camera);
     }
 
     public void PrepareRace()

@@ -11104,18 +11104,21 @@ MonoBehaviour:
   localVehicle: {fileID: 0}
   aiControllers: []
   allVehicles: []
+  screenInput: {fileID: 0}
   screenInputPrefab: {fileID: 9222298944393228262, guid: 2ac4cd5c3094ed14ab57ba0430012a99,
     type: 3}
-  screenInput: {fileID: 0}
+  lapCounter: {fileID: 0}
   lapCounterPrefab: {fileID: 5694973237187414640, guid: eeaa05658bc682046842b6ceb72cb9d7,
     type: 3}
-  lapCounter: {fileID: 0}
+  position: {fileID: 0}
   positionPrefab: {fileID: 5694973237187414640, guid: d380aa366dffea241bb41d0ed0b52aa9,
     type: 3}
-  position: {fileID: 0}
+  vehicleCamera: {fileID: 0}
   vehicleCameraPrefab: {fileID: 4614893276600626739, guid: b4a35a187d8d354418655de184911f03,
     type: 3}
-  vehicleCamera: {fileID: 0}
+  spectatorView: {fileID: 0}
+  spectatorViewPrefab: {fileID: 3461174953514124791, guid: 5c6df1fce46af9642a5fa6d504536149,
+    type: 3}
   countDown: {fileID: 385936638}
   lapCount: 1
   spawns:
