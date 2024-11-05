@@ -621,19 +621,13 @@ public class Vehicle : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (UnityEngine.Input.GetKey(KeyCode.E))
-        {
-            vehicleProxy.position = Vector3.zero;
-        }
+         UpdateLapPathIndex();
+         distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
 
-
-//         UpdateLapPathIndex();
-//         distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
-
-//         if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
-//         {
-//             return;
-//         }
+         if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
+         {
+             return;
+         }
 
 
     }
