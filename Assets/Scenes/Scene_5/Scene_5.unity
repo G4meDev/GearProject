@@ -11113,6 +11113,9 @@ MonoBehaviour:
   positionPrefab: {fileID: 5694973237187414640, guid: d380aa366dffea241bb41d0ed0b52aa9,
     type: 3}
   position: {fileID: 0}
+  vehicleCameraPrefab: {fileID: 4614893276600626739, guid: b4a35a187d8d354418655de184911f03,
+    type: 3}
+  vehicleCamera: {fileID: 0}
   countDown: {fileID: 385936638}
   lapCount: 1
   spawns:

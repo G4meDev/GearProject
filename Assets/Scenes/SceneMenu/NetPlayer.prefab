@@ -66,6 +66,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75331339297eee649a0354c7c35e7806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spectatorViewPrefab: {fileID: 3461174953514124791, guid: 5c6df1fce46af9642a5fa6d504536149,
+    type: 3}
+  spectatorView: {fileID: 0}
   playerName:
     m_InternalValue:
       utf8LengthInBytes: 0

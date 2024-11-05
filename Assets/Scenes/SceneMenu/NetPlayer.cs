@@ -4,17 +4,27 @@ using UnityEngine;
 
 public class NetPlayer : NetworkBehaviour
 {
+    public SpectatorView spectatorViewPrefab;
+    public SpectatorView spectatorView;
+
     public NetworkVariable<FixedString64Bytes> playerName = new NetworkVariable<FixedString64Bytes>();
     public Vehicle vehicle;
 
     SessionManager sessionManager;
 
-    [Rpc(SendTo.NotServer)]
-    public void OnEndedRaceRpc(int position)
+    public void GoSpectator()
+    {
+
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void OnEndedRaceRpc(int position, Vector3 endPos, Quaternion endRot)
     {
         if (IsOwner)
         {
             Debug.Log("i finished at " + position);
+
+            GoSpectator();
         }
 
 

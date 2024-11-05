@@ -13,15 +13,21 @@ public class SceneManager : NetworkBehaviour
 
     public List<Vehicle> allVehicles = new List<Vehicle>();
 
-
-    public GameObject screenInputPrefab;
+    [HideInInspector]
     public UI_ScreenInput screenInput;
+    public GameObject screenInputPrefab;
 
-    public GameObject lapCounterPrefab;
+    [HideInInspector]
     public UI_LapCounter lapCounter;
+    public GameObject lapCounterPrefab;
 
-    public GameObject positionPrefab;
+    [HideInInspector]
     public UI_Position position;
+    public GameObject positionPrefab;
+
+    [HideInInspector]
+    public VehicleCamera vehicleCamera;
+    public VehicleCamera vehicleCameraPrefab;
 
     public CountDown countDown;
 
@@ -49,7 +55,7 @@ public class SceneManager : NetworkBehaviour
         GUIStyle label2 = new GUIStyle(GUI.skin.label);
         label2.fontSize = 72;
 
-        GUI.Label(new Rect(5, Screen.height - 450, 300, 150), rtt.ToString(), label2);
+        GUI.Label(new Rect(5, Screen.height - 450, 300, 150), "ping: " + rtt.ToString(), label2);
     }
 
     public static SceneManager Get()
@@ -76,7 +82,7 @@ public class SceneManager : NetworkBehaviour
                 GameObject vehicle = GameObject.Instantiate(vehiclePrefab, spawns[spawnCounter].transform.position, spawns[spawnCounter].transform.rotation);
                 netPlayer.vehicle = vehicle.GetComponent<Vehicle>();
                 netPlayer.vehicle.GetComponent<NetworkObject>().SpawnWithOwnership(client.ClientId);
-                
+
                 spawnCounter++;
             }
 
@@ -102,8 +108,6 @@ public class SceneManager : NetworkBehaviour
     public void OnLocalPlayerChanged(Vehicle vehicle)
     {
         localVehicle = vehicle;
-        screenInput.OnPlayerChanged();
-        lapCounter.UpdateLapCounter();
     }
 
     public void RegisterAI(AIController controller)
@@ -161,13 +165,13 @@ public class SceneManager : NetworkBehaviour
     private void Init()
     {
         Application.targetFrameRate = 61;
-        //Time.fixedDeltaTime = 1.0f / 30.0f;
 
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();
         position = Instantiate(positionPrefab).GetComponent<UI_Position>();
 
-        raceStarted = false;
+        vehicleCamera = Instantiate(vehicleCameraPrefab).GetComponent<VehicleCamera>();
+        screenInput.OnCameraChanged(vehicleCamera.camera);
     }
 
     void Start()

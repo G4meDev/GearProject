@@ -95,8 +95,6 @@ public class Vehicle : NetworkBehaviour
 
     public bool isPlayer = true;
 
-    public GameObject cameraPrefab;
-
     public Rigidbody vehicleProxy;
     public Rigidbody vehicleBox;
     public GameObject vehicleMesh;
@@ -183,9 +181,7 @@ public class Vehicle : NetworkBehaviour
 
         if(IsServer)
         {
-            NetPlayer netPlayer = GetOwnerNetPlayer();
-            netPlayer.OnEndedRaceRpc(position);
-
+            GetOwnerNetPlayer().OnEndedRaceRpc(position, vehicleBox.position, vehicleBox.rotation);
             NetworkObject.Despawn();
         }
     }
@@ -429,12 +425,7 @@ public class Vehicle : NetworkBehaviour
 
         if (isPlayer && IsOwner)
         {
-            if (cameraPrefab)
-            {
-                GameObject obj = Instantiate(cameraPrefab);
-                obj.transform.parent = transform;
-                obj.transform.position = transform.position;
-            }
+            SceneManager.Get().vehicleCamera.vehicle = this;
 
             gameObject.AddComponent<PlayerInput>();
         }
@@ -445,11 +436,15 @@ public class Vehicle : NetworkBehaviour
         Init();
 
         SceneManager.Get().RegisterVehicle(this);
+
+        base.OnNetworkSpawn();
     }
 
     public override void OnNetworkDespawn()
     {
         SceneManager.Get().UnregisterVehicle(this);
+
+        base.OnNetworkDespawn();
     }
 
     void Start()
@@ -618,6 +613,11 @@ public class Vehicle : NetworkBehaviour
 
     private void FixedUpdate()
     {
+        if(IsHost && Input.GetKey(KeyCode.E))
+        {
+            EndRace();
+        }
+
          UpdateLapPathIndex();
          distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
 
