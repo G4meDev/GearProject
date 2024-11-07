@@ -119,8 +119,6 @@ public class Vehicle : NetworkBehaviour
     public float speedModifierIntensity;
     public float speedModifierReserveTime;
 
-    public AnimationCurve tractionCurve;
-
     public AnimationCurve steerCurve;
     [HideInInspector]
     public float currentSteer;

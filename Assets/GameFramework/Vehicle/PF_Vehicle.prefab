@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2714219053422563872}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.386, y: -0.227, z: 0.453}
+  m_LocalPosition: {x: -0.386, y: 0.05, z: 0.453}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -54,7 +54,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.95
+      value: 0.55
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -62,50 +62,26 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
-      value: 0.3
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  torqueCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
+      time: 0.3
       value: 0.5
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.4000001
+      outSlope: -0.4000001
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.35
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.6
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      time: 0.5
+      value: 0.15
+      inSlope: -0.2857144
+      outSlope: -0.2857144
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.35
+      value: 0.1
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -115,13 +91,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  steerCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  effectedByEngine: 0
+  effectedByEngine: 1
   effectedBySteer: 1
   forceComOffset: 0
   onGround: 0
@@ -151,7 +121,7 @@ Transform:
   m_GameObject: {fileID: 3125401180679266113}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.386, y: -0.22699998, z: -0.453}
+  m_LocalPosition: {x: -0.386, y: 0.049999997, z: -0.453}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -179,7 +149,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.95
+      value: 0.55
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -187,62 +157,32 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
-      value: 0.3
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  torqueCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
+      time: 0.3
       value: 0.5
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.4000001
+      outSlope: -0.4000001
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.35
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.6
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      time: 0.5
+      value: 0.15
+      inSlope: -0.2857144
+      outSlope: -0.2857144
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.35
+      value: 0.1
       inSlope: 0
       outSlope: 0
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  steerCurve:
-    serializedVersion: 2
-    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -373,7 +313,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   avaliableTorque: 0
-  counterForceStr: 0.03
   maxSpeed: 20
   maxSpeedReverse: -10
   accel: 10
@@ -381,49 +320,33 @@ MonoBehaviour:
   rayDist: 1.2
   speedModifierIntensity: 0
   speedModifierReserveTime: 0
-  boostIntensity: 10
-  tractionCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.8
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.1
-      value: 0.05
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   steerCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 40
-      inSlope: -35
-      outSlope: -35
-      tangentMode: 34
+      value: 30
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 5
-      inSlope: -35
-      outSlope: -35
-      tangentMode: 34
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -431,20 +354,13 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   currentSteer: 0
-  steerVelocityFriction: 2
   forwardSpeed: 0
-  coyoteTime: 0.1
-  jumpDuration: 0.2
-  jumpStartTime: 0
   hInput: 0
   vInput: 0
   currentHInput: 0
   currentVInput: 0
   hInputRaiseRate: 0.06
   vInputRaiseRate: 0.06
-  steerValue: 0
-  aeroState: 0
-  airborneTime: 0
   antiGravityNode: {fileID: 0}
   lapPathNode: {fileID: 0}
   distanceFromStart: -1
@@ -642,8 +558,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.27428383, z: 1}
-  m_Center: {x: 0, y: 0.1826406, z: 0}
+  m_Size: {x: 1.0210956, y: 0.55185175, z: 1.6967341}
+  m_Center: {x: 0.009755538, y: 0.5090567, z: -0.014772782}
 --- !u!54 &2899090973253632067
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -697,7 +613,7 @@ Transform:
   m_GameObject: {fileID: 6434461705284186222}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.386, y: -0.22699998, z: 0.453}
+  m_LocalPosition: {x: 0.386, y: 0.049999997, z: 0.453}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -725,7 +641,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.95
+      value: 0.55
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -733,50 +649,26 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
-      value: 0.3
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  torqueCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
+      time: 0.3
       value: 0.5
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.4000001
+      outSlope: -0.4000001
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.35
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.6
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      time: 0.5
+      value: 0.15
+      inSlope: -0.2857144
+      outSlope: -0.2857144
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.35
+      value: 0.1
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -786,13 +678,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  steerCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  effectedByEngine: 0
+  effectedByEngine: 1
   effectedBySteer: 1
   forceComOffset: 0
   onGround: 0
@@ -822,7 +708,7 @@ Transform:
   m_GameObject: {fileID: 7319136585510926876}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.386, y: -0.22699998, z: -0.453}
+  m_LocalPosition: {x: 0.386, y: 0.049999997, z: -0.453}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -850,7 +736,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.95
+      value: 0.55
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -858,62 +744,32 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
-      value: 0.3
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  torqueCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
+      time: 0.3
       value: 0.5
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.4000001
+      outSlope: -0.4000001
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.35
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.6
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      time: 0.5
+      value: 0.15
+      inSlope: -0.2857144
+      outSlope: -0.2857144
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.35
+      value: 0.1
       inSlope: 0
       outSlope: 0
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  steerCurve:
-    serializedVersion: 2
-    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -947,7 +803,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.6471
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cf3fec9ad018ba84eb10d45abccc1a5e,
         type: 3}
@@ -1091,7 +947,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1769a89a97f3ea5409dcc82bdb814349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshOffset: {x: 0, y: -0.65, z: 0}
   lerpRate: 10
 --- !u!4 &2082113745696784758 stripped
 Transform:
