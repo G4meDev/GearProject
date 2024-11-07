@@ -80,7 +80,7 @@ public class AIController : MonoBehaviour
                 routePlanning.projectionData.crossTrackProjection.child.transform.position,
                 routePlanning.projectionData.crossTrackProjection.t);
 
-            temp = vehicle.vehicleBox.transform.InverseTransformPointUnscaled(crossTrackPos);
+            temp = vehicle.vehicleProxy.transform.InverseTransformPointUnscaled(crossTrackPos);
             crossTrackLocal = new Vector2(temp.x, temp.z);
 
             crossTrackScale = Mathf.Lerp(routePlanning.projectionData.crossTrackProjection.parent.transform.lossyScale.x,
@@ -93,7 +93,7 @@ public class AIController : MonoBehaviour
                 routePlanning.projectionData.Projection_1.child.transform.position,
                 routePlanning.projectionData.Projection_1.t);
 
-            temp = vehicle.vehicleBox.transform.InverseTransformPointUnscaled(projection_1_Pos);
+            temp = vehicle.vehicleProxy.transform.InverseTransformPointUnscaled(projection_1_Pos);
             p_1_Local = new Vector2(temp.x, temp.z);
 
             p_1_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_1.parent.transform.lossyScale.x,
@@ -106,7 +106,7 @@ public class AIController : MonoBehaviour
                 routePlanning.projectionData.Projection_2.child.transform.position,
                 routePlanning.projectionData.Projection_2.t);
 
-            temp = vehicle.vehicleBox.transform.InverseTransformPointUnscaled(projection_2_Pos);
+            temp = vehicle.vehicleProxy.transform.InverseTransformPointUnscaled(projection_2_Pos);
             p_2_Local = new Vector2(temp.x, temp.z);
 
             p_2_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_2.parent.transform.lossyScale.x,
@@ -119,7 +119,7 @@ public class AIController : MonoBehaviour
                 routePlanning.projectionData.Projection_3.child.transform.position,
                 routePlanning.projectionData.Projection_3.t);
 
-            temp = vehicle.vehicleBox.transform.InverseTransformPointUnscaled(projection_3_Pos);
+            temp = vehicle.vehicleProxy.transform.InverseTransformPointUnscaled(projection_3_Pos);
             p_3_Local = new Vector2(temp.x, temp.z);
 
             p_3_Scale = Mathf.Lerp(routePlanning.projectionData.Projection_3.parent.transform.lossyScale.x,

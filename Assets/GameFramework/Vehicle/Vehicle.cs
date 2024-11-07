@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 // @TODO: Develop jump
 
@@ -19,19 +20,15 @@ public class VehicleState : INetworkSerializable
     public Vector3 vehicleProxy_Velocity;
     public Vector3 vehicleProxy_AngularVelocity;
 
-    public Quaternion vehicleBox_Rotation;
-
-    public VehicleState(Vector3 proxy_pos, Quaternion proxy_rot, Vector3 proxy_velo, Vector3 proxy_angularVelo, Quaternion box_rot)
+    public VehicleState(Vector3 proxy_pos, Quaternion proxy_rot, Vector3 proxy_velo, Vector3 proxy_angularVelo)
     {
         vehicleProxy_Position = proxy_pos;
         vehicleProxy_Rotation = proxy_rot;
         vehicleProxy_Velocity = proxy_velo;
         vehicleProxy_AngularVelocity = proxy_angularVelo;
-
-        vehicleBox_Rotation = box_rot;
     }
 
-    public VehicleState() : this(Vector3.zero, Quaternion.identity, Vector3.zero, Vector3.zero, Quaternion.identity)
+    public VehicleState() : this(Vector3.zero, Quaternion.identity, Vector3.zero, Vector3.zero)
     {
 
     }
@@ -42,8 +39,6 @@ public class VehicleState : INetworkSerializable
         serializer.SerializeValue(ref vehicleProxy_Rotation);
         serializer.SerializeValue(ref vehicleProxy_Velocity);
         serializer.SerializeValue(ref vehicleProxy_AngularVelocity);
-
-        serializer.SerializeValue(ref vehicleBox_Rotation);
     }
 }
 
@@ -89,6 +84,8 @@ public class VehicleTimeStamp
 
 public class Vehicle : NetworkBehaviour
 {
+    public VehicleWheel[] wheels;
+
     public CircularBuffer<VehicleTimeStamp> vehicleTimeStamp = new(128);
 
     public GameObject serverRepObject;
@@ -96,7 +93,6 @@ public class Vehicle : NetworkBehaviour
     public bool isPlayer = true;
 
     public Rigidbody vehicleProxy;
-    public Rigidbody vehicleBox;
     public GameObject vehicleMesh;
 
     public int position = 1;
@@ -104,60 +100,44 @@ public class Vehicle : NetworkBehaviour
     public float gravityStr = 25.0f;
     private Vector3 gravityDir = Vector3.down;
 
-    public float counterForceStr = 0.03f;
+    public AnimationCurve torqueCurve;
+    [HideInInspector]
+    public float avaliableTorque;
+
 
     public float maxSpeed = 20.0f;
     public float maxSpeedReverse = -10.0f;
-    public float accel = 20.0f;
+    public float accel = 10.0f;
+
+    [HideInInspector]
+    public float speedRatio;
+
+
 
     public float rayDist = 1.0f;
 
     public float speedModifierIntensity;
     public float speedModifierReserveTime;
 
-    public float boostIntensity = 10.0f;
-
     public AnimationCurve tractionCurve;
 
     public AnimationCurve steerCurve;
-    public float steerVelocityFriction = 2.0f;
+    [HideInInspector]
+    public float currentSteer;
 
     [HideInInspector]
     public float forwardSpeed = 0.0f;
 
-    float lastTimeOnGround = 0.0f;
-
-    public float coyoteTime = 0.1f;
-
-    public float jumpDuration = 0.1f;
-
-    [HideInInspector]
-    public float jumpStartTime = 0;
-
-    public float vInput;
 
     public float hInput;
+    public float vInput;
 
-    [HideInInspector]
-    private RaycastHit hit;
+    public float currentHInput;
+    public float currentVInput;
 
-    [HideInInspector]
-    private bool bHit;
+    public float hInputRaiseRate = 0.004f;
+    public float vInputRaiseRate = 0.06f;
 
-    [HideInInspector]
-    private Vector3 contactSmoothNormal;
-
-    [HideInInspector]
-    public float steerValue;
-
-    [HideInInspector]
-    private float maxSpeedWithModifier;
-
-    [HideInInspector]
-    public VehicleAeroState aeroState = VehicleAeroState.OnGround;
-
-    [HideInInspector]
-    public float airborneTime = 0.0f;
 
     public AntiGravity_Node antiGravityNode;
 
@@ -181,7 +161,7 @@ public class Vehicle : NetworkBehaviour
 
         if(IsServer)
         {
-            GetOwnerNetPlayer().OnEndedRaceRpc(position, vehicleBox.position, vehicleBox.rotation);
+            //GetOwnerNetPlayer().OnEndedRaceRpc(position, vehicleBox.position, vehicleBox.rotation);
             NetworkObject.Despawn();
         }
     }
@@ -239,37 +219,16 @@ public class Vehicle : NetworkBehaviour
         speedModifierIntensity = 0.0f;
         speedModifierReserveTime = 0.0f;
 
-        Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
-        LayerMask layerMask = LayerMask.GetMask("Default");
-        bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
+//         Ray ray = new(lapPathNode.spawnPoint.transform.position + Vector3.up * 2, Vector3.down);
+//         LayerMask layerMask = LayerMask.GetMask("Default");
+//         bool bhit = Physics.Raycast(ray, out hit, 5, layerMask);
+// 
+//         Vector3 targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
 
-        Vector3 targetPos = bhit ? hit.point + Vector3.up * 0.65f : lapPathNode.spawnPoint.transform.position;
-
-        vehicleProxy.position = targetPos;
-        vehicleBox.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
-        vehicleMesh.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
+//         vehicleProxy.position = targetPos;
+//         vehicleMesh.transform.SetPositionAndRotation(targetPos, lapPathNode.spawnPoint.transform.rotation);
 
         killDelegate?.Invoke();
-    }
-
-    private float GetContactSurfaceFriction()
-    {
-        if (bHit)
-        {
-            return hit.collider.material.dynamicFriction - 100;
-        }
-
-        return 0;
-    }
-
-    private float GetContactSurfaceLateralFriction()
-    {
-        if (bHit)
-        {
-            return hit.collider.material.staticFriction - 100;
-        }
-
-        return 0;
     }
 
     public void StartFalling()
@@ -277,57 +236,12 @@ public class Vehicle : NetworkBehaviour
 
     }
 
-    void UpdateAeroState()
-    {
-        aeroState = VehicleAeroState.OnGround;
-        return;
-
-        if (!bHit)
-        {
-            if (aeroState != VehicleAeroState.Jumping)
-            {
-                if (Time.time < lastTimeOnGround + coyoteTime)
-                {
-                    aeroState = VehicleAeroState.Coyote;
-                }
-                else if (aeroState == VehicleAeroState.Coyote)
-                {
-                    aeroState = VehicleAeroState.Falling;
-                    StartFalling();
-                }
-                else
-                {
-                    aeroState = VehicleAeroState.Falling;
-                }
-            }
-
-        }
-
-        else
-        {
-            if (aeroState == VehicleAeroState.Jumping)
-            {
-                if (Time.time > jumpStartTime + jumpDuration)
-                {
-                    aeroState = VehicleAeroState.OnGround;
-                    lastTimeOnGround = Time.time;
-                }
-            }
-
-            else
-            {
-                aeroState = VehicleAeroState.OnGround;
-                lastTimeOnGround = Time.time;
-            }
-        }
-    }
-
-    public float GetMaxSpeedWithModifiers()
-    {
-        float modifier = speedModifierIntensity;
-
-        return maxSpeed + modifier - GetContactSurfaceFriction() - (Mathf.Abs(steerValue) * steerVelocityFriction);
-    }
+//     public float GetMaxSpeedWithModifiers()
+//     {
+//         float modifier = speedModifierIntensity;
+// 
+//         return maxSpeed + modifier - GetContactSurfaceFriction() - (Mathf.Abs(steerValue) * steerVelocityFriction);
+//     }
 
     private void UpdateSpeedModifiers()
     {
@@ -349,27 +263,6 @@ public class Vehicle : NetworkBehaviour
         }
     }
 
-    public void IncreaseSpeedTo(float targetSpeed)
-    {
-        if (forwardSpeed < targetSpeed)
-        {
-            vehicleProxy.AddForce((targetSpeed - forwardSpeed) * vehicleBox.transform.forward, ForceMode.VelocityChange);
-        }
-    }
-
-    private void RaycastForContactSurface()
-    {
-        Ray ray = new(vehicleProxy.position, gravityDir);
-
-        // TODO: make track surface and track wall layer
-        LayerMask layerMask = LayerMask.GetMask("Default");
-        bHit = Physics.Raycast(ray, out hit, rayDist, layerMask);
-
-        // @TODO: find faster way
-        //contactSmoothNormal = bHit ? MeshHelpers.GetSmoothNormalFromHit(ref hit) : -gravityDir;
-        contactSmoothNormal = bHit ? hit.normal : -gravityDir;
-    }
-
     private void Gravity()
     {
         if (antiGravityNode)
@@ -384,35 +277,6 @@ public class Vehicle : NetworkBehaviour
 
         // gravity force
         vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
-    }
-
-    private void ApplySteer()
-    {
-        // applying vehicle yaw to the box
-        if (aeroState == VehicleAeroState.OnGround)
-        {
-            steerValue = steerCurve.Evaluate(vehicleProxy.velocity.magnitude) * hInput * Time.fixedDeltaTime;
-            steerValue = forwardSpeed > 0 ? steerValue : -steerValue;
-        }
-        else
-        {
-            steerValue = 0;
-        }
-
-        vehicleBox.rotation = (vehicleBox.rotation * Quaternion.AngleAxis(steerValue, vehicleBox.rotation * Vector3.up));
-
-        //vehicleBox.transform.Rotate(Vector3.up, steerValue, Space.Self);
-    }
-
-    private void AlignWithContactSurface()
-    {
-        // if in touch with ground align with surface normal otherwise align with world up 
-        Vector3 boxUp = bHit ? contactSmoothNormal : -gravityDir;
-        //Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.transform.right, boxUp));
-        Vector3 nForward = Vector3.Normalize(Vector3.Cross(vehicleBox.rotation * Vector3.right, boxUp));
-        Quaternion q = Quaternion.LookRotation(nForward, boxUp);
-
-        vehicleBox.rotation = (q);
     }
 
     public void Init()
@@ -457,69 +321,51 @@ public class Vehicle : NetworkBehaviour
     
     public void StepVehicleMovement()
     {
-        vehicleBox.position = vehicleProxy.position;
+        if(currentHInput == 0 && hInput != 0)
+        {
+            float fallDir = -Mathf.Sign(hInput);
+            hInput += fallDir * hInputRaiseRate;
+            hInput = Mathf.Sign(hInput) == Mathf.Sign(fallDir) ? 0.0f : hInput;
+        }
 
-        //forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.forward) > 0 ? vehicleProxy.velocity.magnitude : -vehicleProxy.velocity.magnitude;
-        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.rotation * Vector3.forward) > 0 ? vehicleProxy.velocity.magnitude : -vehicleProxy.velocity.magnitude;
+        else if(currentHInput != 0)
+        {
+            float raiseDir = Mathf.Sign(currentHInput);
+            hInput += raiseDir * hInputRaiseRate;
+            hInput = Mathf.Clamp(hInput, -1, 1);
+        }
+
+
+        if (currentVInput == 0 && vInput != 0)
+        {
+            float fallDir = -Mathf.Sign(vInput);
+            vInput += fallDir * vInputRaiseRate;
+            vInput = Mathf.Sign(vInput) == Mathf.Sign(fallDir) ? 0.0f : vInput;
+        }
+
+        else if (currentVInput != 0)
+        {
+            float raiseDir = Mathf.Sign(currentVInput);
+            vInput += raiseDir * vInputRaiseRate;
+            vInput = Mathf.Clamp(vInput, -1, 1);
+        }
+
+
+        forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleProxy.transform.forward);
+
+        speedRatio = Mathf.Clamp01(Mathf.Abs(forwardSpeed) / maxSpeed);
+        avaliableTorque = torqueCurve.Evaluate(speedRatio) * accel * vInput;
+
+        currentSteer = steerCurve.Evaluate(speedRatio) * hInput;
 
         Gravity();
-        UpdateSpeedModifiers();
-        maxSpeedWithModifier = GetMaxSpeedWithModifiers();
-        
-        RaycastForContactSurface();
-        ApplySteer();
-        AlignWithContactSurface();
-        UpdateAeroState();
 
-        if (!bHit)
+        foreach(VehicleWheel wheel in wheels)
         {
-
-
-        }
-        if (bHit)
-        {
-            if (speedModifierReserveTime > 0)
-            {
-                IncreaseSpeedTo(maxSpeedWithModifier);
-            }
-
-            float enginePower;
-
-            if (vInput > 0)
-            {
-                enginePower = forwardSpeed < maxSpeedWithModifier ? accel : 0;
-            }
-
-            else
-            {
-                enginePower = forwardSpeed > maxSpeedReverse ? accel : 0;
-            }
-
-
-            enginePower *= vInput;
-
-            if (aeroState == VehicleAeroState.OnGround)
-            {
-                //vehicleProxy.AddForce(vehicleBox.transform.forward * enginePower, ForceMode.Acceleration);
-                vehicleProxy.AddForce(vehicleBox.rotation * Vector3.forward * enginePower, ForceMode.Acceleration);
-            }
-
-            //float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.transform.right);
-            float slipingSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleBox.rotation * Vector3.right);
-            float slipingSpeedRatio = vehicleProxy.velocity.magnitude == 0 ? 0 : Mathf.Abs(slipingSpeed) / vehicleProxy.velocity.magnitude;
-
-            //float t = GetContactSurfaceLateralFriction();
-
-            float traction = Mathf.Clamp01(tractionCurve.Evaluate(slipingSpeedRatio));
-            //Debug.Log("slip:" + slipingSpeedRatio + "    traction:" + traction);
-
-            //vehicleProxy.AddForce(-slipingSpeed * traction * vehicleBox.transform.right, ForceMode.VelocityChange);
-            vehicleProxy.AddForce(-slipingSpeed * traction * (vehicleBox.rotation * Vector3.right), ForceMode.VelocityChange);
+            wheel.StepPhysic();
         }
 
-        vehicleProxy.AddForce((vehicleProxy.velocity.magnitude == 0 ? 0 : counterForceStr) * -vehicleProxy.velocity.normalized, ForceMode.VelocityChange);
-
-        Physics.SyncTransforms();
+        //Physics.SyncTransforms();
     }
 
     public VehicleState MakeVehicleState()
@@ -528,8 +374,7 @@ public class Vehicle : NetworkBehaviour
             vehicleProxy.position,
             vehicleProxy.rotation,
             vehicleProxy.velocity,
-            vehicleProxy.angularVelocity,
-            vehicleBox.rotation
+            vehicleProxy.angularVelocity
             );
     }
 
@@ -539,7 +384,6 @@ public class Vehicle : NetworkBehaviour
         vehicleProxy.rotation = state.vehicleProxy_Rotation;
         vehicleProxy.velocity = state.vehicleProxy_Velocity;
         vehicleProxy.angularVelocity = state.vehicleProxy_AngularVelocity;
-        vehicleBox.rotation = state.vehicleBox_Rotation;
 
         Physics.SyncTransforms();
     }
@@ -552,7 +396,7 @@ public class Vehicle : NetworkBehaviour
     public bool StatesInSync(VehicleState state1, VehicleState state2)
     {
         float position_Error = Vector3.Distance(state1.vehicleProxy_Position, state2.vehicleProxy_Position);
-        float rotation_Error = Quaternion.Angle(state1.vehicleBox_Rotation, state2.vehicleBox_Rotation);
+        float rotation_Error = Quaternion.Angle(state1.vehicleProxy_Rotation, state2.vehicleProxy_Rotation);
 
         DrawHelpers.DrawSphere(state1.vehicleProxy_Position, 1, Color.red);
         DrawHelpers.DrawSphere(state2.vehicleProxy_Position, 1, Color.blue);
@@ -571,7 +415,7 @@ public class Vehicle : NetworkBehaviour
     public void UpdateClientStateRpc(uint frameNumber, VehicleState state)
     {
         serverRepObject.transform.position = state.vehicleProxy_Position;
-        serverRepObject.transform.rotation = state.vehicleBox_Rotation;
+        serverRepObject.transform.rotation = state.vehicleProxy_Rotation;
 
         bool Synced = StatesInSync(state, vehicleTimeStamp.Get(frameNumber).vehicleState);
 
