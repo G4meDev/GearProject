@@ -5,7 +5,7 @@ using UnityEngine.Windows;
 public class VehicleWheel : MonoBehaviour
 {
     [HideInInspector]
-    Vehicle vehicle;
+    public Vehicle vehicle;
 
     [HideInInspector]
     public RaycastHit contactHit = new RaycastHit();
@@ -29,6 +29,9 @@ public class VehicleWheel : MonoBehaviour
 
     [HideInInspector]
     public bool onGround;
+
+    [HideInInspector]
+    public Vector3 worldVelocity;
 
     private void Awake()
     {
@@ -56,11 +59,11 @@ public class VehicleWheel : MonoBehaviour
                 Vector3 targetLocal = new Vector3(transform.localPosition.x, t.y + forceComOffset, transform.localPosition.z);
                 Vector3 targetWorld = transform.parent.TransformPointUnscaled(targetLocal);
 
-                DrawHelpers.DrawSphere(targetWorld, .5f, Color.blue);
+                DrawHelpers.DrawSphere(contactHit.point, .1f, Color.blue);
 
-                Vector3 tireWorldVelocity = vehicle.vehicleProxy.GetPointVelocity(targetWorld);
+                worldVelocity = vehicle.vehicleProxy.GetPointVelocity(targetWorld);
                 offset = SuspensionRestLength - contactHit.distance;
-                float vel = Vector3.Dot(SpringDir, tireWorldVelocity);
+                float vel = Vector3.Dot(SpringDir, worldVelocity);
 
                 float suspenssionForce = (offset * springStrength) - (vel * springDamper);
 
@@ -75,12 +78,12 @@ public class VehicleWheel : MonoBehaviour
                 }
 
                 Vector3 steerDir = transform.right;
-                float steerVelocity = Vector3.Dot(steerDir, tireWorldVelocity);
-                float steerRatio = steerVelocity == 0 ? 0 : steerVelocity / tireWorldVelocity.magnitude;
+                float steerVelocity = Vector3.Dot(steerDir, worldVelocity);
+                float steerRatio = steerVelocity == 0 ? 0 : steerVelocity / worldVelocity.magnitude;
                 steerRatio = Mathf.Clamp(Mathf.Abs(steerRatio), 0, 1);
                 float traction = tractionCurve.Evaluate(steerRatio);
 
-                Debug.Log(steerRatio + "    " + traction);
+                //Debug.Log(steerRatio + "    " + traction);
 
                 float desirdVelocityChange = -steerVelocity * traction;
                 vehicle.vehicleProxy.AddForceAtPosition(steerDir * desirdVelocityChange * 0.25f, targetWorld, ForceMode.VelocityChange);
