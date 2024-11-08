@@ -41,8 +41,6 @@ public class WheelMesh : MonoBehaviour
             float changeRoll = (changeDist * 360) / (2 * Mathf.PI * wheelRadius);
             currentRoll += changeRoll;
 
-            Debug.Log(currentRoll);
-
             transform.localRotation = refrenceRotation;
             transform.Rotate(new Vector3(0, 0, currentRoll), Space.Self);
 

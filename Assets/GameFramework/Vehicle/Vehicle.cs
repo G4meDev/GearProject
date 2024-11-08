@@ -319,34 +319,35 @@ public class Vehicle : NetworkBehaviour
     
     public void StepVehicleMovement()
     {
-        if(currentHInput == 0 && hInput != 0)
-        {
-            float fallDir = -Mathf.Sign(hInput);
-            hInput += fallDir * hInputRaiseRate;
-            hInput = Mathf.Sign(hInput) == Mathf.Sign(fallDir) ? 0.0f : hInput;
-        }
+//         if(currentHInput == 0 && hInput != 0)
+//         {
+//             float fallDir = -Mathf.Sign(hInput);
+//             hInput += fallDir * hInputRaiseRate;
+//             hInput = Mathf.Sign(hInput) == Mathf.Sign(fallDir) ? 0.0f : hInput;
+//         }
+// 
+//         else if(currentHInput != 0)
+//         {
+//             float raiseDir = Mathf.Sign(currentHInput);
+//             hInput += raiseDir * hInputRaiseRate;
+//             hInput = Mathf.Clamp(hInput, -1, 1);
+//         }
+// 
+// 
+//         if (currentVInput == 0 && vInput != 0)
+//         {
+//             float fallDir = -Mathf.Sign(vInput);
+//             vInput += fallDir * vInputRaiseRate;
+//             vInput = Mathf.Sign(vInput) == Mathf.Sign(fallDir) ? 0.0f : vInput;
+//         }
+// 
+//         else if (currentVInput != 0)
+//         {
+//             float raiseDir = Mathf.Sign(currentVInput);
+//             vInput += raiseDir * vInputRaiseRate;
+//             vInput = Mathf.Clamp(vInput, -1, 1);
+//         }
 
-        else if(currentHInput != 0)
-        {
-            float raiseDir = Mathf.Sign(currentHInput);
-            hInput += raiseDir * hInputRaiseRate;
-            hInput = Mathf.Clamp(hInput, -1, 1);
-        }
-
-
-        if (currentVInput == 0 && vInput != 0)
-        {
-            float fallDir = -Mathf.Sign(vInput);
-            vInput += fallDir * vInputRaiseRate;
-            vInput = Mathf.Sign(vInput) == Mathf.Sign(fallDir) ? 0.0f : vInput;
-        }
-
-        else if (currentVInput != 0)
-        {
-            float raiseDir = Mathf.Sign(currentVInput);
-            vInput += raiseDir * vInputRaiseRate;
-            vInput = Mathf.Clamp(vInput, -1, 1);
-        }
 
 
         forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleProxy.transform.forward);
@@ -362,8 +363,6 @@ public class Vehicle : NetworkBehaviour
         {
             wheel.StepPhysic();
         }
-
-        //Physics.SyncTransforms();
     }
 
     public VehicleState MakeVehicleState()
@@ -455,16 +454,11 @@ public class Vehicle : NetworkBehaviour
     {
         if(IsOwnedByServer && Input.GetKey(KeyCode.E))
         {
-            EndRace();
+            vehicleProxy.position = Vector3.zero;
         }
 
          UpdateLapPathIndex();
          distanceFromFirstPlace = SceneManager.GetDistanceFromFirstPlace(this);
-
-         if (!NetworkManager.IsHost || !SceneManager.Get().raceStarted)
-         {
-             return;
-         }
 
 
     }

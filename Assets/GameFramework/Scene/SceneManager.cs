@@ -239,7 +239,7 @@ public class SceneManager : NetworkBehaviour
     public void UpdateFrameAhead()
     {
         ulong rtt = NetworkManager.NetworkConfig.NetworkTransport.GetCurrentRtt(NetworkManager.ServerClientId);
-        frameAheadTaget = (uint)(1 + Mathf.CeilToInt(rtt / (1 / Time.fixedDeltaTime) * 1.0f));
+        frameAheadTaget = (uint)(1 + Mathf.CeilToInt(rtt / (1 / Time.fixedDeltaTime) * 2.0f));
     }
 
     public void ClientUpdate()

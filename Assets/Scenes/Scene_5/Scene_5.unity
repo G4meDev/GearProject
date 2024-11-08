@@ -11120,7 +11120,7 @@ MonoBehaviour:
   spectatorViewPrefab: {fileID: 3461174953514124791, guid: 5c6df1fce46af9642a5fa6d504536149,
     type: 3}
   countDown: {fileID: 385936638}
-  lapCount: 1
+  lapCount: 3
   spawns:
   - {fileID: 457060628}
   - {fileID: 173751309}
