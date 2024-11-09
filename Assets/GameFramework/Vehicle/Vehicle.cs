@@ -85,6 +85,7 @@ public class VehicleTimeStamp
 public class Vehicle : NetworkBehaviour
 {
     public VehicleWheel[] wheels;
+    public WheelCollider[] wheelColliders;
 
     public CircularBuffer<VehicleTimeStamp> vehicleTimeStamp = new(128);
 
@@ -359,10 +360,18 @@ public class Vehicle : NetworkBehaviour
 
         Gravity();
 
-        foreach(VehicleWheel wheel in wheels)
+        foreach(WheelCollider wheel in wheelColliders)
         {
-            wheel.StepPhysic();
+            if(wheel.GetComponent<VehicleWheel>().effectedBySteer)
+                wheel.steerAngle = currentSteer;
+            //if(wheel.GetComponent<VehicleWheel>().effectedByEngine)
+                wheel.motorTorque = accel * avaliableTorque;
         }
+
+//         foreach(VehicleWheel wheel in wheels)
+//         {
+//             wheel.StepPhysic();
+//         }
     }
 
     public VehicleState MakeVehicleState()
