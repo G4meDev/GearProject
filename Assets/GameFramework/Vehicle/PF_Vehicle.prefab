@@ -241,7 +241,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 30
+      value: 10
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -966,7 +966,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1769a89a97f3ea5409dcc82bdb814349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lerpRate: 10
+  lerpRate: 20
 --- !u!4 &7629967910071131971 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b778dfc904e7a7b4396a112303354d13,

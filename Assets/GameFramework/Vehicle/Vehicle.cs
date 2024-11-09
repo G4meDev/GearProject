@@ -394,8 +394,8 @@ public class Vehicle : NetworkBehaviour
         Physics.SyncTransforms();
     }
 
-    private float pos_error_treshold = 0.5f;
-    private float rot_error_treshold = 30.0f;
+    private float pos_error_treshold = 0.1f;
+    private float rot_error_treshold = 5.0f;
 
     public uint lastRecivedInputFrame = 0;
 

@@ -23,8 +23,8 @@ public class VehicleMesh : MonoBehaviour
 
             float lerpAlpha = Mathf.Clamp01(Time.deltaTime * lerpRate);
 
-            transform.position = Vector3.Lerp(transform.position, targetPosition, 1);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotaton, 1);
+            transform.position = Vector3.Lerp(transform.position, targetPosition, lerpAlpha);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotaton, lerpAlpha);
         }
 
     }
