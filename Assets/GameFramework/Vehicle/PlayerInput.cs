@@ -30,8 +30,8 @@ public class PlayerInput : MonoBehaviour
 
 #else
 
-        vehicle.currentHInput = screenInput.data.hInput;
-        vehicle.currentVInput = screenInput.data.vInput;
+        vehicle.hInput = screenInput.data.hInput;
+        vehicle.vInput = screenInput.data.vInput;
 #endif
     }
 }

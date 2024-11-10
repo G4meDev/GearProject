@@ -18,8 +18,8 @@ public class VehicleMesh : MonoBehaviour
     {
         if (vehicle)
         {
-            Vector3 targetPosition = vehicle.vehicleProxy.position;
-            Quaternion targetRotaton = vehicle.vehicleProxy.rotation;
+            Vector3 targetPosition = vehicle.vehicleProxy.transform.position;
+            Quaternion targetRotaton = vehicle.vehicleProxy.transform.rotation;
 
             float lerpAlpha = Mathf.Clamp01(Time.deltaTime * lerpRate);
 

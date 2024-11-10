@@ -90,7 +90,7 @@ public class SessionManager : NetworkBehaviour
 
     public void StartRace()
     {
-        NetworkManager.SceneManager.LoadScene("Scene_5", LoadSceneMode.Additive);
+        NetworkManager.SceneManager.LoadScene("Scene_6", LoadSceneMode.Additive);
     }
 
 
