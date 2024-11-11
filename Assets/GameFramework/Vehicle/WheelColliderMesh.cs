@@ -19,7 +19,7 @@ public class WheelColliderMesh : MonoBehaviour
             transform.localPosition = localPos;
 
             transform.rotation = worldRot;
-            transform.Rotate(new Vector3(0, -90, 0), Space.Self);
+            transform.Rotate(new Vector3(0, 90, 0), Space.Self);
         }
     }
 }
