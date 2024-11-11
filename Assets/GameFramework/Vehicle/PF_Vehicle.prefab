@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5317419879853754435}
   - component: {fileID: 1009725420281159778}
-  - component: {fileID: 7116613587875724584}
+  - component: {fileID: 3402937130268738251}
   m_Layer: 9
   m_Name: RL
   m_TagString: Untagged
@@ -49,7 +49,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 0.5
-  m_Mass: 0.25
+  m_Mass: 1
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
@@ -72,7 +72,7 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
---- !u!114 &7116613587875724584
+--- !u!114 &3402937130268738251
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -81,26 +81,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3770027585867379192}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e04f7ca81ac91e949bc1b2039cc47f23, type: 3}
+  m_Script: {fileID: 11500000, guid: cb33e1a2db7d8604b9d1d3704c1c69bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vehicle: {fileID: 0}
-  offset: 0
-  SuspensionRestLength: 0.25
-  springStrength: 1000
-  springDamper: 150
-  wheelRadius: 0.22
-  tractionCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  steerable: 0
   effectedByEngine: 1
-  effectedBySteer: 0
-  forceComOffset: 0
-  onGround: 0
-  worldVelocity: {x: 0, y: 0, z: 0}
 --- !u!1 &3985926892625339986
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,7 +216,7 @@ MonoBehaviour:
   avaliableTorque: 0
   maxSpeed: 20
   maxSpeedReverse: -10
-  accel: 40
+  accel: 100
   speedRatio: 0
   rayDist: 1.2
   speedModifierIntensity: 0
@@ -513,7 +498,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3989236442446721352}
   - component: {fileID: 3697664942951640434}
-  - component: {fileID: 7403933061668127713}
+  - component: {fileID: 4895470138419355107}
   m_Layer: 9
   m_Name: FR
   m_TagString: Untagged
@@ -552,7 +537,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 0.5
-  m_Mass: 0.25
+  m_Mass: 1
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
@@ -575,7 +560,7 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
---- !u!114 &7403933061668127713
+--- !u!114 &4895470138419355107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -584,26 +569,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5610772623281311089}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e04f7ca81ac91e949bc1b2039cc47f23, type: 3}
+  m_Script: {fileID: 11500000, guid: cb33e1a2db7d8604b9d1d3704c1c69bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vehicle: {fileID: 0}
-  offset: 0
-  SuspensionRestLength: 0.25
-  springStrength: 1000
-  springDamper: 150
-  wheelRadius: 0.22
-  tractionCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  effectedByEngine: 0
-  effectedBySteer: 1
-  forceComOffset: 0
-  onGround: 0
-  worldVelocity: {x: 0, y: 0, z: 0}
+  steerable: 1
+  effectedByEngine: 1
 --- !u!1 &6060104347698729938
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,7 +584,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1904517238393070872}
   - component: {fileID: 1127914500719867547}
-  - component: {fileID: 6553935408486833616}
+  - component: {fileID: 2368361964510298366}
   m_Layer: 9
   m_Name: FL
   m_TagString: Untagged
@@ -653,7 +623,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 0.5
-  m_Mass: 0.25
+  m_Mass: 1
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
@@ -676,7 +646,7 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
---- !u!114 &6553935408486833616
+--- !u!114 &2368361964510298366
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -685,26 +655,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6060104347698729938}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e04f7ca81ac91e949bc1b2039cc47f23, type: 3}
+  m_Script: {fileID: 11500000, guid: cb33e1a2db7d8604b9d1d3704c1c69bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vehicle: {fileID: 0}
-  offset: 0
-  SuspensionRestLength: 0.25
-  springStrength: 1000
-  springDamper: 150
-  wheelRadius: 0.22
-  tractionCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  effectedByEngine: 0
-  effectedBySteer: 1
-  forceComOffset: 0
-  onGround: 0
-  worldVelocity: {x: 0, y: 0, z: 0}
+  steerable: 1
+  effectedByEngine: 1
 --- !u!1 &6772439349839376035
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,7 +670,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3022369554218009548}
   - component: {fileID: 1339343916137026165}
-  - component: {fileID: 3026216845688096770}
+  - component: {fileID: 139594234317175236}
   m_Layer: 9
   m_Name: RR
   m_TagString: Untagged
@@ -754,7 +709,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0.3
   m_ForceAppPointDistance: 0.5
-  m_Mass: 0.25
+  m_Mass: 1
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
@@ -777,7 +732,7 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
---- !u!114 &3026216845688096770
+--- !u!114 &139594234317175236
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -786,26 +741,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6772439349839376035}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e04f7ca81ac91e949bc1b2039cc47f23, type: 3}
+  m_Script: {fileID: 11500000, guid: cb33e1a2db7d8604b9d1d3704c1c69bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vehicle: {fileID: 0}
-  offset: 0
-  SuspensionRestLength: 0.25
-  springStrength: 1000
-  springDamper: 150
-  wheelRadius: 0.22
-  tractionCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  steerable: 0
   effectedByEngine: 1
-  effectedBySteer: 0
-  forceComOffset: 0
-  onGround: 0
-  worldVelocity: {x: 0, y: 0, z: 0}
 --- !u!1001 &7956081664656292008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -947,7 +887,80 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2118590799951207134}
+    - targetCorrespondingSourceObject: {fileID: 6685102266707914259, guid: b778dfc904e7a7b4396a112303354d13,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3528546982341024782}
+    - targetCorrespondingSourceObject: {fileID: -3954667314687668168, guid: b778dfc904e7a7b4396a112303354d13,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 925285513318052960}
+    - targetCorrespondingSourceObject: {fileID: -6307582514934083829, guid: b778dfc904e7a7b4396a112303354d13,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3354375982589971484}
+    - targetCorrespondingSourceObject: {fileID: 342099816849067261, guid: b778dfc904e7a7b4396a112303354d13,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2536377178871539113}
   m_SourcePrefab: {fileID: 100100000, guid: b778dfc904e7a7b4396a112303354d13, type: 3}
+--- !u!1 &2843914421999741072 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -3954667314687668168, guid: b778dfc904e7a7b4396a112303354d13,
+    type: 3}
+  m_PrefabInstance: {fileID: 7956081664656292008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &925285513318052960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2843914421999741072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94bf2fb2917173149bf592a1ffd83e3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheel: {fileID: 3697664942951640434}
+--- !u!1 &3652400646224516795 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6685102266707914259, guid: b778dfc904e7a7b4396a112303354d13,
+    type: 3}
+  m_PrefabInstance: {fileID: 7956081664656292008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3528546982341024782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3652400646224516795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94bf2fb2917173149bf592a1ffd83e3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheel: {fileID: 1127914500719867547}
+--- !u!1 &5052855171323115427 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -6307582514934083829, guid: b778dfc904e7a7b4396a112303354d13,
+    type: 3}
+  m_PrefabInstance: {fileID: 7956081664656292008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3354375982589971484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5052855171323115427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94bf2fb2917173149bf592a1ffd83e3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheel: {fileID: 1009725420281159778}
 --- !u!1 &7215541633103216757 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 741808593568725213, guid: b778dfc904e7a7b4396a112303354d13,
@@ -973,3 +986,22 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7956081664656292008}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7698569201880265813 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 342099816849067261, guid: b778dfc904e7a7b4396a112303354d13,
+    type: 3}
+  m_PrefabInstance: {fileID: 7956081664656292008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2536377178871539113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7698569201880265813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94bf2fb2917173149bf592a1ffd83e3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheel: {fileID: 1339343916137026165}

@@ -370,7 +370,7 @@ public class Vehicle : NetworkBehaviour
 
         foreach(WheelCollider wheel in wheelColliders)
         {
-            if(wheel.GetComponent<VehicleWheel>().effectedBySteer)
+            if(wheel.GetComponent<WheelColliderControl>().steerable)
                 wheel.steerAngle = currentSteer;
             //if(wheel.GetComponent<VehicleWheel>().effectedByEngine)
                 //wheel.motorTorque = accel * avaliableTorque;
