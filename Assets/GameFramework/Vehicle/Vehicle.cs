@@ -149,6 +149,14 @@ public class Vehicle : NetworkBehaviour
     public delegate void KillDelegate();
     public KillDelegate killDelegate;
 
+    private void OnGUI()
+    {
+        GUIStyle label2 = new GUIStyle(GUI.skin.label);
+        label2.fontSize = 36;
+
+        GUI.Label(new Rect(5, Screen.height - 300, 300, 150), "speed: " + forwardSpeed, label2);
+    }
+
     NetPlayer GetOwnerNetPlayer()
     {
         return NetworkManager.ConnectedClients.GetValueOrDefault(OwnerClientId).PlayerObject.GetComponent<NetPlayer>();
@@ -365,7 +373,8 @@ public class Vehicle : NetworkBehaviour
             if(wheel.GetComponent<VehicleWheel>().effectedBySteer)
                 wheel.steerAngle = currentSteer;
             //if(wheel.GetComponent<VehicleWheel>().effectedByEngine)
-                wheel.motorTorque = accel * avaliableTorque;
+                //wheel.motorTorque = accel * avaliableTorque;
+                wheel.motorTorque = accel * vInput;
         }
 
 //         foreach(VehicleWheel wheel in wheels)
