@@ -362,7 +362,7 @@ public class Vehicle : NetworkBehaviour
         forwardSpeed = Vector3.Dot(vehicleProxy.velocity, vehicleProxy.transform.forward);
 
         speedRatio = Mathf.Clamp01(Mathf.Abs(forwardSpeed) / maxSpeed);
-        avaliableTorque = torqueCurve.Evaluate(speedRatio) * accel * vInput;
+        avaliableTorque = torqueCurve.Evaluate(speedRatio);
 
         currentSteer = steerCurve.Evaluate(speedRatio) * hInput;
 
@@ -371,16 +371,17 @@ public class Vehicle : NetworkBehaviour
         foreach(WheelCollider wheel in wheelColliders)
         {
             if(wheel.GetComponent<WheelColliderControl>().steerable)
+            {
                 wheel.steerAngle = currentSteer;
-            //if(wheel.GetComponent<VehicleWheel>().effectedByEngine)
-                //wheel.motorTorque = accel * avaliableTorque;
-                wheel.motorTorque = accel * vInput;
-        }
+            }
 
-//         foreach(VehicleWheel wheel in wheels)
-//         {
-//             wheel.StepPhysic();
-//         }
+            if(wheel.GetComponent<WheelColliderControl>().effectedByEngine)
+            {
+                wheel.motorTorque = accel * avaliableTorque * vInput;
+                Debug.Log(accel * avaliableTorque * vInput);
+            }
+            //wheel.motorTorque = Mathf.Lerp(accel, 0, speedRatio) * vInput;
+        }
     }
 
     public VehicleState MakeVehicleState()

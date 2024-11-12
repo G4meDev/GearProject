@@ -14,7 +14,7 @@ public class WheelColliderMesh : MonoBehaviour
             wheel.GetWorldPose(out Vector3 worldPos, out Quaternion worldRot);
 
             Vector3 localPos = transform.localPosition;
-            localPos.y = wheel.contactOffset;
+            localPos.y = wheel.transform.InverseTransformPointUnscaled(worldPos).y + wheel.radius;
 
             transform.localPosition = localPos;
 

@@ -44,11 +44,11 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.17
   m_SuspensionSpring:
-    spring: 200
-    damper: 5
+    spring: 23.3
+    damper: 3
     targetPosition: 0.5
-  m_SuspensionDistance: 0.34
-  m_ForceAppPointDistance: 0.5
+  m_SuspensionDistance: 0.1
+  m_ForceAppPointDistance: 0.38
   m_Mass: 0.13333334
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
@@ -170,21 +170,12 @@ MonoBehaviour:
   vehicleProxy: {fileID: 2899090973253632067}
   vehicleMesh: {fileID: 7215541633103216757}
   position: -1
-  gravityStr: 9.8
+  gravityStr: 40
   torqueCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.5
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.35
       value: 1
       inSlope: 0
       outSlope: 0
@@ -193,10 +184,10 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.6
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      time: 0.26978382
+      value: 0.49017906
+      inSlope: -0.56071615
+      outSlope: -0.56071615
       tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
@@ -214,9 +205,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   avaliableTorque: 0
-  maxSpeed: 40
+  maxSpeed: 30
   maxSpeedReverse: -10
-  accel: 50
+  accel: 80
   speedRatio: 0
   rayDist: 1.2
   speedModifierIntensity: 0
@@ -226,7 +217,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 40
+      value: 30
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -532,11 +523,11 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.17
   m_SuspensionSpring:
-    spring: 200
-    damper: 5
+    spring: 23.3
+    damper: 3
     targetPosition: 0.5
-  m_SuspensionDistance: 0.34
-  m_ForceAppPointDistance: 0.5
+  m_SuspensionDistance: 0.1
+  m_ForceAppPointDistance: 0.38
   m_Mass: 0.13333334
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
@@ -573,7 +564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   steerable: 1
-  effectedByEngine: 0
+  effectedByEngine: 1
 --- !u!1 &6060104347698729938
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,11 +609,11 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.17
   m_SuspensionSpring:
-    spring: 200
-    damper: 5
+    spring: 23.3
+    damper: 3
     targetPosition: 0.5
-  m_SuspensionDistance: 0.34
-  m_ForceAppPointDistance: 0.5
+  m_SuspensionDistance: 0.1
+  m_ForceAppPointDistance: 0.38
   m_Mass: 0.13333334
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
@@ -659,7 +650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   steerable: 1
-  effectedByEngine: 0
+  effectedByEngine: 1
 --- !u!1 &6772439349839376035
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,11 +695,11 @@ WheelCollider:
   m_Center: {x: 0, y: 0, z: 0}
   m_Radius: 0.17
   m_SuspensionSpring:
-    spring: 200
-    damper: 5
+    spring: 23.3
+    damper: 3
     targetPosition: 0.5
-  m_SuspensionDistance: 0.34
-  m_ForceAppPointDistance: 0.5
+  m_SuspensionDistance: 0.1
+  m_ForceAppPointDistance: 0.38
   m_Mass: 0.13333334
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
