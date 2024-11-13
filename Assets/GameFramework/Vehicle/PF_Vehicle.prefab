@@ -50,18 +50,18 @@ WheelCollider:
   m_SuspensionDistance: 0.1
   m_ForceAppPointDistance: 0.38
   m_Mass: 0.13333334
-  m_WheelDampingRate: 0.25
+  m_WheelDampingRate: 0.01
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1.5
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 2
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 1.6
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1.5
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 1
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 0.8
     m_Stiffness: 1
   m_IncludeLayers:
     serializedVersion: 2
@@ -155,11 +155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1e6736742e446429043f76fc5d20e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheels:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   wheelColliders:
   - {fileID: 1127914500719867547}
   - {fileID: 3697664942951640434}
@@ -184,17 +179,8 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.26978382
-      value: 0.49017906
-      inSlope: -0.56071615
-      outSlope: -0.56071615
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
       time: 1
-      value: 0.35
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -207,7 +193,7 @@ MonoBehaviour:
   avaliableTorque: 0
   maxSpeed: 30
   maxSpeedReverse: -10
-  accel: 80
+  accel: 1.5
   speedRatio: 0
   rayDist: 1.2
   speedModifierIntensity: 0
@@ -461,8 +447,8 @@ Rigidbody:
   m_GameObject: {fileID: 5586777812053100585}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 1
-  m_AngularDrag: 0
+  m_Drag: 0
+  m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -529,18 +515,18 @@ WheelCollider:
   m_SuspensionDistance: 0.1
   m_ForceAppPointDistance: 0.38
   m_Mass: 0.13333334
-  m_WheelDampingRate: 0.25
+  m_WheelDampingRate: 0.01
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1.5
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 2
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 1.6
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1.5
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 1
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 0.8
     m_Stiffness: 1
   m_IncludeLayers:
     serializedVersion: 2
@@ -615,18 +601,18 @@ WheelCollider:
   m_SuspensionDistance: 0.1
   m_ForceAppPointDistance: 0.38
   m_Mass: 0.13333334
-  m_WheelDampingRate: 0.25
+  m_WheelDampingRate: 0.01
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1.5
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 2
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 1.6
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1.5
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 1
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 0.8
     m_Stiffness: 1
   m_IncludeLayers:
     serializedVersion: 2
@@ -701,18 +687,18 @@ WheelCollider:
   m_SuspensionDistance: 0.1
   m_ForceAppPointDistance: 0.38
   m_Mass: 0.13333334
-  m_WheelDampingRate: 0.25
+  m_WheelDampingRate: 0.01
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1.5
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 2
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 1.6
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.4
-    m_ExtremumValue: 1.5
-    m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 1
+    m_AsymptoteSlip: 0.5
+    m_AsymptoteValue: 0.8
     m_Stiffness: 1
   m_IncludeLayers:
     serializedVersion: 2

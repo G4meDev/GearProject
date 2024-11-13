@@ -84,7 +84,6 @@ public class VehicleTimeStamp
 
 public class Vehicle : NetworkBehaviour
 {
-    public VehicleWheel[] wheels;
     public WheelCollider[] wheelColliders;
 
     public CircularBuffer<VehicleTimeStamp> vehicleTimeStamp = new(128);
@@ -378,7 +377,6 @@ public class Vehicle : NetworkBehaviour
             if(wheel.GetComponent<WheelColliderControl>().effectedByEngine)
             {
                 wheel.motorTorque = accel * avaliableTorque * vInput;
-                Debug.Log(accel * avaliableTorque * vInput);
             }
             //wheel.motorTorque = Mathf.Lerp(accel, 0, speedRatio) * vInput;
         }
