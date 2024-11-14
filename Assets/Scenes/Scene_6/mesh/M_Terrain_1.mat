@@ -201,6 +201,7 @@ Material:
     - _gravel_GlobalScale: 37
     - _gravel_MacroScale: 7
     - _gravel_MicroScale: 3
+    - _macro: 1
     - _sand: 0.39
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
