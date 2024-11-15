@@ -8085,6 +8085,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff9e50a4946464948ac9a869c2c0bc70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1371117799
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1371117800}
+  m_Layer: 0
+  m_Name: ------------------------------------------------------
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1371117800
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371117799}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1389106887
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14071,6 +14102,7 @@ MonoBehaviour:
   spectatorView: {fileID: 0}
   spectatorViewPrefab: {fileID: 3461174953514124791, guid: 5c6df1fce46af9642a5fa6d504536149,
     type: 3}
+  targetCamera: {fileID: 69874144}
   countDown: {fileID: 385936638}
   lapCount: 3
   spawns:
@@ -14746,3 +14778,4 @@ SceneRoots:
   - {fileID: 138853695}
   - {fileID: 69874145}
   - {fileID: 571044647}
+  - {fileID: 1371117800}

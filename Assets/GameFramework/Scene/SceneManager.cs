@@ -33,6 +33,8 @@ public class SceneManager : NetworkBehaviour
     public SpectatorView spectatorView;
     public SpectatorView spectatorViewPrefab;
 
+    public Camera targetCamera;
+
     public CountDown countDown;
 
     public int lapCount = 3;
@@ -182,10 +184,11 @@ public class SceneManager : NetworkBehaviour
         screenInput = Instantiate(screenInputPrefab).GetComponent<UI_ScreenInput>();
         lapCounter = Instantiate(lapCounterPrefab).GetComponent<UI_LapCounter>();
         position = Instantiate(positionPrefab).GetComponent<UI_Position>();
-
+        
         vehicleCamera = Instantiate(vehicleCameraPrefab).GetComponent<VehicleCamera>();
         vehicleCamera.gameObject.SetActive(false);
-        screenInput.OnCameraChanged(vehicleCamera.camera);
+
+        screenInput.OnCameraChanged(targetCamera);
     }
 
     void Start()
