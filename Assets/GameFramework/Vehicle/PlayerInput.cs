@@ -25,8 +25,8 @@ public class PlayerInput : MonoBehaviour
         float steerInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Horizontal") + screenInput.data.hInput, -1, 1);
         float throttleInput = Mathf.Clamp(UnityEngine.Input.GetAxis("Vertical") + screenInput.data.vInput, -1, 1);
 
-        vehicle.hInput = steerInput;
-        vehicle.vInput = throttleInput;
+        vehicle.currentHInput = steerInput;
+        vehicle.currentVInput = throttleInput;
 
 #else
 

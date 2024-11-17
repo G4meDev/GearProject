@@ -218,12 +218,12 @@ public class SceneManager : NetworkBehaviour
             vehicle.UpdateVehicleInput(currentInput);
             vehicle.StepVehicleMovement();
 
-            if(!vehicle.IsOwner)
-            {
-                Debug.Log("client_" + vehicle.OwnerClientId + " frame: " + currentFrame);
-                Debug.Log("client_" + vehicle.OwnerClientId + " input: " + currentInput);
-                Debug.Log("client_" + vehicle.OwnerClientId + " before state: " + vehicle.MakeVehicleState());
-            }
+//             if(!vehicle.IsOwner)
+//             {
+//                 Debug.Log("client_" + vehicle.OwnerClientId + " frame: " + currentFrame);
+//                 Debug.Log("client_" + vehicle.OwnerClientId + " input: " + currentInput);
+//                 Debug.Log("client_" + vehicle.OwnerClientId + " before state: " + vehicle.MakeVehicleState());
+//             }
         }
         
         Physics.Simulate(Time.fixedDeltaTime);
@@ -232,10 +232,10 @@ public class SceneManager : NetworkBehaviour
         {
             vehicle.UpdateClientStateRpc(currentFrame, vehicle.MakeVehicleState());
 
-            if (!vehicle.IsOwner)
-            {
-                Debug.Log("client_" + vehicle.OwnerClientId + " after state: " + vehicle.MakeVehicleState());
-            }
+//             if (!vehicle.IsOwner)
+//             {
+//                 Debug.Log("client_" + vehicle.OwnerClientId + " after state: " + vehicle.MakeVehicleState());
+//             }
         }
 
         currentFrame++;
@@ -249,10 +249,10 @@ public class SceneManager : NetworkBehaviour
         {
             vehicle.UpdateVehicleToState(vehicle.vehicleTimeStamp.Get(frame).vehicleState);
 
-            if (vehicle.IsOwner)
-            {
-                Debug.Log("client_" + vehicle.OwnerClientId + " rollback state: " + vehicle.MakeVehicleState());
-            }
+//             if (vehicle.IsOwner)
+//             {
+//                 Debug.Log("client_" + vehicle.OwnerClientId + " rollback state: " + vehicle.MakeVehicleState());
+//             }
         }
     }
 
@@ -288,12 +288,12 @@ public class SceneManager : NetworkBehaviour
                 vehicle.UpdateVehicleInput(input);
                 vehicle.StepVehicleMovement();
 
-                if (vehicle.IsOwner)
-                {
-                    Debug.Log("client_" + vehicle.OwnerClientId + " frame: " + i);
-                    Debug.Log("client_" + vehicle.OwnerClientId + " input: " + input);
-                    Debug.Log("client_" + vehicle.OwnerClientId + " before state: " + vehicle.MakeVehicleState());
-                }
+//                 if (vehicle.IsOwner)
+//                 {
+//                     Debug.Log("client_" + vehicle.OwnerClientId + " frame: " + i);
+//                     Debug.Log("client_" + vehicle.OwnerClientId + " input: " + input);
+//                     Debug.Log("client_" + vehicle.OwnerClientId + " before state: " + vehicle.MakeVehicleState());
+//                 }
             }
 
             Physics.Simulate(Time.fixedDeltaTime);
@@ -302,10 +302,10 @@ public class SceneManager : NetworkBehaviour
             {
                 vehicle.vehicleTimeStamp.Get(i).vehicleState = vehicle.MakeVehicleState();
 
-                if (vehicle.IsOwner)
-                {
-                    Debug.Log("client_" + vehicle.OwnerClientId + " after state: " + vehicle.MakeVehicleState());
-                }
+//                 if (vehicle.IsOwner)
+//                 {
+//                     Debug.Log("client_" + vehicle.OwnerClientId + " after state: " + vehicle.MakeVehicleState());
+//                 }
             }
         }
 

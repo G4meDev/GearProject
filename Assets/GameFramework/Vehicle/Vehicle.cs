@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-// @TODO: Develop jump
-
 public enum VehicleAeroState
 {
     OnGround,
@@ -12,7 +10,36 @@ public enum VehicleAeroState
     Falling
 }
 
+public class WheelState : INetworkSerializable
+{
+    public float rotationSpeed;
 
+    public WheelState(float inRotationSpeed)
+    {
+        rotationSpeed = inRotationSpeed;
+    }
+
+    public WheelState() : this(0)
+    {
+
+    }
+
+    public WheelState(WheelCollider collider) : this(collider.rotationSpeed)
+    {
+
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref rotationSpeed);
+    }
+
+    public override string ToString()
+    {
+        return "(rotation speed: " + rotationSpeed +
+            ")";
+    }
+}
 
 public class VehicleState : INetworkSerializable
 {
@@ -21,15 +48,25 @@ public class VehicleState : INetworkSerializable
     public Vector3 vehicleProxy_Velocity;
     public Vector3 vehicleProxy_AngularVelocity;
 
-    public VehicleState(Vector3 proxy_pos, Quaternion proxy_rot, Vector3 proxy_velo, Vector3 proxy_angularVelo)
+    public WheelState wheelState_1;
+    public WheelState wheelState_2;
+    public WheelState wheelState_3;
+    public WheelState wheelState_4;
+
+    public VehicleState(Vector3 proxy_pos, Quaternion proxy_rot, Vector3 proxy_velo, Vector3 proxy_angularVelo, WheelState InWheelState_1, WheelState InWheelState_2, WheelState InWheelState_3, WheelState InWheelState_4)
     {
         vehicleProxy_Position = proxy_pos;
         vehicleProxy_Rotation = proxy_rot;
         vehicleProxy_Velocity = proxy_velo;
         vehicleProxy_AngularVelocity = proxy_angularVelo;
+
+        wheelState_1 = InWheelState_1;
+        wheelState_2 = InWheelState_2;
+        wheelState_3 = InWheelState_3;
+        wheelState_4 = InWheelState_4;
     }
 
-    public VehicleState() : this(Vector3.zero, Quaternion.identity, Vector3.zero, Vector3.zero)
+    public VehicleState() : this(Vector3.zero, Quaternion.identity, Vector3.zero, Vector3.zero, new(0), new(0), new(0), new(0))
     {
 
     }
@@ -40,6 +77,11 @@ public class VehicleState : INetworkSerializable
         serializer.SerializeValue(ref vehicleProxy_Rotation);
         serializer.SerializeValue(ref vehicleProxy_Velocity);
         serializer.SerializeValue(ref vehicleProxy_AngularVelocity);
+
+        serializer.SerializeValue(ref wheelState_1);
+        serializer.SerializeValue(ref wheelState_2);
+        serializer.SerializeValue(ref wheelState_3);
+        serializer.SerializeValue(ref wheelState_4);
     }
 
     public override string ToString()
@@ -48,6 +90,10 @@ public class VehicleState : INetworkSerializable
             ", rot: " + vehicleProxy_Rotation +
             ", vel: " + vehicleProxy_Velocity +
             ", ang: " + vehicleProxy_AngularVelocity +
+            "\n, w_1: " + wheelState_1 +
+            ", w_2: " + wheelState_2 +
+            ", w_3: " + wheelState_3 +
+            ", w_4: " + wheelState_4 +
             ")";
     }
 }
@@ -323,34 +369,34 @@ public class Vehicle : NetworkBehaviour
     
     public void StepVehicleMovement()
     {
-//         if(currentHInput == 0 && hInput != 0)
-//         {
-//             float fallDir = -Mathf.Sign(hInput);
-//             hInput += fallDir * hInputRaiseRate;
-//             hInput = Mathf.Sign(hInput) == Mathf.Sign(fallDir) ? 0.0f : hInput;
-//         }
-// 
-//         else if(currentHInput != 0)
-//         {
-//             float raiseDir = Mathf.Sign(currentHInput);
-//             hInput += raiseDir * hInputRaiseRate;
-//             hInput = Mathf.Clamp(hInput, -1, 1);
-//         }
-// 
-// 
-//         if (currentVInput == 0 && vInput != 0)
-//         {
-//             float fallDir = -Mathf.Sign(vInput);
-//             vInput += fallDir * vInputRaiseRate;
-//             vInput = Mathf.Sign(vInput) == Mathf.Sign(fallDir) ? 0.0f : vInput;
-//         }
-// 
-//         else if (currentVInput != 0)
-//         {
-//             float raiseDir = Mathf.Sign(currentVInput);
-//             vInput += raiseDir * vInputRaiseRate;
-//             vInput = Mathf.Clamp(vInput, -1, 1);
-//         }
+        if(currentHInput == 0 && hInput != 0)
+        {
+            float fallDir = -Mathf.Sign(hInput);
+            hInput += fallDir * hInputRaiseRate;
+            hInput = Mathf.Sign(hInput) == Mathf.Sign(fallDir) ? 0.0f : hInput;
+        }
+
+        else if(currentHInput != 0)
+        {
+            float raiseDir = Mathf.Sign(currentHInput);
+            hInput += raiseDir * hInputRaiseRate;
+            hInput = Mathf.Clamp(hInput, -1, 1);
+        }
+
+
+        if (currentVInput == 0 && vInput != 0)
+        {
+            float fallDir = -Mathf.Sign(vInput);
+            vInput += fallDir * vInputRaiseRate;
+            vInput = Mathf.Sign(vInput) == Mathf.Sign(fallDir) ? 0.0f : vInput;
+        }
+
+        else if (currentVInput != 0)
+        {
+            float raiseDir = Mathf.Sign(currentVInput);
+            vInput += raiseDir * vInputRaiseRate;
+            vInput = Mathf.Clamp(vInput, -1, 1);
+        }
 
 
 
@@ -370,9 +416,9 @@ public class Vehicle : NetworkBehaviour
 
             if(wheel.GetComponent<WheelColliderControl>().effectedByEngine)
             {
-                wheel.motorTorque = accel * avaliableTorque * vInput;
+                //wheel.motorTorque = accel * avaliableTorque * vInput;
+                wheel.motorTorque = accel * avaliableTorque;
             }
-            //wheel.motorTorque = Mathf.Lerp(accel, 0, speedRatio) * vInput;
         }
     }
 
@@ -382,8 +428,17 @@ public class Vehicle : NetworkBehaviour
             vehicleProxy.position,
             vehicleProxy.rotation,
             vehicleProxy.velocity,
-            vehicleProxy.angularVelocity
+            vehicleProxy.angularVelocity,
+            new (wheelColliders[0]),
+            new (wheelColliders[1]),
+            new (wheelColliders[2]),
+            new (wheelColliders[3])
             );
+    }
+
+    public void UpdateWheel(WheelCollider collider, WheelState state)
+    {
+        collider.rotationSpeed = state.rotationSpeed;
     }
 
     public void UpdateVehicleToState(VehicleState state)
@@ -392,6 +447,11 @@ public class Vehicle : NetworkBehaviour
         vehicleProxy.transform.rotation = state.vehicleProxy_Rotation;
         vehicleProxy.velocity = state.vehicleProxy_Velocity;
         vehicleProxy.angularVelocity = state.vehicleProxy_AngularVelocity;
+
+        UpdateWheel(wheelColliders[0], state.wheelState_1);
+        UpdateWheel(wheelColliders[1], state.wheelState_2);
+        UpdateWheel(wheelColliders[2], state.wheelState_3);
+        UpdateWheel(wheelColliders[3], state.wheelState_4);
 
         Physics.SyncTransforms();
     }
