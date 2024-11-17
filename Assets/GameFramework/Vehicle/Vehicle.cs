@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 // @TODO: Develop jump
 
@@ -12,6 +11,8 @@ public enum VehicleAeroState
     Jumping,
     Falling
 }
+
+
 
 public class VehicleState : INetworkSerializable
 {
@@ -40,6 +41,15 @@ public class VehicleState : INetworkSerializable
         serializer.SerializeValue(ref vehicleProxy_Velocity);
         serializer.SerializeValue(ref vehicleProxy_AngularVelocity);
     }
+
+    public override string ToString()
+    {
+        return "(pos: " + vehicleProxy_Position +
+            ", rot: " + vehicleProxy_Rotation +
+            ", vel: " + vehicleProxy_Velocity +
+            ", ang: " + vehicleProxy_AngularVelocity +
+            ")";
+    }
 }
 
 public class VehicleInput : INetworkSerializable
@@ -62,6 +72,11 @@ public class VehicleInput : INetworkSerializable
     {
         serializer.SerializeValue(ref hInput);
         serializer.SerializeValue(ref vInput);
+    }
+
+    public override string ToString()
+    {
+        return "(vInput: " + vInput + ", hInput: " + hInput + ")";
     }
 }
 
@@ -96,9 +111,6 @@ public class Vehicle : NetworkBehaviour
     public GameObject vehicleMesh;
 
     public int position = 1;
-
-    public float gravityStr = 25.0f;
-    private Vector3 gravityDir = Vector3.down;
 
     public AnimationCurve torqueCurve;
     [HideInInspector]
@@ -269,22 +281,6 @@ public class Vehicle : NetworkBehaviour
         }
     }
 
-    private void Gravity()
-    {
-        if (antiGravityNode)
-        {
-            gravityDir = -antiGravityNode.GetUpVector(vehicleProxy.position);
-        }
-
-        else
-        {
-            gravityDir = Vector3.down;
-        }
-
-        // gravity force
-        vehicleProxy.AddForce(gravityDir * gravityStr, ForceMode.Acceleration);
-    }
-
     public void Init()
     {
         if (IsServer && !isPlayer)
@@ -365,8 +361,6 @@ public class Vehicle : NetworkBehaviour
 
         currentSteer = steerCurve.Evaluate(speedRatio) * hInput;
 
-        Gravity();
-
         foreach(WheelCollider wheel in wheelColliders)
         {
             if(wheel.GetComponent<WheelColliderControl>().steerable)
@@ -394,8 +388,8 @@ public class Vehicle : NetworkBehaviour
 
     public void UpdateVehicleToState(VehicleState state)
     {
-        vehicleProxy.position = state.vehicleProxy_Position;
-        vehicleProxy.rotation = state.vehicleProxy_Rotation;
+        vehicleProxy.transform.position = state.vehicleProxy_Position;
+        vehicleProxy.transform.rotation = state.vehicleProxy_Rotation;
         vehicleProxy.velocity = state.vehicleProxy_Velocity;
         vehicleProxy.angularVelocity = state.vehicleProxy_AngularVelocity;
 

@@ -22,13 +22,13 @@ public class VehicleCamera : MonoBehaviour
         if (vehicle && cameraRail)
         {
             cameraRail.GetCameraVectors(vehicle.vehicleProxy.transform.position, out Vector3 cameraForward, out Vector3 cameraUp, out Vector3 cameraPos);
-            target.transform.position = cameraPos;
-            //target.transform.position = vehicle.vehicleMesh.transform.position;
+            //target.transform.position = cameraPos;
             target.transform.position = (cameraPos + vehicle.vehicleMesh.transform.position) / 2;
+            
+            //target.transform.position = vehicle.vehicleMesh.transform.position;
 
 
             target.transform.rotation = Quaternion.LookRotation(cameraForward, cameraUp);
-            //target.transform.rotation = Quaternion.LookRotation(cameraForward, Vector3.up);
             //target.transform.rotation = vehicle.vehicleMesh.transform.rotation;
         }
     }
